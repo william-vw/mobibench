@@ -1,0 +1,267 @@
+Extra inferences by including OWL2 RL reasoning
+(a.k.a. "semantic enhancement")
+
+
+> preconditions
+
+>> goal > service
+
+original: #22
+semantically-enhanced: #32
+
+- userscience-fiction-novel_price_service > science-fiction-noveluser_recommendedpriceindollar_service
+query output parameter _PRICE (type Price) matches service output parameter _RECOMMENDEDPRICEINDOLLAR (type RecommendedPriceInDollar); 
+	RecommendedPriceInDollar is a subclass of RecommendedPrice, which is a subclass of Price (see concept.owl), meaning _RECOMMENDEDPRICEINDOLLAR also has type Price
+	
+- userscience-fiction-novel_price_service > ScienceFNovelReview_service
+query output parameter _PRICE (type Price) matches service output parameter _RECOMMENDEDPRICE (type RecommendedPrice); 
+	RecommendedPrice is a subclass of Price (see concept.owl), meaning service output parameter _RECOMMENDEDPRICE also has type Price
+	
+(service ScienceFNovelReview_service also returns reviews)	
+
+- userscience-fiction-novel_price_service > SFNovelReview_service
+query output parameter _PRICE (type Price) matches service output parameter _RECOMMENDEDPRICEINEURO (type RecommendedPriceInEuro); 
+	RecommendedPriceInEuro is a subclass of RecommendedPrice, which is a subclass of Price (see concept.owl), meaning _RECOMMENDEDPRICEINEURO also has type Price
+
+- userscience-fiction-novel_price_service > SFNRecommendedPrice_service
+query output parameter _PRICE (type Price) matches service output parameter _RECOMMENDEDPRICE (type RecommendedPrice); 
+	RecommendedPrice is a subclass of Price (see concept.owl), meaning _RECOMMENDEDPRICE also has type Price
+
+- bookpersoncreditcardaccount_price_service > bookpersoncreditcardaccount_recommendedprice_service
+query output parameter _PRICE (type Price) matches service output parameter _RECOMMENDEDPRICE (type RecommendedPrice); 
+	RecommendedPrice is a subclass of Price (see concept.owl), meaning _RECOMMENDEDPRICE also has type Price
+
+- bookpersoncreditcardaccount_price_service > bookpersoncreditcardaccount_taxedfreeprice_service
+query output parameter _PRICE (type Price) matches service output parameter _TAXEDFREEPRICE (type TaxFreePrice); 
+	TaxFreePrice is a subclass of Price (see concept.owl), meaning _TAXEDFREEPRICE also has type Price
+	
+- citycountry_hotel_service > countrycapital-city_hotel_service
+query input parameter _CITY (type City) matches service output parameter _CAPITAL_CITY (type Capital-City); 
+	Capital-City is a subclass of City (see portal.owl), meaning _CAPITAL_CITY also has type City
+
+- getLocationOfUSCity > getPlaceOfAddress
+in query description, input parameter _CITY must be located in input parameter _STATE
+in service description, input parameter _CITY must be located in input parameter _COUNTY, which must be located in input parameter _STATE
+	due to transitivity of property locatedIn (see protont.owl), service input parameter _CITY is also located in input parameter _STATE
+		
+- geographical-regiongeographical-region_map_service > citycity_map_service
+query input parameters _GEOGRAPHICAL_REGION1 and _GEOGRAPHICAL_REGION2 (type Geographical-Region) match service input parameters _CITY1 and _CITY2 (type City); 
+	City is a subclass of Municipal-Unit, which is a subclass of Geopolitical-Entity, which is a subclass of Geographical-Region (see portal.owl), meaning _CITY1 and _CITY2 also have type Geographical-Region
+
+- geocodeUSAddress > getPlaceOfAddress
+in query description, input parameter _CITY must be located in input parameter _STATE
+in service description, input parameter _CITY must be located in input parameter _COUNTY, which must be located in input parameter _STATE
+	due to transitivity of property locatedIn (see protont.owl), service input parameter _CITY is also located in input parameter _STATE
+
+
+>> service > goal:
+
+original: #23
+semantically-enhanced: #53
+
+- publicationperson__service > bookpersoncreditcardaccount_price_service
+service input parameter _PUBLICATION (type Publication) matches query input parameter _BOOK (type Book); 
+	Book is a subclass of Monograph, which is a subclass of Publication (see books.owl), meaning _BOOK also has type Publication
+
+- publicationperson__service > bookpersoncreditcardaccount__service
+service input parameter _PUBLICATION (type Publication) matches query input parameter _BOOK (type Book); 
+	Book is a subclass of Monograph, which is a subclass of Publication (see books.owl), meaning _BOOK also has type Publication
+
+(query bookpersoncreditcardaccount__service additionally requires that the input parameter _BOOK is available)
+	
+- publicationperson__service > userscience-fiction-novel_price_service
+service input parameter _PUBLICATION (type Publication) matches query input parameter _SCIENCE_FICTION_NOVEL (type Science-Fiction-Novel); 
+	Science-Fiction-Novel is a subclass of Novel, which is a subclass of Book, which is a subclass of Monograph, which is a subtype of Publication (see books.owl), meaning _SCIENCE_FICTION_NOVEL also has type Publication
+service input parameter _PERSON (type Person) matches query input parameter _USER (type User)
+	User is a subclass of Person (see books.owl), meaning _USER also has type Person
+	
+- objectperson__service > bookpersoncreditcardaccount__service
+service input parameter _OBJECT (type Object) matches query input parameter _BOOK (type Book); 
+	Book is a subclass of Monograph, which is a subclass of Publication, which is a subclass of PrintedMaterial, which is a subclass of Object (see books.owl), meaning _BOOK also has type Object
+
+- locationlocation_icon_service > geographical-regiongeographical-region_map_service
+service input parameters _LOCATION1 and _LOCATION2 (type Location) match query input parameters _GEOGRAPHICAL_REGION1 and _GEOGRAPHICAL_REGION2 (type Geographical-Region)
+	Geographical-Region is a subclass of Location (see portal.owl), meaning _GEOGRAPHICAL_REGION1 and _GEOGRAPHICAL_REGION2 also have type Location
+service output parameter _ICON (type Icon) matches query output parameter _MAP (type Map)
+	Map is a subclass of Icon (see Mid-level-ontology.owl), meaning _MAP also has type Icon
+
+- bookpersoncreditaccount__Beaservice > bookpersoncreditcardaccount_price_service
+service input parameter _CREDITACCOUNT (type CreditAccount) matches query input parameter _CREDITCARDACCOUNT (type CreditCardAccount)
+	CreditCardAccount is a subclass of CreditAccount (see Mid-level-ontology.owl), meaning _CREDITCARDACCOUNT also has type CreditAccount
+	
+- bookpersoncreditaccount__Beaservice > bookpersoncreditcardaccount__service
+service input parameter _CREDITACCOUNT (type CreditAccount) matches query input parameter _CREDITCARDACCOUNT (type CreditCardAccount)
+	CreditCardAccount is a subclass of CreditAccount (see Mid-level-ontology.owl), meaning _CREDITCARDACCOUNT also has type CreditAccount
+
+(query bookpersoncreditcardaccount__service additionally requires that the input parameter _BOOK is available)
+	
+- monographperson__service > bookpersoncreditcardaccount_price_service
+service input parameter _MONOGRAPH (type Monograph) matches query input parameter _BOOK (type Book); 
+	Book is a subclass of Monograph (see books.owl), meaning _BOOK also has type Monograph
+
+- monographperson__service > bookpersoncreditcardaccount__service
+service input parameter _MONOGRAPH (type Monograph) matches query input parameter _BOOK (type Book); 
+	Book is a subclass of Monograph (see books.owl), meaning _BOOK also has type Monograph
+	
+(query bookpersoncreditcardaccount__service additionally requires that the input parameter _BOOK is available)
+
+- monographperson__service > userscience-fiction-novel_price_service
+service input parameter _MONOGRAPH (type Monograph) matches query input parameter _SCIENCE_FICTION_NOVEL (type Science-Fiction-Novel); 
+	Science-Fiction-Novel is a subclass of Novel, which is a subclass of Book, which is a subclass of Monograph (see books.owl), meaning _SCIENCE_FICTION_NOVEL also has type Monograph
+service input parameter _PERSON (type Person) matches query input parameter _USER (type User)
+	User is a subclass of Person (see books.owl), meaning _USER also has type Person
+	
+- locationlocation_map_SRIservice > geographical-regiongeographical-region_map_service
+service input parameters _LOCATION1 and _LOCATION2 (type Location) match query input parameters _GEOGRAPHICAL_REGION1 and _GEOGRAPHICAL_REGION2 (type Geographical-Region)
+	Geographical-Region is a subclass of Location (see portal.owl), meaning _GEOGRAPHICAL_REGION1 and _GEOGRAPHICAL_REGION2 also have type Location
+
+- geographical-regiongeographical-region_icon_service > geographical-regiongeographical-region_map_service
+service output parameter _ICON (type Icon) matches query output parameter _MAP (type Map)
+	Map is a subclass of Icon (see Mid-level-ontology.owl), meaning _MAP also has type Icon
+
+- printedmaterialpersoncreditcardaccount__service > bookpersoncreditcardaccount_price_service
+service input parameter _PRINTEDMATERIAL (type PrintedMaterial) matches query input parameter _BOOK (type Book); 
+	Book is a subclass of Monograph, which is a subclass of Publication, which is a subclass of PrintedMaterial (see books.owl), meaning _BOOK also has type PrintedMaterial
+
+- printedmaterialpersoncreditcardaccount__service > bookpersoncreditcardaccount__service
+service input parameter _PRINTEDMATERIAL (type PrintedMaterial) matches query input parameter _BOOK (type Book); 
+	Book is a subclass of Monograph, which is a subclass of Publication, which is a subclass of PrintedMaterial (see books.owl), meaning _BOOK also has type PrintedMaterial
+	
+(query bookpersoncreditcardaccount__service additionally requires that the input parameter _BOOK is available)
+
+- bookperson_price_service > userscience-fiction-novel_price_service
+service input parameter _BOOK (type Book) matches query input parameter _SCIENCE_FICTION_NOVEL (type Science-Fiction-Novel); 
+	Science-Fiction-Novel is a subclass of Novel, which is a subclass of Book (see books.owl), meaning _SCIENCE_FICTION_NOVEL also has type Book
+service input parameter _PERSON (type Person) matches query input parameter _USER (type User)
+	User is a subclass of Person (see books.owl), meaning _USER also has type Person
+
+- printedmaterialpersoncreditcardaccount_price_service > bookpersoncreditcardaccount_price_service
+service input parameter _PRINTEDMATERIAL (type PrintedMaterial) matches query input parameter _BOOK (type Book); 
+	Book is a subclass of Monograph, which is a subclass of Publication, which is a subclass of PrintedMaterial (see books.owl), meaning _BOOK also has type PrintedMaterial
+
+(service printedmaterialpersoncreditcardaccount_price_service additionally supplies a _PRICE output parameter)
+	
+- locationlocation_map_service > geographical-regiongeographical-region_map_service
+service input parameters _LOCATION1 and _LOCATION2 (type Location) match query input parameters _GEOGRAPHICAL_REGION1 and _GEOGRAPHICAL_REGION2 (type Geographical-Region)
+	Geographical-Region is a subclass of Location (see portal.owl), meaning _GEOGRAPHICAL_REGION1 and _GEOGRAPHICAL_REGION2 also have type Location
+
+- sciencefictionbookuser_price_service > userscience-fiction-novel_price_service
+service input parameter _SCIENCEFICTIONBOOK (type ScienceFictionBook) matches query input parameter _SCIENCE_FICTION_NOVEL (type Science-Fiction-Novel)
+	Science-Fiction-Novel is a subclass of ScienceFictionBook, meaning _SCIENCE_FICTION_NOVEL also has type ScienceFictionBook
+
+- userbook_price_service > userscience-fiction-novel_price_service
+service input parameter _BOOK (type Book) matches query input parameter _SCIENCE_FICTION_NOVEL (type Science-Fiction-Novel); 
+	Science-Fiction-Novel is a subclass of Novel, which is a subclass of Book (see books.owl), meaning _SCIENCE_FICTION_NOVEL also has type Book
+
+- personbookliabilityaccount__service > bookpersoncreditcardaccount_price_service
+service input parameter _LIABILITYACCOUNT (type LiabilityAccount) matches query input parameter _CREDITCARDACCOUNT (type CreditCardAccount)
+	CreditCardAccount is a subclass of CreditAccount, which is a subclass of LiabilityAccount (see Mid-level-ontology.owl), meaning _CREDITCARDACCOUNT also has type LiabilityAccount
+
+- personbookliabilityaccount__service > bookpersoncreditcardaccount__service
+service input parameter _LIABILITYACCOUNT (type LiabilityAccount) matches query input parameter _CREDITCARDACCOUNT (type CreditCardAccount)
+	CreditCardAccount is a subclass of CreditAccount, which is a subclass of LiabilityAccount (see Mid-level-ontology.owl), meaning _CREDITCARDACCOUNT also has type LiabilityAccount
+
+(query bookpersoncreditcardaccount__service additionally requires that the input parameter _BOOK is available)
+	
+- personmonographcreditcardaccount__service > bookpersoncreditcardaccount_price_service
+service input parameter _MONOGRAPH (type Monograph) matches query input parameter _BOOK (type Book); 
+	Book is a subclass of Monograph (see books.owl), meaning _BOOK also has type Monograph
+
+- personmonographcreditcardaccount__service > bookpersoncreditcardaccount__service
+service input parameter _MONOGRAPH (type Monograph) matches query input parameter _BOOK (type Book); 
+	Book is a subclass of Monograph (see books.owl), meaning _BOOK also has type Monograph
+
+(query bookpersoncreditcardaccount__service additionally requires that the input parameter _BOOK is available)
+	
+- printedmaterialperson__service > bookpersoncreditcardaccount_price_service
+service input parameter _PRINTEDMATERIAL (type PrintedMaterial) matches query input parameter _BOOK (type Book); 
+	Book is a subclass of Monograph, which is a subclass of Publication, which is a subclass of PrintedMaterial (see books.owl), meaning _BOOK also has type PrintedMaterial
+
+- printedmaterialperson__service > bookpersoncreditcardaccount__service
+service input parameter _PRINTEDMATERIAL (type PrintedMaterial) matches query input parameter _BOOK (type Book); 
+	Book is a subclass of Monograph, which is a subclass of Publication, which is a subclass of PrintedMaterial (see books.owl), meaning _BOOK also has type PrintedMaterial
+
+(query bookpersoncreditcardaccount__service additionally requires that the input parameter _BOOK is available)
+	
+- printedmaterialperson__service > userscience-fiction-novel_price_service
+service input parameter _PRINTEDMATERIAL (type PrintedMaterial) matches query input parameter _SCIENCE_FICTION_NOVEL (type Science-Fiction-Novel); 
+	Science-Fiction-Novel is a subclass of Novel, which is a subclass of Book, which is a subclass of Monograph, which is a subclass of Publication, which is a subclass of PrintedMaterial (see books.owl), meaning _SCIENCE_FICTION_NOVEL also has type PrintedMaterial
+service input parameter _PERSON (type Person) matches query input parameter _USER (type User)
+	User is a subclass of Person (see books.owl), meaning _USER also has type Person
+	
+- objectpersoncreditaccount_price_service > bookpersoncreditcardaccount_price_service
+service input parameter _OBJECT (type Object) matches query input parameter _BOOK (type Book); 
+	Book is a subclass of Monograph, which is a subclass of Publication, which is a subclass of PrintedMaterial, which is a subclass of Object (see books.owl), meaning _BOOK also has type Object
+service input parameter _CREDITACCOUNT (type CreditAccount) matches query input parameter _CREDITCARDACCOUNT (type CreditCardAccount)
+	CreditCardAccount is a subclass of CreditAccount (see Mid-level-ontology.owl), meaning _CREDITCARDACCOUNT also has type CreditAccount
+
+- bookperson__service > userscience-fiction-novel_price_service
+service input parameter _BOOK (type Book) matches query input parameter _SCIENCE_FICTION_NOVEL (type Science-Fiction-Novel); 
+	Science-Fiction-Novel is a subclass of Novel, which is a subclass of Book (see books.owl), meaning _SCIENCE_FICTION_NOVEL also has type Book
+service input parameter _PERSON (type Person) matches query input parameter _USER (type User)
+	User is a subclass of Person (see books.owl), meaning _USER also has type Person
+
+- bookpersoncreditaccount__service > bookpersoncreditcardaccount_price_service
+service input parameter _CREDITACCOUNT (type CreditAccount) matches query input parameter _CREDITCARDACCOUNT (type CreditCardAccount)
+	CreditCardAccount is a subclass of CreditAccount (see Mid-level-ontology.owl), meaning _CREDITCARDACCOUNT also has type CreditAccount
+
+- bookpersoncreditaccount__service > bookpersoncreditcardaccount__service
+service input parameter _CREDITACCOUNT (type CreditAccount) matches query input parameter _CREDITCARDACCOUNT (type CreditCardAccount)
+	CreditCardAccount is a subclass of CreditAccount (see Mid-level-ontology.owl), meaning _CREDITCARDACCOUNT also has type CreditAccount
+	
+(query bookpersoncreditcardaccount__service additionally requires that the input parameter _BOOK is available)
+
+
+
+> effects
+
+>> goal > service: 
+
+original: #3
+semantically-enhanced: #4
+
+- bookpersoncreditcardaccount__service > bookusercreditcardaccount__service
+query input parameter _PERSON (type Person) matches service input parameter _USER (type User)
+	User is a subclass of Person (see books.owl), meaning _USER also has type Person
+
+
+>> service > goal:
+
+original: #5
+semantically-enhanced: #14
+
+- publicationperson__service > bookpersoncreditcardaccount__service
+service input parameter _PUBLICATION (type Publication) matches query input parameter _BOOK (type Book); 
+	Book is a subclass of Monograph, which is a subclass of Publication (see books.owl), meaning _BOOK also has type Publication
+
+- objectperson__service > bookpersoncreditcardaccount__service
+service input parameter _OBJECT (type Object) matches query input parameter _BOOK (type Book); 
+	Book is a subclass of Monograph, which is a subclass of Publication, which is a subclass of PrintedMaterial, which is a subclass of Object (see books.owl), meaning _BOOK also has type Object
+
+- printedmaterialpersoncreditcardaccount__service > bookpersoncreditcardaccount__service
+service input parameter _PRINTEDMATERIAL (type PrintedMaterial) matches query input parameter _BOOK (type Book); 
+	Book is a subclass of Monograph, which is a subclass of Publication, which is a subclass of PrintedMaterial (see books.owl), meaning _BOOK also has type PrintedMaterial
+
+- bookpersoncreditaccount__Beaservice > bookpersoncreditcardaccount__service
+service input parameter _CREDITACCOUNT (type CreditAccount) matches query input parameter _CREDITCARDACCOUNT (type CreditCardAccount)
+	CreditCardAccount is a subclass of CreditAccount (see Mid-level-ontology.owl), meaning _CREDITCARDACCOUNT also has type CreditAccount
+
+- monographperson__service > bookpersoncreditcardaccount__service
+service input parameter _MONOGRAPH (type Monograph) matches query input parameter _BOOK (type Book); 
+	Book is a subclass of Monograph (see books.owl), meaning _BOOK also has type Monograph
+
+- personbookliabilityaccount__service > bookpersoncreditcardaccount__service
+service input parameter _LIABILITYACCOUNT (type LiabilityAccount) matches query input parameter _CREDITCARDACCOUNT (type CreditCardAccount)
+	CreditCardAccount is a subclass of CreditAccount, which is a subclass of LiabilityAccount (see Mid-level-ontology.owl), meaning _CREDITCARDACCOUNT also has type LiabilityAccount
+
+- personmonographcreditcardaccount__service > bookpersoncreditcardaccount__service
+service input parameter _MONOGRAPH (type Monograph) matches query input parameter _BOOK (type Book); 
+	Book is a subclass of Monograph (see books.owl), meaning _BOOK also has type Monograph
+
+- printedmaterialperson__service > bookpersoncreditcardaccount__service
+service input parameter _PRINTEDMATERIAL (type PrintedMaterial) matches query input parameter _BOOK (type Book); 
+	Book is a subclass of Monograph, which is a subclass of Publication, which is a subclass of PrintedMaterial (see books.owl), meaning _BOOK also has type PrintedMaterial
+
+- bookpersoncreditaccount__service > bookpersoncreditcardaccount__service
+service input parameter _CREDITACCOUNT (type CreditAccount) matches query input parameter _CREDITCARDACCOUNT (type CreditCardAccount)
+	CreditCardAccount is a subclass of CreditAccount (see Mid-level-ontology.owl), meaning _CREDITCARDACCOUNT also has type CreditAccount

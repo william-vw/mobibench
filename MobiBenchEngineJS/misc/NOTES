@@ -1,0 +1,21 @@
+- some rules could be removed, but actually serve as replacement for other rules
+prp-symp (SymmetricProperty): prp-inv2 could only be removed (in part) due to this rule
+so, we certainly still need that rule
+	previously thought this may have been a false positive..
+but correctly indicated as rule-to-keep by web service function 	
+
+
+- lack of "self-subProperties" could technically lead to some rules (incorrectly) not being added to red4
+e.g., LinkRestriction rules; headOf should be subproperty of itself
+	doesn't seem to be the case now though
+	
+
+- future work: 
+ 	try out additional optimizations (SwiftOWLIM docs): 
+		for instance, these could be supported virtually (i.e., at query time): 
+		- for each resource, inferring types such as owl:Thing, rdf:Resource
+		- for each resource & property, in case they participate in subClassOf & subPropertyOf statements, infer Class & Property types
+		- via reflexivity of owl:sameAs, generate essentially the same statement twice
+		- for each class, inferring it is a subclass of owl:Thing, and type rdfs:Class
+
+	integrate Jess, Drools (see paper "A pair of OWL2 RL reasoners"), mTableaux

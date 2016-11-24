@@ -1,0 +1,3 @@
+EDIT ip addresses in: 
+	MobiBenchEngineNative/assets/www/js/config.js
+	MobiBenchAutoDeviceClient/src/wvw/mobibench/auto/AutoBenchmarkDeviceClient.java

@@ -1,0 +1,57 @@
+{	
+	"file" : "reason_task.js",
+	"cons" : "ReasonTask",
+
+	"ontology_inference" : {
+		"folder" : "ontology_inference/",
+		"file" : "ontology_inference.js",
+		
+		"builtin" : {
+			"file" : "builtin.js",
+			"cons" : "BuiltinOntologyInference"
+		},
+		"owl2rl" : {
+			"file" : "owl2rl.js",
+			"cons" : "Owl2RlOntologyInference",
+			
+			"dependency" : "rule_inference"
+		}
+	},
+
+	"service_match" : {
+		"folder" : "service_match/",
+		"file" : "service_match.js",
+		
+		"rule_based" : {
+			"file" : "rule_based.js",
+			"cons" : "RuleBasedServiceMatch",
+			
+			"dependency" : "rule_inference"
+		}
+	},
+		
+	"rule_inference" : {
+		"folder" : "rule_inference/",
+		"file" : "rule_inference.js",
+		
+		"builtin" : {
+			"file" : "builtin.js",
+			"cons" : "BuiltinRuleInference",
+			
+			"sub_flows" : {
+				"folder" : "flows/",
+				"file" : "sub_flow.js",
+			
+				"load_data_exec_rules" : {
+					"file" : "load_data_exec_rules.js",
+					"cons" : "LoadDataExecRules"
+				},
+			
+				"load_rules_data_exec" : {
+					"file" : "load_rules_data_exec.js",
+					"cons" : "LoadRulesDataExec"
+				}
+			}
+		}
+	}
+}

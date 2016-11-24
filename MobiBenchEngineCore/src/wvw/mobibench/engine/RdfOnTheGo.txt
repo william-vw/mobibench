@@ -1,0 +1,258 @@
+/**
+ * Copyright 2016 William Van Woensel
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ * 
+ * 
+ * @author wvw
+ * 
+ */
+
+package wvw.mobibench.engine;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
+
+import deri.org.store.BDBGraph;
+import wvw.mobibench.config.ProcessFlows;
+import wvw.mobibench.config.data.DataFormats;
+import wvw.mobibench.config.data.DatasetConfig;
+import wvw.mobibench.config.data.DatasetConfigContainer;
+import wvw.mobibench.config.engine.EngineConfig;
+import wvw.mobibench.config.engine.EngineReasoningConfig;
+import wvw.mobibench.config.engine.res.EngineDatasetConfig;
+import wvw.mobibench.config.engine.res.EngineRulesetConfig;
+import wvw.mobibench.config.reason.MechanismTypes;
+import wvw.mobibench.config.reason.ReasoningConfig;
+import wvw.mobibench.config.reason.ReasoningMechanism;
+import wvw.mobibench.config.reason.TaskTypes;
+import wvw.mobibench.config.rules.RuleFormats;
+import wvw.mobibench.config.rules.RulesetConfig;
+import wvw.mobibench.config.rules.RulesetConfigContainer;
+import wvw.mobibench.exception.BenchmarkException;
+import wvw.mobibench.exception.OperationNotSupportedException;
+import wvw.mobibench.results.ExperimentResults;
+import wvw.mobibench.results.InferenceResults;
+import wvw.mobibench.timer.EngineExperimentTimer;
+import wvw.mobibench.timer.EngineResultTimes;
+import wvw.utils.log2.Log;
+
+public class RdfOnTheGo extends ReasoningEngine {
+
+	private BDBGraph graph;
+	private Model model;
+
+	public RdfOnTheGo() {
+		super("RdfOnTheGo");
+	}
+
+	protected EngineConfig createEngineConfig() {
+		EngineRulesetConfig ruleConfig = new EngineRulesetConfig(
+				RuleFormats.SPARQLQuery, true);
+		EngineDatasetConfig dataConfig = new EngineDatasetConfig(
+				DataFormats.RDF, false);
+
+		EngineReasoningConfig reasonConfig = new EngineReasoningConfig();
+
+		// - rules_inference
+		ReasoningMechanism rulesMech = new ReasoningMechanism(MechanismTypes.BUILTIN,
+				ProcessFlows.load_data_exec_rules);
+
+		reasonConfig.addMechanism(TaskTypes.RULE_INFERENCE, rulesMech);
+
+		return new EngineConfig(ruleConfig, dataConfig, reasonConfig);
+	}
+
+	public void init() {
+	}
+
+	public void reset() {
+		if (model != null) {
+			model.close();
+			graph.close();
+
+			model = null;
+			graph = null;
+		}
+	}
+
+	public EngineResultTimes loadData(ReasoningConfig rConfig, DatasetConfigContainer datasetContainer)
+			throws BenchmarkException {
+
+		DatasetConfig dataset = datasetContainer.getConfig();
+
+		EngineResultTimes resultTimes = new EngineResultTimes();
+
+		try {
+			String path = dataset.toFile(true);
+			// Log.d("path: " + path);
+
+			EngineExperimentTimer timer = new EngineExperimentTimer("loadData", resultTimes);
+			timer.begin();
+
+			if (graph == null) {
+				graph = new BDBGraph("test"); // alternative
+
+				// IMPORTANT rdf-on-the-go expects N-TRIPLE as input
+				graph.load("file:///" + path, "");
+				graph.sync();
+
+				model = ModelFactory.creatModelStore("test");
+
+			} else {
+				graph.load("file:///" + path, "");
+				graph.sync();
+
+				// Log.d("statements: " + printStatements(model));
+			}
+
+			timer.done();
+
+			return resultTimes;
+
+		} catch (IOException e) {
+			throw new BenchmarkException("Error in <loadData>: " + e.getMessage());
+		}
+	}
+
+	public ExperimentResults executeRules(ReasoningConfig rConfig,
+			RulesetConfigContainer rulesetContainer)
+			throws BenchmarkException {
+
+		RulesetConfig ruleset = rulesetContainer.getConfig();
+
+		InferenceResults expResults = new InferenceResults();
+
+		EngineResultTimes resultTimes = new EngineResultTimes();
+		expResults.setResultTimes(resultTimes);
+
+		// NOTE separate model to keep inferred triples (temporary)
+		// Model infModel = ModelFactory.createDefaultModel();
+
+		List<String> rules = ruleset.getRulesList();
+
+		EngineExperimentTimer timer = new EngineExperimentTimer("executeRules", resultTimes);
+		timer.begin();
+
+		int prevStmtCnt = countStmts(model);
+
+		boolean hasNewStmts = true;
+		while (hasNewStmts) {
+			Log.d("executing ruleset\n");
+
+			for (String rule : rules) {
+				// Log.d("rule: \n" + rule);
+
+				Query q = QueryFactory.create(rule);
+				QueryExecution qe = QueryExecutionFactory.create(q, model);
+
+				Model res = qe.execConstruct(model);
+
+				model.add(res);
+				// infModel.add(res);
+
+				qe.close();
+
+				// NOTE to print out results of each rule
+				// System.out.println("results: ");
+				// printStatements(res, null, null, null);
+			}
+
+			int newStmtCnt = countStmts(model);
+			Log.d("stmts: " + newStmtCnt + " - " + prevStmtCnt);
+
+			hasNewStmts = (newStmtCnt > prevStmtCnt);
+			prevStmtCnt = newStmtCnt;
+
+			// NOTE to print out results per iteration
+			// infmodel.write(System.out, "N3");
+			// infmodel = ModelFactory.createDefaultModel();
+		}
+
+		timer.done();
+
+		timer = new EngineExperimentTimer("collectInferred", resultTimes);
+		timer.begin();
+
+		expResults.setInferred(printStatements(model));
+
+		timer.done();
+
+		return expResults;
+	}
+
+	private int countStmts(Model model) {
+		int nr = 0;
+		StmtIterator it = model.listStatements();
+		while (it.hasNext()) {
+			it.next();
+
+			nr++;
+		}
+
+		return nr;
+	}
+
+	public EngineResultTimes loadRules(ReasoningConfig rConfig, RulesetConfigContainer rulesetContainer)
+			throws BenchmarkException {
+
+		throw new OperationNotSupportedException("loadRules");
+	}
+
+	public ExperimentResults execute(ReasoningConfig rConfig) throws BenchmarkException {
+		throw new OperationNotSupportedException("execute");
+	}
+
+	public ExperimentResults inference(ReasoningConfig rConfig,
+			DatasetConfigContainer ontologyContainer)
+			throws BenchmarkException {
+
+		throw new OperationNotSupportedException("inference");
+	}
+
+	public ExperimentResults entails(ReasoningConfig rConfig,
+			DatasetConfigContainer serviceContainer,
+			DatasetConfigContainer goalContainer) throws BenchmarkException {
+
+		throw new OperationNotSupportedException("entails");
+	}
+
+	private List<String> printStatements(Model m) {
+		return printStatements(m, null, null, null);
+	}
+
+	private List<String> printStatements(Model m, Resource s, Property p, RDFNode o) {
+		List<String> stmts = new ArrayList<String>();
+
+		for (StmtIterator i = m.listStatements(s, p, o); i.hasNext();) {
+			Statement stmt = i.nextStatement();
+
+			stmts.add(stmt.toString());
+		}
+
+		return stmts;
+	}
+}

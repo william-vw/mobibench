@@ -1,0 +1,138 @@
+/**
+ * Copyright 2016 William Van Woensel
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ * 
+ * 
+ * @author wvw
+ * 
+ */
+
+package dal.niche.utils;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+
+import com.hp.hpl.jena.graph.query.Expression.Variable;
+import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.reasoner.TriplePattern;
+
+
+public class RDFUtils {
+
+	public static String toString(Resource res) {
+		// variable
+		if (res.getURI() == null)
+			return res.toString();
+
+		return "<" + res.getURI() + ">";
+	}
+
+	public static String toString(Literal lit, boolean dataType,
+			boolean doubleEscape) {
+		String str = "\"" + lit.getValue() + "\"";
+		if (doubleEscape)
+			str = doubleEscape(str);
+
+		if (dataType && lit.getDatatypeURI() != null)
+			str += "^^<" + lit.getDatatypeURI() + ">";
+
+		return str;
+	}
+
+	public static List<String> toStringList(RDFNode[] nodes, boolean dataType) {
+		return toStringList(Arrays.asList(nodes), dataType);
+	}
+	
+	public static List<String> toStringList(List<RDFNode> nodes, boolean dataType) {
+		List<String> strs = new ArrayList<String>();
+
+		for (RDFNode node : nodes)
+			strs.add(toString(node, dataType));
+
+		return strs;
+	}
+	
+	public static String toComposedString(RDFNode[] nodes, boolean dataType) {
+		return toComposedString(Arrays.asList(nodes), dataType);
+	}
+	
+	public static String toComposedString(List<RDFNode> nodes, boolean dataType) {
+		String str = "";
+
+		for (RDFNode node : nodes)
+			str += toString(node, dataType) + " ";
+
+		return str.substring(0, str.length() - 1) + " .";
+	}
+
+	public static String toString(RDFNode node) {
+		return toString(node, true, false);
+	}
+
+	public static String toString(RDFNode node, boolean dataType) {
+		return toString(node, dataType, false);
+	}
+
+	public static String toString(RDFNode node, boolean dataType,
+			boolean doubleEscape) {
+		
+		if (node instanceof Variable)
+			return node.toString();
+
+		else if (node.isResource())
+			return toString((Resource) node);
+
+		else if (node.isLiteral())
+			return toString((Literal) node, dataType, doubleEscape);
+		
+		return null;
+	}
+
+	public static RDFNode[] toRDFNodeArray(TriplePattern triplePattern) {
+		return new RDFNode[] { (RDFNode) triplePattern.getSubject(),
+				(RDFNode) triplePattern.getPredicate(), (RDFNode) triplePattern.getObject() };
+	}
+
+	public static String doubleEscape(String str) {
+		return str.replaceAll("\"", "\\\\\"");
+
+	}
+
+	public static String toListString(List<String> nodes) {
+		String nodesStr = nodes.toString();
+
+		return "(" + nodesStr.substring(1, nodesStr.length() - 1) + ")";
+	}
+
+	public static String toRDF(List<String> triples) {
+		String rdf = "";
+		for (String triple : triples)
+			rdf += triple + "\n";
+
+		return rdf;
+	}
+
+	public static String convertBNodes(String str) {
+		return str.replaceAll("[^:\\s\\(]+:[^:\\s]+:[^\\s]+\\s", "_:b0 ");
+	}
+
+	public static String normalizeIntDatatypes(String str) {
+		return str.replaceAll(
+				"\\^\\^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger>",
+				"^^<http://www.w3.org/2001/XMLSchema#int>");
+	}
+}

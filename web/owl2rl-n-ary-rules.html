@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Supporting OWL2 RL n-ary rules | MobiBench</title>
+
+	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+	<link rel="stylesheet" href="css/default.css" />
+	<style>
+		ul.nav-menu {
+			width: 400px;
+		}
+		.ref {
+			color: black !important;
+		}
+	</style>
+	
+	<script type="text/x-mathjax-config">
+	  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+	</script>
+	<script type="text/javascript"
+	  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+	</script>
+	<style>
+		.math {
+			font-size: 14px;
+		}
+	</style>
+	
+    <script type="text/javascript" src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+	<style>
+		li.L0, li.L1, li.L2, li.L3,
+		li.L5, li.L6, li.L7, li.L8
+		{ list-style-type: decimal !important }
+	</style>
+	
+	<a href="javascript:" id="return-to-top"><i class="icon-chevron-up"></i></a>
+	
+	<link rel="stylesheet" href="css/totop.css" />
+	<link rel="stylesheet" href="css/font-awesome.css">
+	<script type="text/javascript" src="js/totop.js"></script>
+</head>
+
+<body>
+<a class="pos" name="top"><h1>MobiBench: Supporting OWL2 RL n-ary rules</h1></a>
+
+<p>This web page categorizes so-called n-ary rules, which refer to a finite list of elements, and present different solutions for supporting them in a rule-based system. These solutions have been implemented in <a href="../index.html">MobiBench</a>.</p>
+
+<p><b>Contact</b>: <a href="mailto:william.van.woensel@gmail.com&subject=MobiBench">William Van Woensel</a></p>
+
+<div class="nav-menu">Navigation</div>
+<ul class="nav-menu">
+	<li><a href="#rule-types">Types of n-ary rules</a></li>
+	<li>
+		<a href="#rule-solutions">Solutions</a>
+		<ul>
+			<li><a href="#mem-fns">List membership functions</a></li>
+			<li><a href="#instantiate-rules">Instantiate n-ary rules</a></li>
+			<li><a href="#binarize-ontology">Normalize (or “binarize”) the input ontology</a></li>
+			<li><a href="#auxiliary-rules">Replace each n-ary rule by 3 auxiliary rules</a></li>
+		</ul>
+	</li>
+</ul>
+	 
+<a class="pos" name="rule-types">
+	<h2>Types of n-ary rules</h2>
+</a>
+
+<p>
+A first subset <b>(L1)</b> of n-ary rules enumerate one or more restrictions, each referring to a list element (<i>#eq-diff2, #eq-diff3, #prp-adp, #cax-adc, #cls-uni</i>). For instance, rule <i>#eq-diff2</i> flags an ontology inconsistency if two equivalent elements of an <i>owl:AllDifferent</i> construct are found: </p>
+
+$$T(?x, type, AllDifferent), T(?x, members, ?y), \\
+LIST[?y, ?z_1, ..., ?z_n], T(?z_i, owl:sameAs, ?z_j) \rightarrow false$$
+<a class="pos" name="eq-diff2"><div class="rule-caption"><b>Rule <i>#eq-diff2</i></b></div></a>
+
+<p>In contrast, rules from a second subset <b>(L2)</b> restrain all elements in a list (<i>#prp-spo2, #prp-key, #cls-int1</i>). As an example, rule <i>#cls-int1</i> infers that y is an instance of an intersection in case it is typed by all intersection member classes:</p>
+
+$$T(?c, owl:intersectionOf, ?x), LIST[?x, ?c_1, ..., ?c_n],\\
+T(?y, rdf:type, ?c_1), ..., T(?y, rdf:type, ?c_n) \rightarrow T(?y, rdf:type, ?c)$$
+<a class="pos" name="cls-int2"><div class="rule-caption"><b>Rule <i>#cls-int1</i></b></div></a>
+
+<p>A third ruleset <b>(L3)</b> yields inferences for all list elements (<i>#cls-int2, #cls-oo, #scm-int, #scm-uni</i>). As an example, rule </i>#scm-uni</i> infers that each member class of a union is a subclass of that union:</p>
+
+<a class="pos" name="scm-uni">
+$$T(?c, owl:unionOf, ?x), LIST[?x, ?c_1, ..., ?c_n] \rightarrow\\
+T(?c_1, rdfs:subClassOf, ?c), ..., T(?c_n, rdfs:subClassOf, ?c)$$
+<div class="rule-caption"><b>Rule <i>#scm-uni</i></b></div>
+</a>
+
+<a class="pos" name="rule-solutions">
+	<h2>Solutions</h2>
+</a>
+
+<p>In this section, we present solutions for the different types of n-ary rules.</p>
+<p> To support rules from <b>(L1)</b> and <b>(L3)</b>, the first solution can be applied. To support rules from <b>(L2)</b>, one of the other three solutions is needed.</p>
+
+<a class="pos" name="mem-fns">
+	<h3>List membership functions</h3>
+</a>
+
+<p>The following two rules infer list membership; i.e., they link each list element (indicated by <i>rdf:first</i>) to all preceding list cells (i.e., blank nodes making up the linked list), meaning that the first cell will be directly linked to all list elements.</p>
+
+$$T(?l, first, ?m) \rightarrow ?T(?l, hasMember, ?m)\\
+T(?l_1, rest, ?l_2), T(?l_2, hasMember, ?m) \rightarrow T(?l_1, hasMember, ?m)$$
+<a class="pos" name="li-mem-rules"><div class="rule-caption"><b>List membership rules</b></div></a>
+
+<p>Using these two rules, rules from <b>(L1)</b> and <b>(L3)</b> can be supported. As an example, using these rules, <i><a href="#scm-uni">#scm-uni</a></i> <b>(L3)</b> may be represented as follows:</p>
+
+$$T(?c, unionOf, ?l), T(?l, hasMember, ?cl) \rightarrow T(?cl, subClassOf, ?c)$$
+<a class="pos" name="scm-uni2"><div class="rule-caption"><b>Rule <i>#scm-uni</i> using list membership rules</b></div></a>
+
+<p>Since the list membership rules link each list element (in this case, union member class) to the first list cell $?l$, the rule will yield inferences for all member classes of the union.</p>
+
+<a class="pos" name="instantiate-rules">
+	<h3>Instantiate n-ary rules</h3>
+</a>
+
+<p>Based on relevant assertions found in the ontology, this solution instantiates rules from <b>(L2)</b>. In particular, an OWL2 RL rule is instantiated for each related assertion (e.g., <i>propertyChainAxiom</i> for rule <i>#prp-spo2</i>), leading to multiple instantiated rules per original rule. In related work, this  kind of instantiation (or "rule-templates") approach is applied for any n-ary rule <a href="#ref1">[1]</a> or even for all (instance-based) OWL2 RL rules <a href="#ref2">[2, 3, 4]</a></p>
+
+<p>A clear drawback of this approach that it requires a pre-processing step for each input ontology. Also, it yields an instantiated rule for each relevant assertion, potentially inflating the ruleset. On the other hand, in case no related assertions are found, this process will not add any rules to the ruleset.</p>
+
+<a class="pos" name="binarize-ontology">
+	<h3>Normalize (or “binarize”) the input ontology</h3>
+</a>
+
+<p>Normalize (or "binarize") the input ontology to only contain binary versions of n-ary assertions relevant to <b>(L2)</b>. For instance, an n-ary intersection can be converted to a set of binary intersections as follows:</p>
+
+$$I = C_1 \cap C_2 \cap ... \cap C_n \equiv \\
+I = C_1 \cap I_1 \wedge I_1 = C_2 \cap I_2 \wedge ... I_{(n-2)} = C_{(n-1)} \cap C_n$$
+<a class="pos" name="binary-n-ary-intersection"><div class="rule-caption"><b>Binary version of an n-ary intersection.</b></div></a>
+
+<p>The binary version of rule <i>#cls-int1</i> looks as follows:</p>
+
+$$T(?c, intersectionOf, ?x), T(?x,hasMember,?c_1), T(?x, hasMember, ?c_2 ),\\
+T(?y, type, ?c_1), T(?y, type, ?c_2) \rightarrow T(?y, type, ?c)$$
+<a class="pos" name="binary-n-ary-rule"><div class="rule-caption"><b>Binary version of rule <i>#cls-int1</i></b></div></a>
+
+<p>This rule may be considered recursive, since it both references and infers the same kind of assertion (i.e., <i>T(?y, type, ?c)</i>). When applying this rule on a set of binary assertions $I_1, I_2, ..., I_{(n-2)}$ &nbsp;, the following holds. For any resource <i>X</i> where $\forall i, n \leq i \leq 2: type(X) = C_i$&nbsp;&nbsp;&nbsp;&nbsp;, the rule infers $\forall i, n-2 \leq i \leq 1: type(X)=I_i$&nbsp;&nbsp;&nbsp;&nbsp;. In doing so, the rule travels up the chain of binary intersections until it infers $type(X) = I_1$&nbsp;&nbsp;. Combined with $type(X) = C_1$&nbsp;&nbsp;&nbsp;, the rule then infers $type(X) = I$&nbsp;&nbsp;.</p>
+
+<p>It is not hard to see how this approach only works for recursive rules, since it relies on producing partial inferences to generate the final inference. Rule <i>#prp-key</i> is not a recursive rule, since it infers equivalence between resources but does not refer to such relations:</p>
+
+$$T(?c, hasKey, ?u), LIST[?u, ?p_1, ..., ?p_n], \\
+T(?x, type, ?c), T(?x, ?p_1, ?z_1), ..., T(?x, ?p_n, ?z_n), \\
+T(?y, type, ?c), T(?y, ?p_1, ?z_1), ..., T(?y, ?p_n, ?z_n)\\
+\rightarrow T(?x, sameAs, ?y)$$
+<a class="pos" name="prp-key"><div class="rule-caption"><b>Rule <i>#prp-key</i>.</b></div></a>
+
+<p>Consequently, this approach only works for rules <i>#prp-spo2</i> and <i>#cls-int1</i> from <b>(L2)</b>. Another drawback is that, similar to <a href="#instantiate-rules">instantiating the rules</a>, it requires pre-processing for each ontology. In particular, each relevant n-ary assertion (size <i>n</i>) needs to be replaced by <i>n-2</i> binarized versions. Further, it generates <i>n-2</i> intermediary inferences for each complete, n-ary inference. Although these are sound inferences, they could be considered to "crowd" the dataset.</p>
+
+<a class="pos" name="auxiliary-rules">
+	<h3>Replace each n-ary rule by 3 auxiliary rules</h3>
+</a>
+
+<p>Replace each rule from <b>(L2)</b> by 3 auxiliary rules. Bishop et al. <a href="#ref5">[5]</a> suggested this solution for OWLIM, based on a W3C note <a href="#ref6">[6]</a>. We show the auxiliary rules for <i>#cls-int</i> below:</p>
+
+$$T(?l, first, ?c), T(?l, rest, nil), T(?y, type, ?c)\\
+\rightarrow T(?y, inIntersection, ?l)\\
+\\
+T(?l, first, ?c), T(?l, rest, ?l_2), T(?y, type, ?c), T(?y, inIntersection, ?l_2) \\
+\rightarrow T(?y, inIntersection, ?l)\\
+\\
+T(?x, intersectionOf, ?l), T(?y, inIntersection, ?l) \rightarrow T(?y, type, ?x)$$
+<a class="pos" name="aux-rules"><div class="rule-caption"><b>Auxiliary rules</b></div></a>
+
+<p>In this solution, a first auxiliary rule starts at the end of any list ($T(?l, rest, nil)$&nbsp;&nbsp;), and infers an intermediary assertion for the last element (cell <i>n</i>). Referencing this first inference, as well as its own, subsequent inferences, a second rule travels up the list structure ($T(?l, rest, ?l_2)$&nbsp;&nbsp;&nbsp;) by inferring similar assertions for cells <i>n-1</i> up until cell <i>1</i>. In case the first cell is related to the relevant assertion (e.g., intersection, property chain or has-key), a third auxiliary rule generates the inference for the original, n-ary assertion.</p>
+
+<p>A distinct advantage of this approach is that, in contrast to <a href="#instantiate-rules">instantiating the rules</a> and <a href="#binarize-ontology">binarizing the ontology</a>, it does not rely on pre-processing. However, each "complete" inference for an n-ary assertion (size <i>n</i>) requires <i>n</i> intermediary inferences, which do not follow from OWL2 RL semantics (instead, they ensue from our custom, auxiliary rules). As such, they can be considered to "pollute" the dataset. Bishop et al. <a href="#ref5">[5]</a> internally flag these inferences so they can be skipped during query answering. Developers may want to support something similar when adopting this solution.</p>
+
+<h2>References</h2>
+<a name="ref1" class="ref"><b>[1]</b> O’Connor, M., Das, A.: A Pair of OWL 2 RL Reasoners. OWL: Experiences and Directions Workshop 2012 (2012).</a><br />
+<a name="ref2" class="ref"><b>[2] </b>Motik, B., Horrocks, I., Kim, S.M.: Delta-reasoner: A Semantic Web Reasoner for an Intelligent Mobile Platform. Proceedings of the 21st International Conference Companion on World Wide Web. pp. 63–72. ACM, New York, NY, USA (2012).</a><br />
+<a name="ref3" class="ref"><b>[3]</b> Meditskos, G., Bassiliades, N.: DLEJena: A Practical Forward-chaining OWL 2 RL Reasoner Combining Jena and Pellet. Web Semant. 8, 89–94 (2010).</a><br />
+<a name="ref4" class="ref"><b>[4]</b> Bak, J., Nowak, M., Jedrzejek, C.: RuQAR: Reasoning Framework for OWL 2 RL Ontologies. The Semantic Web: ESWC 2014 Satellite Events, Anissaras, Crete, Greece, May 25-29, 2014, Revised Selected Papers. pp. 195–198. Springer (2014).</a><br />
+<a name="ref5" class="ref"><b>[5]</b> Bishop, B., Bojanov, S.: Implementing OWL 2 RL and OWL 2 QL Rule-Sets for OWLIM. In: Dumontier, M. and Courtot, M. (eds.) OWLED. CEUR-WS.org (2011).</a><br />
+<a name="ref6" class="ref"><b>[6]</b> Reynolds, D.: OWL 2 RL in RIF (Second Edition), http://www.w3.org/TR/rif-owl-rl/.</a>
+</body>
+</html>

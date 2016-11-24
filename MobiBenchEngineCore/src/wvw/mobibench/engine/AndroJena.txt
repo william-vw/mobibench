@@ -1,0 +1,531 @@
+/**
+ * Copyright 2016 William Van Woensel
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ * 
+ * 
+ * @author wvw
+ * 
+ */
+
+package wvw.mobibench.engine;
+
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
+import com.hp.hpl.jena.graph.query.Expression.Variable;
+import com.hp.hpl.jena.rdf.model.InfModel;
+import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.RDFReader;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.reasoner.Reasoner;
+import com.hp.hpl.jena.reasoner.ReasonerRegistry;
+import com.hp.hpl.jena.reasoner.TriplePattern;
+import com.hp.hpl.jena.reasoner.ValidityReport;
+import com.hp.hpl.jena.reasoner.ValidityReport.Report;
+import com.hp.hpl.jena.reasoner.rulesys.GenericRuleReasoner;
+import com.hp.hpl.jena.reasoner.rulesys.OWLMicroReasonerFactory;
+import com.hp.hpl.jena.reasoner.rulesys.OWLMiniReasonerFactory;
+import com.hp.hpl.jena.reasoner.rulesys.RDFSRuleReasonerFactory;
+import com.hp.hpl.jena.reasoner.rulesys.Rule;
+import com.hp.hpl.jena.vocabulary.ReasonerVocabulary;
+
+import wvw.mobibench.config.ProcessFlows;
+import wvw.mobibench.config.data.DataFormats;
+import wvw.mobibench.config.data.DatasetConfig;
+import wvw.mobibench.config.data.DatasetConfigContainer;
+import wvw.mobibench.config.engine.EngineConfig;
+import wvw.mobibench.config.engine.EngineReasoningConfig;
+import wvw.mobibench.config.engine.res.EngineDatasetConfig;
+import wvw.mobibench.config.engine.res.EngineRulesetConfig;
+import wvw.mobibench.config.reason.MechanismTypes;
+import wvw.mobibench.config.reason.ReasoningConfig;
+import wvw.mobibench.config.reason.ReasoningMechanism;
+import wvw.mobibench.config.reason.ReasoningOption;
+import wvw.mobibench.config.reason.ReasoningScope;
+import wvw.mobibench.config.reason.ScopeTypes;
+import wvw.mobibench.config.reason.TaskTypes;
+import wvw.mobibench.config.rules.RuleFormats;
+import wvw.mobibench.config.rules.RulesetConfig;
+import wvw.mobibench.config.rules.RulesetConfigContainer;
+import wvw.mobibench.exception.BenchmarkException;
+import wvw.mobibench.exception.OperationNotSupportedException;
+import wvw.mobibench.results.ExperimentResults;
+import wvw.mobibench.results.InferenceResults;
+import wvw.mobibench.results.OntologyInferenceResults;
+import wvw.mobibench.timer.EngineExperimentTimer;
+import wvw.mobibench.timer.EngineResultTimes;
+import wvw.utils.log2.Log;
+
+public class AndroJena extends ReasoningEngine {
+
+	private Model model = null;
+	private InfModel infModel = null;
+
+	private RulesetConfig prevRuleset = null;
+
+	public AndroJena() {
+		super("AndroJena");
+	}
+
+	protected EngineConfig createEngineConfig() {
+		EngineRulesetConfig ruleConfig = new EngineRulesetConfig(
+				RuleFormats.Jena);
+		EngineDatasetConfig dataConfig = new EngineDatasetConfig(
+				DataFormats.RDF, false);
+
+		EngineReasoningConfig reasonConfig = new EngineReasoningConfig();
+
+		// - rules_inference
+		ReasoningMechanism rulesMech = new ReasoningMechanism(MechanismTypes.BUILTIN,
+				ProcessFlows.load_data_exec_rules);
+
+		reasonConfig.addMechanism(TaskTypes.RULE_INFERENCE, rulesMech);
+
+		// - ontology_inference
+
+		// -- builtin
+		ReasoningMechanism owlMech = new ReasoningMechanism(MechanismTypes.BUILTIN);
+		owlMech.addScope(new ReasoningScope(ScopeTypes.OWL,
+				new ReasoningOption("full"), new ReasoningOption("mini"), new ReasoningOption(
+						"micro")));
+		owlMech.addScope(new ReasoningScope(ScopeTypes.RDFS,
+				new ReasoningOption("full"), new ReasoningOption("default"), new ReasoningOption(
+						"simple")));
+
+		reasonConfig.addMechanism(TaskTypes.ONTOLOGY_INFERENCE, owlMech);
+
+		return new EngineConfig(ruleConfig, dataConfig, reasonConfig);
+	}
+
+	public void init() {
+	}
+
+	public void reset() {
+		if (model != null) {
+			model.close();
+
+			model = null;
+		}
+
+		if (infModel != null) {
+			infModel.close();
+
+			infModel = null;
+		}
+	}
+
+	public EngineResultTimes loadData(ReasoningConfig rConfig, DatasetConfigContainer datasetContainer)
+			throws BenchmarkException {
+
+		return loadData(rConfig, datasetContainer, new EngineExperimentTimer("loadData"));
+	}
+
+	public EngineResultTimes loadData(ReasoningConfig rConfig, DatasetConfigContainer datasetContainer,
+			EngineExperimentTimer timer) throws BenchmarkException {
+
+		Log.d("AndroJena.loadData:start");
+		DatasetConfig dataset = datasetContainer.getConfig();
+
+		// NOTE loading data includes creating model objects as well
+		timer.begin();
+
+		// for loading multiple datasets into the same model
+		if (model == null)
+			model = ModelFactory.createDefaultModel();
+
+		// this would make measuring reasoning times inaccurate
+		// (rebind needs to have an effect)
+		// Model curModel;
+		// if (infModel != null)
+		// curModel = infModel;
+		// else
+		// curModel = model;
+
+		String triples = dataset.getDataString();
+		// Log.d("triples: " + triples);
+
+		RDFReader reader = model.getReader(dataset.getRdfSyntax().toString());
+		reader.read(model, new StringReader(triples), "");
+
+		timer.done();
+
+		Log.d("AndroJena.loadData:end");
+
+		return (EngineResultTimes) timer.getTimes();
+	}
+
+	public ExperimentResults executeRules(ReasoningConfig rConfig,
+			RulesetConfigContainer rulesetContainer) throws BenchmarkException {
+
+		EngineResultTimes resultTimes = new EngineResultTimes();
+
+		RulesetConfig ruleset = rulesetContainer.getConfig();
+
+		Log.d("AndroJena.executeRules:start");
+
+		EngineExperimentTimer timer;
+		Model dedModel = null;
+
+		// either first time reasoning, or ruleset has changed
+		if (infModel == null || !prevRuleset.equals(ruleset)) {
+			timer = new EngineExperimentTimer("createRules", resultTimes);
+
+			// Log.d("rules: " + ruleset.getRulesString());
+
+			timer.begin();
+			List<Rule> rules = Rule.parseRules(ruleset.getRulesString());
+			Log.d("# parsed rules: " + rules.size());
+			timer.done();
+
+			timer = new EngineExperimentTimer("executeRules", resultTimes);
+
+			timer.begin();
+			GenericRuleReasoner reasoner = new GenericRuleReasoner(rules);
+
+			// first time reasoning
+			if (infModel == null) {
+				Log.d("> first time reasoning");
+
+				infModel = ModelFactory.createInfModel(reasoner, model);
+
+				// reasoning occurred before & ruleset has changed; so, create
+				// new InfModel with new ruleset, given data from previous
+				// InfModel
+			} else {
+				Log.d("> reasoning occurred before, but ruleset has changed");
+
+				// NOTE both "methods" have the same effect
+				// (1)
+				// Model temp = ModelFactory.createDefaultModel();
+				// temp.add(infModel.getDeductionsModel());
+				// temp.add(model);
+				//
+				// infModel = ModelFactory.createInfModel(reasoner, temp);
+
+				// (2)
+				infModel = ModelFactory.createInfModel(reasoner, infModel);
+			}
+
+			dedModel = infModel.getDeductionsModel();
+			timer.done();
+
+			prevRuleset = ruleset;
+
+		} else {
+			// reasoning occurred before and ruleset is still the same;
+			// simply ask infModel to consider newly added data via rebind()
+			Log.d("> reasoning occurred before & ruleset still the same");
+
+			new EngineExperimentTimer("createRules", resultTimes).none();
+			timer = new EngineExperimentTimer("executeRules", resultTimes);
+
+			timer.begin();
+			infModel.rebind();
+
+			dedModel = infModel.getDeductionsModel();
+			timer.done();
+		}
+
+		timer = new EngineExperimentTimer("collectInferred", resultTimes);
+
+		timer.begin();
+		// model as argument when recording inferences 
+		// (e.g., for capturing materialized datasets)
+		List<String> inferred = collectTriples(infModel);
+		timer.done();
+
+		// cannot be closed (else exception)
+		// dedModel.close();
+
+		Log.d("AndroJena.executeRules:end");
+
+		return new InferenceResults(resultTimes, inferred);
+	}
+
+	public EngineResultTimes loadRules(ReasoningConfig rConfig, RulesetConfigContainer rulesetContainer)
+			throws BenchmarkException {
+
+		throw new OperationNotSupportedException("execute");
+	}
+
+	public ExperimentResults execute(ReasoningConfig rConfig)
+			throws BenchmarkException {
+
+		throw new OperationNotSupportedException("execute");
+	}
+
+	public ExperimentResults inference(ReasoningConfig rConfig,
+			DatasetConfigContainer ontologyContainer) throws BenchmarkException {
+
+		Log.d("AndroJena.inference:start");
+
+		OntologyInferenceResults expResults = new OntologyInferenceResults();
+
+		EngineResultTimes resultTimes = new EngineResultTimes();
+		expResults.setResultTimes(resultTimes);
+
+		loadData(rConfig, ontologyContainer, new EngineExperimentTimer("loadOntology",
+				resultTimes));
+
+		EngineExperimentTimer timer = new EngineExperimentTimer("inference", resultTimes);
+
+		if (infModel == null) {
+			Log.d("> first time reasoning");
+
+			ReasoningScope scope = rConfig.getScope();
+
+			ReasoningOption option = scope.getOptions().next();
+			Log.d("option: " + option.getLabel());
+
+			Reasoner reasoner = null;
+			Resource config = null;
+
+			switch (scope.getType()) {
+			case OWL:
+				timer.begin();
+
+				// options: full, mini, micro
+				if (option.getLabel().equals("full"))
+					reasoner = ReasonerRegistry.getOWLReasoner();
+
+				else {
+					config = ModelFactory.createDefaultModel().createResource();
+
+					if (option.getLabel().equals("mini"))
+						reasoner = OWLMiniReasonerFactory.theInstance().create(
+								config);
+
+					else if (option.getLabel().equals("micro"))
+						reasoner = OWLMicroReasonerFactory.theInstance()
+								.create(config);
+				}
+
+				break;
+
+			case RDFS:
+				timer.begin();
+
+				config = ModelFactory
+						.createDefaultModel()
+						.createResource()
+						.addProperty(ReasonerVocabulary.PROPsetRDFSLevel,
+								option.getLabel()); // options: full, default,
+													// simple
+
+				reasoner = RDFSRuleReasonerFactory.theInstance().create(config);
+
+				break;
+				
+			default:
+				break;
+			}
+
+			infModel = ModelFactory.createInfModel(reasoner, model);
+
+		} else {
+			Log.d("> reasoning occurred before");
+
+			timer.begin();
+
+			// NOTE possible that reasoning is step is comprised in loading
+			// step, in case data is added directly to InfModel
+			// From website:
+			// There are times when the data in a model bound into an InfModel
+			// can is changed "behind the scenes" instead of through calls to
+			// the InfModel. If this occurs the result of future queries to the
+			// InfModel are unpredictable. To overcome this and force the Inf-
+			// Model to reconsult the raw data use the InfModel.rebind() call.
+			infModel.rebind();
+		}
+
+		checkConsistency(expResults);
+
+		Model dedModel = infModel.getDeductionsModel();
+		timer.done();
+
+		EngineExperimentTimer timer2 = new EngineExperimentTimer("collectInferred", resultTimes);
+		timer2.begin();
+
+		expResults.setInferred(collectTriples(infModel));
+		timer2.done();
+
+		Log.d("AndroJena.inference:end");
+
+		return expResults;
+	}
+
+	private void checkConsistency(OntologyInferenceResults expResults)
+			throws BenchmarkException {
+
+		EngineExperimentTimer timer = new EngineExperimentTimer("consistency",
+				expResults.getResultTimes());
+
+		timer.begin();
+		ValidityReport validity = infModel.validate();
+
+		// NOTE code below has ~0 execution time
+		if (validity.isValid()) {
+			expResults.setConsistent(true);
+
+		} else {
+			expResults.setConsistent(false);
+
+			String conflicts = "";
+			for (Iterator<Report> i = validity.getReports(); i.hasNext();) {
+				ValidityReport.Report report = (ValidityReport.Report) i.next();
+
+				conflicts += report + "\n";
+			}
+
+			expResults.setConflicts(conflicts);
+		}
+
+		timer.done();
+	}
+
+	public ExperimentResults entails(ReasoningConfig rConfig,
+			DatasetConfigContainer ontology1, DatasetConfigContainer ontology2)
+			throws BenchmarkException {
+
+		throw new OperationNotSupportedException("entails");
+	}
+
+	private List<String> collectTriples(Model model) {
+		List<String> inferred = new ArrayList<String>();
+
+		StmtIterator stmtIt = model.listStatements();
+		while (stmtIt.hasNext()) {
+			Statement stmt = stmtIt.next();
+
+			inferred.add(toComposedString(
+					new RDFNode[] { stmt.getSubject(), stmt.getPredicate(), stmt.getObject() },
+					true));
+		}
+
+		return inferred;
+	}
+
+	// - utils
+
+	private String toString(Resource res) {
+		// variable
+		if (res.getURI() == null)
+			return res.toString();
+
+		return "<" + res.getURI() + ">";
+	}
+
+	public String toString(Literal lit, boolean dataType,
+			boolean doubleEscape) {
+		String str = "\"" + lit.getValue() + "\"";
+		if (doubleEscape)
+			str = doubleEscape(str);
+
+		if (dataType && lit.getDatatypeURI() != null)
+			str += "^^<" + lit.getDatatypeURI() + ">";
+
+		return str;
+	}
+
+	public List<String> toStringList(RDFNode[] nodes, boolean dataType) {
+		return toStringList(Arrays.asList(nodes), dataType);
+	}
+
+	public List<String> toStringList(List<RDFNode> nodes, boolean dataType) {
+		List<String> strs = new ArrayList<String>();
+
+		for (RDFNode node : nodes)
+			strs.add(toString(node, dataType));
+
+		return strs;
+	}
+
+	public String toComposedString(RDFNode[] nodes, boolean dataType) {
+		return toComposedString(Arrays.asList(nodes), dataType);
+	}
+
+	public String toComposedString(List<RDFNode> nodes, boolean dataType) {
+		String str = "";
+
+		for (RDFNode node : nodes)
+			str += toString(node, dataType) + " ";
+
+		return str.substring(0, str.length() - 1) + " .";
+	}
+
+	public String toString(RDFNode node) {
+		return toString(node, true, false);
+	}
+
+	public String toString(RDFNode node, boolean dataType) {
+		return toString(node, dataType, false);
+	}
+
+	public String toString(RDFNode node, boolean dataType,
+			boolean doubleEscape) {
+
+		if (node instanceof Variable)
+			return node.toString();
+
+		else if (node.isResource())
+			return toString((Resource) node);
+
+		else if (node.isLiteral())
+			return toString((Literal) node, dataType, doubleEscape);
+
+		return null;
+	}
+
+	public RDFNode[] toRDFNodeArray(TriplePattern triplePattern) {
+		return new RDFNode[] { (RDFNode) triplePattern.getSubject(),
+				(RDFNode) triplePattern.getPredicate(), (RDFNode) triplePattern.getObject() };
+	}
+
+	public String doubleEscape(String str) {
+		return str.replaceAll("\"", "\\\\\"");
+
+	}
+
+	public String toListString(List<String> nodes) {
+		String nodesStr = nodes.toString();
+
+		return "(" + nodesStr.substring(1, nodesStr.length() - 1) + ")";
+	}
+
+	public String toRDF(List<String> triples) {
+		String rdf = "";
+		for (String triple : triples)
+			rdf += triple + "\n";
+
+		return rdf;
+	}
+
+	public String convertBNodes(String str) {
+		return str.replaceAll("[^:\\s\\(]+:[^:\\s]+:[^\\s]+\\s", "_:b0 ");
+	}
+
+	public String normalizeIntDatatypes(String str) {
+		return str.replaceAll(
+				"\\^\\^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger>",
+				"^^<http://www.w3.org/2001/XMLSchema#int>");
+	}
+}

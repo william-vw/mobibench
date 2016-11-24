@@ -1,0 +1,135 @@
+/**
+ * Copyright 2016 William Van Woensel
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ * 
+ * 
+ * @author wvw
+ * 
+ */
+
+package wvw.mobibench.engine;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
+import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
+import org.semanticweb.owlapi.reasoner.SimpleConfiguration;
+import org.semanticweb.owlapi.util.InferredAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredClassAssertionAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredDataPropertyCharacteristicAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredDisjointClassesAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredEquivalentClassAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredEquivalentDataPropertiesAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredEquivalentObjectPropertyAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredInverseObjectPropertiesAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredObjectPropertyCharacteristicAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredPropertyAssertionGenerator;
+import org.semanticweb.owlapi.util.InferredSubClassAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredSubDataPropertyAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredSubObjectPropertyAxiomGenerator;
+
+import uk.ac.manchester.cs.jfact.JFactFactory;
+import wvw.mobibench.config.data.DataFormats;
+import wvw.mobibench.config.engine.EngineConfig;
+import wvw.mobibench.config.engine.EngineReasoningConfig;
+import wvw.mobibench.config.engine.res.EngineDatasetConfig;
+import wvw.mobibench.config.reason.MechanismTypes;
+import wvw.mobibench.config.reason.ReasoningConfig;
+import wvw.mobibench.config.reason.ReasoningMechanism;
+import wvw.mobibench.config.reason.ReasoningScope;
+import wvw.mobibench.config.reason.ScopeTypes;
+import wvw.mobibench.config.reason.TaskTypes;
+
+public class JFact extends OWLAPIEngine {
+
+	// NOTE for JFact, pre-computing inferences always includes checking
+	// consistency (exceptions are thrown for inconsistent ontologies)
+
+	// NOTE not possible to set option to ignore inconsistent ontologies in
+	// config (cfr. HermiT), so not possible to get consistency explanations
+
+	// NOTE tried using incremental classification with JFact, but no
+	// results are returned
+
+	public JFact() {
+		super("JFact", false);
+	}
+
+	protected EngineConfig createEngineConfig() {
+		EngineDatasetConfig dataConfig = new EngineDatasetConfig(DataFormats.RDF);
+
+		// > reasoning
+
+		EngineReasoningConfig reasonConfig = new EngineReasoningConfig();
+
+		// - ontology_inference
+
+		// -- builtin
+		ReasoningMechanism owlMech = new ReasoningMechanism(MechanismTypes.BUILTIN);
+		owlMech.addScope(new ReasoningScope(ScopeTypes.FULL));
+
+		reasonConfig.addMechanism(TaskTypes.ONTOLOGY_INFERENCE, owlMech);
+
+		// ReasoningMechanism smMech = new ReasoningMechanism(MechanismTypes.ENTAILMENT);
+		// reasonConfig.addMechanism(TaskTypes.SERVICE_MATCH, smMech);
+		
+		return new EngineConfig(dataConfig, reasonConfig);
+	}
+	
+	protected OWLReasoner createReasoner(OWLOntology ontology) {
+		OWLReasonerFactory reasonerFactory = new JFactFactory();
+
+		OWLReasonerConfiguration config = new SimpleConfiguration(50000);
+		return reasonerFactory.createReasoner(ontology, config);
+	}
+
+	protected List<InferredAxiomGenerator<? extends OWLAxiom>> getInferredAxiomGenerators(
+			ReasoningConfig rConfig) {
+
+		List<InferredAxiomGenerator<? extends OWLAxiom>> generators =
+				new ArrayList<InferredAxiomGenerator<? extends OWLAxiom>>();
+
+		switch (rConfig.getScope().getType()) {
+
+		case FULL:
+			// InferredClassAxiomGenerator subclasses
+			generators.add(new InferredDisjointClassesAxiomGenerator());
+			generators.add(new InferredEquivalentClassAxiomGenerator());
+			generators.add(new InferredSubClassAxiomGenerator());
+			// InferredDataPropertyAxiomGenerator subclasses
+			generators.add(new InferredDataPropertyCharacteristicAxiomGenerator());
+			generators.add(new InferredEquivalentDataPropertiesAxiomGenerator());
+			generators.add(new InferredSubDataPropertyAxiomGenerator());
+			// InferredIndividualAxiomGenerator subclasses
+			generators.add(new InferredClassAssertionAxiomGenerator());
+			generators.add(new InferredPropertyAssertionGenerator());
+			// InferredObjectPropertyAxiomGenerator subclasses
+			generators.add(new InferredEquivalentObjectPropertyAxiomGenerator());
+			generators.add(new InferredInverseObjectPropertiesAxiomGenerator());
+			generators.add(new InferredObjectPropertyCharacteristicAxiomGenerator());
+			generators.add(new InferredSubObjectPropertyAxiomGenerator());
+
+			break;
+
+		default:
+			return super.getInferredAxiomGenerators(rConfig);
+		}
+
+		return generators;
+	}
+}

@@ -1,0 +1,42 @@
+- These cases rely on datatype-related OWL2 RL rules, which require internal datatype support that is not available for all rule engines. Since these rules were left out, the following test cases needed to be removed:
+	rdfbased-dat-crossdtype-instance-dtype
+	rdfbased-dat-crossdtype-noinstance
+	rdfbased-dat-dtype-*
+	rdfbased-dat-crossdtype-instance-rdfsliteral
+	rdfbased-ont-graph-form (also requires support for datatypes)
+
+- Similarly, these tests rely on the character sets supported by rule engines. Since such support cannot be assumed in general, the following test cases were left out:
+	rdfbased-ont-iri-ascii
+	rdfbased-ont-iri-nonascii
+
+- It is impractical to systematically test these cases, since they do not involve generating new inferences that can be compared to their expected output (also, they are trivially supported by any kind of rule engine):
+	rdfbased-sem-simple-subgraph-self
+	rdfbased-sem-simple-emptygraph-any
+	rdfbased-sem-simple-subgraph-any
+	rdfbased-sem-simple-emptygraph-self
+	rdfbased-ont-graph-permutation
+	rdfbased-ont-graph-singleton
+	rdfbased-xtr-subgraph-incomplete
+	rdfbased-ont-graph-empty
+	rdfbased-ont-graph-allsame
+
+- Aside from not generating any inferences, these test cases are already directly supported by our axiom set and will thus always be met:
+	rdfbased-sem-class-literal-type
+	rdfbased-sem-class-nothing-type
+	rdfbased-sem-class-thing-type
+	rdfbased-sem-prop-backwardcompatiblewith-type-annot
+	rdfbased-sem-prop-comment-type
+	rdfbased-sem-prop-deprecated-type
+	rdfbased-sem-prop-incompatiblewith-type-annot
+	rdfbased-sem-prop-isdefinedby-type
+	rdfbased-sem-prop-label-type
+	rdfbased-sem-prop-priorversion-type-annot
+	rdfbased-sem-prop-seealso-type
+	rdfbased-sem-prop-versioninfo-type
+
+- To the best of our knowledge, these test cases are not covered by the current OWL2 RL ruleset, and were thus left out:
+	rdfbased-xtr-metamodel-class-sameiff
+	rdfbased-xtr-metamodel-prop-sameiff
+	rdfbased-xtr-constraint-anonind-axioms
+	rdfbased-xtr-subgraph-monotonic
+	rdfbased-xtr-reflection-selfsame

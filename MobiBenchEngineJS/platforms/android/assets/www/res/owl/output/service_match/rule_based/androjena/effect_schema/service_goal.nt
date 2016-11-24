@@ -1,0 +1,76 @@
+id: bookpersoncreditaccount__Beaservice>bookpersoncreditcardaccount__service
+<http://127.0.0.1/service#bookpersoncreditaccount__Beaservice> <http://127.0.0.1/matches> "true" .
+
+
+id: bookpersoncreditaccount__service>bookpersoncreditcardaccount__service
+<http://127.0.0.1/service#bookpersoncreditaccount__service> <http://127.0.0.1/matches> "true" .
+
+
+id: bookpersoncreditcardaccount__BShopservice>bookpersoncreditcardaccount__service
+<http://127.0.0.1/service#bookpersoncreditcardaccount__BShopservice> <http://127.0.0.1/matches> "true" .
+
+
+id: bookpersoncreditcardaccount__service>bookpersoncreditcardaccount__service
+<http://127.0.0.1/service#bookpersoncreditcardaccount__service> <http://127.0.0.1/matches> "true" .
+
+
+id: bookperson__service>bookpersoncreditcardaccount__service
+<http://127.0.0.1/service#bookperson__service> <http://127.0.0.1/matches> "true" .
+
+
+id: book__ShoppingCartservice>bookpersoncreditcardaccount__service
+<http://127.0.0.1/service#book__ShoppingCartservice> <http://127.0.0.1/matches> "true" .
+
+
+id: EBookOrder1>EBookOrder1
+<http://127.0.0.1/service#EBookOrder1> <http://127.0.0.1/matches> "true" .
+
+
+id: EBookOrder2>EBookOrder1
+<http://127.0.0.1/service#EBookOrder2> <http://127.0.0.1/matches> "true" .
+
+
+id: EBookOrder3>EBookOrder1
+<http://127.0.0.1/service#EBookOrder3> <http://127.0.0.1/matches> "true" .
+
+
+id: fall_down_pill>fall_down_pill
+<http://127.0.0.1/service#fall_down_pill> <http://127.0.0.1/matches> "true" .
+
+
+id: lock_door>lock_door
+<http://127.0.0.1/service#lock_door> <http://127.0.0.1/matches> "true" .
+
+
+id: monographperson__service>bookpersoncreditcardaccount__service
+<http://127.0.0.1/service#monographperson__service> <http://127.0.0.1/matches> "true" .
+
+
+id: objectperson__service>bookpersoncreditcardaccount__service
+<http://127.0.0.1/service#objectperson__service> <http://127.0.0.1/matches> "true" .
+
+
+id: open_door>open_door
+<http://127.0.0.1/service#open_door> <http://127.0.0.1/matches> "true" .
+
+
+id: personbookliabilityaccount__service>bookpersoncreditcardaccount__service
+<http://127.0.0.1/service#personbookliabilityaccount__service> <http://127.0.0.1/matches> "true" .
+
+
+id: personmonographcreditcardaccount__service>bookpersoncreditcardaccount__service
+<http://127.0.0.1/service#personmonographcreditcardaccount__service> <http://127.0.0.1/matches> "true" .
+
+
+id: printedmaterialpersoncreditcardaccount__service>bookpersoncreditcardaccount__service
+<http://127.0.0.1/service#printedmaterialpersoncreditcardaccount__service> <http://127.0.0.1/matches> "true" .
+
+
+id: printedmaterialperson__service>bookpersoncreditcardaccount__service
+<http://127.0.0.1/service#printedmaterialperson__service> <http://127.0.0.1/matches> "true" .
+
+
+id: publicationperson__service>bookpersoncreditcardaccount__service
+<http://127.0.0.1/service#publicationperson__service> <http://127.0.0.1/matches> "true" .
+
+

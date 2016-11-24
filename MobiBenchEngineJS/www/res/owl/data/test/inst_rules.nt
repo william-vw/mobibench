@@ -1,0 +1,65 @@
+<http://niche.cs.dal.ca/owl/I1> <http://www.w3.org/2002/07/owl#intersectionOf> <http://niche.cs.dal.ca/owl/I1_L1> .
+<http://niche.cs.dal.ca/owl/I1_L1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://niche.cs.dal.ca/owl/I1_E1> .
+<http://niche.cs.dal.ca/owl/I1_L1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://niche.cs.dal.ca/owl/I1_L2> .
+<http://niche.cs.dal.ca/owl/I1_L2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://niche.cs.dal.ca/owl/I1_E2> .
+<http://niche.cs.dal.ca/owl/I1_L2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://niche.cs.dal.ca/owl/I1_L3> .
+<http://niche.cs.dal.ca/owl/I1_L3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://niche.cs.dal.ca/owl/I1_E3> .
+<http://niche.cs.dal.ca/owl/I1_L3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://niche.cs.dal.ca/owl/I1_L4> .
+<http://niche.cs.dal.ca/owl/I1_L4> <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://niche.cs.dal.ca/owl/I1_E4> .
+<http://niche.cs.dal.ca/owl/I1_L4> <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://niche.cs.dal.ca/owl/I1_L5> .
+<http://niche.cs.dal.ca/owl/I1_L5> <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://niche.cs.dal.ca/owl/I1_E5> .
+<http://niche.cs.dal.ca/owl/I1_L5> <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+
+<http://niche.cs.dal.ca/owl/I1_Y> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl/I1_E1> .
+<http://niche.cs.dal.ca/owl/I1_Y> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl/I1_E2> .
+<http://niche.cs.dal.ca/owl/I1_Y> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl/I1_E3> .
+<http://niche.cs.dal.ca/owl/I1_Y> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl/I1_E4> .
+<http://niche.cs.dal.ca/owl/I1_Y> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl/I1_E5> .
+
+
+<http://niche.cs.dal.ca/owl/I2> <http://www.w3.org/2002/07/owl#intersectionOf> <http://niche.cs.dal.ca/owl/I2_L1> .
+<http://niche.cs.dal.ca/owl/I2_L1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://niche.cs.dal.ca/owl/I2_E1> .
+<http://niche.cs.dal.ca/owl/I2_L1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://niche.cs.dal.ca/owl/I2_L2> .
+<http://niche.cs.dal.ca/owl/I2_L2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://niche.cs.dal.ca/owl/I2_E2> .
+<http://niche.cs.dal.ca/owl/I2_L2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+
+<http://niche.cs.dal.ca/owl/I2_Y> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl/I2_E1> .
+<http://niche.cs.dal.ca/owl/I2_Y> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl/I2_E2> .
+
+
+<http://niche.cs.dal.ca/owl/I3> <http://www.w3.org/2002/07/owl#intersectionOf> <http://niche.cs.dal.ca/owl/I3_L1> .
+<http://niche.cs.dal.ca/owl/I3_L1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://niche.cs.dal.ca/owl/I3_E1> .
+<http://niche.cs.dal.ca/owl/I3_L1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+
+<http://niche.cs.dal.ca/owl/I3_Y> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl/I3_E1> .
+
+
+<http://niche.cs.dal.ca/owl/P1> <http://www.w3.org/2002/07/owl#propertyChainAxiom> <http://niche.cs.dal.ca/owl/P1_L1> .
+<http://niche.cs.dal.ca/owl/P1_L1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://niche.cs.dal.ca/owl/P1_E1> .
+<http://niche.cs.dal.ca/owl/P1_L1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://niche.cs.dal.ca/owl/P1_L2> .
+<http://niche.cs.dal.ca/owl/P1_L2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://niche.cs.dal.ca/owl/P1_E2> .
+<http://niche.cs.dal.ca/owl/P1_L2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://niche.cs.dal.ca/owl/P1_L3> .
+<http://niche.cs.dal.ca/owl/P1_L3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://niche.cs.dal.ca/owl/P1_E3> .
+<http://niche.cs.dal.ca/owl/P1_L3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+
+<http://niche.cs.dal.ca/owl/P1_X1> <http://niche.cs.dal.ca/owl/P1_E1> <http://niche.cs.dal.ca/owl/P1_X2> .
+<http://niche.cs.dal.ca/owl/P1_X2> <http://niche.cs.dal.ca/owl/P1_E2> <http://niche.cs.dal.ca/owl/P1_X3> .
+<http://niche.cs.dal.ca/owl/P1_X3> <http://niche.cs.dal.ca/owl/P1_E3> <http://niche.cs.dal.ca/owl/P1_X4> .
+
+
+<http://niche.cs.dal.ca/owl/K1> <http://www.w3.org/2002/07/owl#hasKey> <http://niche.cs.dal.ca/owl/K1_L1> .
+<http://niche.cs.dal.ca/owl/K1_L1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://niche.cs.dal.ca/owl/K1_E1> .
+<http://niche.cs.dal.ca/owl/K1_L1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://niche.cs.dal.ca/owl/K1_L2> .
+<http://niche.cs.dal.ca/owl/K1_L2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://niche.cs.dal.ca/owl/K1_E2> .
+<http://niche.cs.dal.ca/owl/K1_L2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://niche.cs.dal.ca/owl/K1_L3> .
+<http://niche.cs.dal.ca/owl/K1_L3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://niche.cs.dal.ca/owl/K1_E3> .
+<http://niche.cs.dal.ca/owl/K1_L3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+
+<http://niche.cs.dal.ca/owl/K1_X> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl/K1> .
+<http://niche.cs.dal.ca/owl/K1_Y> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl/K1> .
+<http://niche.cs.dal.ca/owl/K1_X> <http://niche.cs.dal.ca/owl/K1_E1> <http://niche.cs.dal.ca/owl/Z1> .
+<http://niche.cs.dal.ca/owl/K1_Y> <http://niche.cs.dal.ca/owl/K1_E1> <http://niche.cs.dal.ca/owl/Z1> .
+<http://niche.cs.dal.ca/owl/K1_X> <http://niche.cs.dal.ca/owl/K1_E2> <http://niche.cs.dal.ca/owl/Z2> .
+<http://niche.cs.dal.ca/owl/K1_Y> <http://niche.cs.dal.ca/owl/K1_E2> <http://niche.cs.dal.ca/owl/Z2> .
+<http://niche.cs.dal.ca/owl/K1_X> <http://niche.cs.dal.ca/owl/K1_E3> <http://niche.cs.dal.ca/owl/Z3> .
+<http://niche.cs.dal.ca/owl/K1_Y> <http://niche.cs.dal.ca/owl/K1_E3> <http://niche.cs.dal.ca/owl/Z3> .

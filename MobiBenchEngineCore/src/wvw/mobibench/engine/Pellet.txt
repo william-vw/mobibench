@@ -1,0 +1,811 @@
+/**
+ * Copyright 2016 William Van Woensel
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ * 
+ * 
+ * @author wvw
+ * 
+ */
+
+package wvw.mobibench.engine;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import org.mindswap.pellet.KBLoader;
+import org.mindswap.pellet.KRSSLoader;
+import org.mindswap.pellet.KnowledgeBase;
+import org.mindswap.pellet.jena.JenaLoader;
+import org.mindswap.pellet.jena.ModelExtractor;
+import org.mindswap.pellet.jena.ModelExtractor.StatementType;
+import org.mindswap.pellet.jena.PelletReasonerFactory;
+import org.mindswap.pellet.taxonomy.Taxonomy;
+import org.mindswap.pellet.taxonomy.printer.ClassTreePrinter;
+import org.mindswap.pellet.taxonomy.printer.TaxonomyPrinter;
+import org.mindswap.pellet.utils.SetUtils;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLException;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyChange;
+
+import com.clarkparsia.modularity.IncrementalClassifier;
+import com.clarkparsia.modularity.OntologyDiff;
+import com.clarkparsia.modularity.io.IncrementalClassifierPersistence;
+import com.clarkparsia.pellet.owlapiv3.EntailmentChecker;
+import com.clarkparsia.pellet.owlapiv3.OWLAPILoader;
+import com.clarkparsia.pellet.owlapiv3.OWLClassTreePrinter;
+import com.clarkparsia.pellet.owlapiv3.PelletReasoner;
+import com.hp.hpl.jena.rdf.model.InfModel;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.RDFReaderF;
+import com.hp.hpl.jena.reasoner.Reasoner;
+import com.hp.hpl.jena.reasoner.ValidityReport;
+import com.hp.hpl.jena.shared.NoReaderForLangException;
+
+import wvw.mobibench.config.data.DataFormats;
+import wvw.mobibench.config.data.DatasetConfig;
+import wvw.mobibench.config.data.DatasetConfigContainer;
+import wvw.mobibench.config.engine.EngineConfig;
+import wvw.mobibench.config.engine.EngineReasoningConfig;
+import wvw.mobibench.config.engine.res.EngineDatasetConfig;
+import wvw.mobibench.config.reason.MechanismTypes;
+import wvw.mobibench.config.reason.ReasoningConfig;
+import wvw.mobibench.config.reason.ReasoningMechanism;
+import wvw.mobibench.config.reason.ReasoningOption;
+import wvw.mobibench.config.reason.ReasoningScope;
+import wvw.mobibench.config.reason.ScopeTypes;
+import wvw.mobibench.config.reason.TaskTypes;
+import wvw.mobibench.config.rules.RulesetConfigContainer;
+import wvw.mobibench.exception.BenchmarkException;
+import wvw.mobibench.exception.OperationNotSupportedException;
+import wvw.mobibench.results.EntailmentResults;
+import wvw.mobibench.results.ExperimentResults;
+import wvw.mobibench.results.OntologyInferenceResults;
+import wvw.mobibench.timer.EngineExperimentTimer;
+import wvw.mobibench.timer.EngineResultTimes;
+import wvw.mobibench.wrap.Env;
+import wvw.utils.log2.Log;
+
+public class Pellet extends ReasoningEngine {
+
+	private InfModel model;
+	private KnowledgeBase kb;
+
+	private RDFReaderF readerFactory = ModelFactory.createDefaultModel();
+
+	private File stateFile;
+	private DatasetConfig prevOntology;
+
+	public Pellet() {
+		super("Pellet");
+	}
+
+	protected EngineConfig createEngineConfig() {
+		EngineDatasetConfig dataConfig = new EngineDatasetConfig(
+				DataFormats.RDF, false);
+
+		EngineReasoningConfig reasonConfig = new EngineReasoningConfig();
+
+		// - ontology_inference
+
+		// -- builtin
+		ReasoningMechanism owlMech = new ReasoningMechanism(
+				MechanismTypes.BUILTIN);
+		owlMech.addScope(new ReasoningScope(ScopeTypes.OWL,
+				new ReasoningOption("default"), new ReasoningOption("ont"),
+				new ReasoningOption("owlapiv3")));
+
+		owlMech.addScope(new ReasoningScope(ScopeTypes.CLASS,
+				new ReasoningOption("owlapiv3")));
+
+		reasonConfig.addMechanism(TaskTypes.ONTOLOGY_INFERENCE, owlMech);
+
+		// ReasoningMechanism smMech = new
+		// ReasoningMechanism(MechanismTypes.ENTAILMENT);
+		// reasonConfig.addMechanism(TaskTypes.SERVICE_MATCH, smMech);
+
+		return new EngineConfig(dataConfig, reasonConfig);
+	}
+
+	public void init() {
+	}
+
+	public void reset() {
+		readerFactory = null;
+
+		if (stateFile != null) {
+			Log.d("deleted incremental classifier state: "
+					+ stateFile.delete());
+
+			stateFile = null;
+		}
+
+		prevOntology = null;
+
+		if (model != null) {
+			model.close();
+
+			model = null;
+		}
+
+		if (kb != null) {
+			kb.clear();
+
+			kb = null;
+		}
+	}
+
+	public EngineResultTimes loadData(ReasoningConfig rConfig,
+			DatasetConfigContainer dataSetContainer) throws BenchmarkException {
+
+		throw new OperationNotSupportedException("loadData");
+	}
+
+	public ExperimentResults executeRules(ReasoningConfig rConfig,
+			RulesetConfigContainer ruleSetContainer) throws BenchmarkException {
+
+		throw new OperationNotSupportedException("executeRules");
+	}
+
+	public EngineResultTimes loadRules(ReasoningConfig rConfig,
+			RulesetConfigContainer ruleSetContainer) throws BenchmarkException {
+
+		throw new OperationNotSupportedException("loadRules");
+	}
+
+	public ExperimentResults execute(ReasoningConfig rConfig)
+			throws BenchmarkException {
+
+		throw new OperationNotSupportedException("execute");
+	}
+
+	public ExperimentResults inference(ReasoningConfig rConfig,
+			DatasetConfigContainer ontologyContainer)
+			throws BenchmarkException {
+
+		DatasetConfig ontology = ontologyContainer.getConfig();
+
+		ReasoningScope scope = rConfig.getScope();
+		Iterator<ReasoningOption> options = scope.getOptions();
+
+		ReasoningOption option1 = options.next();
+
+		if (option1.equals("default") || option1.equals("ont"))
+			return inference_old(rConfig, ontologyContainer, option1);
+
+		else if (option1.equals("owlapiv3")) {
+			switch (scope.getType()) {
+
+			case OWL:
+				// (TODO if RDFS will be included in benchmark, tweak
+				// inferencing options in this benchmark for RDFS)
+			case RDFS:
+				return inference_owlapiv3(rConfig, ontology);
+
+			case CLASS:
+				// if (!options.hasNext())
+				// throw new BenchmarkException("expected 2nd option"
+				// + " (default|incremental)");
+				//
+				// ReasoningOption option2 = options.next();
+				//
+				// if (option2.equals("default"))
+				// return inference_owlapiv3_classify(rConfig, ontology);
+
+				// else if (option2.equals("incremental"))
+				return inference_owlapiv3_incrClassify(rConfig, ontology);
+
+			default:
+				break;
+			}
+		}
+
+		return null;
+	}
+
+	private OntologyInferenceResults inference_old(ReasoningConfig rConfig,
+			DatasetConfigContainer ontologyContainer, ReasoningOption option)
+			throws BenchmarkException {
+
+		Log.d("running inference_" + option.getLabel());
+
+		DatasetConfig ontology = ontologyContainer.getConfig();
+
+		OntologyInferenceResults expResults = new OntologyInferenceResults();
+
+		EngineResultTimes resultTimes = new EngineResultTimes();
+		expResults.setResultTimes(resultTimes);
+
+		EngineExperimentTimer timer;
+
+		timer = new EngineExperimentTimer("inference", resultTimes);
+		timer.begin();
+
+		if (model != null) {
+			Log.d("loading into baseline model");
+
+			readIntoModel(model, ontology);
+
+			model.rebind();
+
+		} else {
+			Log.d("creating new model");
+
+			if (option.equals("default"))
+				model = createModel_oldDefault(ontology);
+
+			// TODO doesn't seem to perform any inferencing?
+			else if (option.equals("ont"))
+				model = createModel_oldOnt(ontology);
+
+			readIntoModel(model, ontology);
+		}
+
+		timer.done();
+
+		timer = new EngineExperimentTimer("consistency", resultTimes);
+		timer.begin();
+
+		ValidityReport report = model.validate();
+		expResults.setConsistent(report.isValid());
+
+		if (!expResults.isConsistent())
+			expResults.setConflicts(print(report.getReports()));
+
+		timer.done();
+
+		if (expResults.isConsistent())
+			collectInferred(model, expResults);
+
+		return expResults;
+	}
+
+	private InfModel createModel_oldDefault(DatasetConfig ontology) {
+		Reasoner reasoner = PelletReasonerFactory.theInstance().create();
+		Model emptyModel = ModelFactory.createDefaultModel();
+
+		return ModelFactory.createInfModel(reasoner, emptyModel);
+	}
+
+	private InfModel createModel_oldOnt(DatasetConfig ontology) {
+		return ModelFactory.createOntologyModel(PelletReasonerFactory.THE_SPEC);
+	}
+
+	public OntologyInferenceResults inference_owlapiv3(ReasoningConfig rConfig,
+			DatasetConfig ontology) throws BenchmarkException {
+
+		Log.d("running inference_owlapiv3");
+
+		OntologyInferenceResults expResults = new OntologyInferenceResults();
+
+		EngineResultTimes resultTimes = new EngineResultTimes();
+		expResults.setResultTimes(resultTimes);
+
+		EngineExperimentTimer timer;
+
+		if (kb != null)
+			throw new BenchmarkException("incremental reasoning not "
+					+ "supported for OWLAPIv3 (scope: OWL)");
+
+		try {
+			// NOTE file storing time not included here
+			String path = ontology.toFile(true);
+
+			timer = new EngineExperimentTimer("inference", resultTimes);
+			timer.begin();
+
+			EnumSet<StatementType> selector = mapStatementTypes();
+			// try out other types of loaders as well (?)
+			OWLAPILoader loader = (OWLAPILoader) getLoader("OWLAPIv3",
+					ontology);
+			kb = loader.createKB(path);
+
+			ModelExtractor extractor = new ModelExtractor(kb);
+			extractor.setSelector(selector);
+
+			Model extracted = ModelFactory.createDefaultModel();
+
+			if (SetUtils.intersects(selector,
+					ModelExtractor.StatementType.ALL_CLASS_STATEMENTS)) {
+
+				extractor.extractClassModel(extracted);
+			}
+
+			if (SetUtils.intersects(selector,
+					ModelExtractor.StatementType.ALL_PROPERTY_STATEMENTS)) {
+
+				extractor.extractPropertyModel(extracted);
+			}
+
+			if (SetUtils.intersects(selector,
+					ModelExtractor.StatementType.ALL_INDIVIDUAL_STATEMENTS)) {
+
+				extractor.extractIndividualModel(extracted);
+			}
+
+			timer.done();
+
+			timer = new EngineExperimentTimer("consistency", resultTimes);
+			timer.begin();
+
+			Log.d("consistencyDone? " + kb.isConsistencyDone());
+
+			expResults.setConsistent(kb.isConsistent());
+			// not 100% sure what this does
+			expResults.setConflicts(kb.getExplanation());
+
+			timer.done();
+
+			collectInferred(extracted, expResults);
+
+			return expResults;
+
+		} catch (IOException e) {
+			throw new BenchmarkException(
+					"Error in <inference_owlapiv3>: " + e.getMessage());
+		}
+	}
+
+	public OntologyInferenceResults inference_owlapiv3_classify(
+			ReasoningConfig rConfig, DatasetConfig ontology)
+			throws BenchmarkException {
+
+		Log.d("running inference_owlapiv3_classify");
+
+		ReasoningOption curOption = new ReasoningOption("default");
+
+		OntologyInferenceResults expResults = new OntologyInferenceResults();
+
+		EngineResultTimes resultTimes = new EngineResultTimes();
+		expResults.setResultTimes(resultTimes);
+
+		EngineExperimentTimer timer;
+
+		if (kb != null)
+			throw new BenchmarkException("Incremental reasoning not "
+					+ "supported for OWLAPIv3 (scope: class, option: default)");
+
+		try {
+			// NOTE file storing time not included here
+			String path = ontology.toFile(true);
+
+			timer = new EngineExperimentTimer("loadOntology", resultTimes);
+			timer.begin();
+
+			OWLAPILoader loader = (OWLAPILoader) getLoader("OWLAPIv3",
+					ontology);
+			kb = loader.createKB("file:///" + path);
+
+			timer.done();
+
+			timer = new EngineExperimentTimer("consistency", resultTimes);
+			timer.begin();
+
+			Log.d("consistencyDone? " + kb.isConsistencyDone());
+
+			expResults.setConsistent(kb.isConsistent());
+			// not 100% sure what this does
+			expResults.setConflicts(kb.getExplanation());
+
+			timer.done();
+
+			if (expResults.isConsistent()) {
+				timer = new EngineExperimentTimer("inference", resultTimes);
+				timer.begin();
+
+				kb.classify();
+
+				timer.done();
+
+				collectInferred(kb.getTaxonomy(), expResults, curOption);
+			}
+
+			return expResults;
+
+		} catch (IOException e) {
+			throw new BenchmarkException(
+					"Error in <inference_owlapiv3_classify>: "
+							+ e.getMessage());
+		}
+	}
+
+	// NOTE re-using IncrementalClassifier objects doesn't seem to work
+	public OntologyInferenceResults inference_owlapiv3_incrClassify(
+			ReasoningConfig rConfig, DatasetConfig ontology)
+			throws BenchmarkException {
+
+		Log.d("running inference_owlapiv3_incrClassify");
+
+		ReasoningOption curOption = new ReasoningOption("incremental");
+
+		OntologyInferenceResults expResults = new OntologyInferenceResults();
+
+		EngineResultTimes resultTimes = new EngineResultTimes();
+		expResults.setResultTimes(resultTimes);
+
+		EngineExperimentTimer timer, timer2;
+
+		try {
+			String storagePath = Env.getFilesDir().getPath() + "/";
+
+			// NOTE to support incremental reasoning
+			if (prevOntology != null)
+				ontology.combineWith(prevOntology);
+			else
+				prevOntology = ontology;
+
+			// NOTE file storing time not included here
+			String ontologyPath = ontology.toFile(true);
+			stateFile = new File(storagePath + "classifier_cache.owl");
+
+			timer = new EngineExperimentTimer("loadOntology", resultTimes);
+			timer.begin();
+
+			OWLOntology owlOnt = getOntology(ontologyPath, ontology);
+
+			timer.done();
+
+			timer = new EngineExperimentTimer("inference", resultTimes);
+			timer.begin();
+
+			IncrementalClassifier classifier = createIncrementalClassifier(
+					owlOnt);
+
+			Log.d("classified? " + classifier.isClassified());
+			if (!classifier.isClassified()) {
+
+				// NOTE consistency checking is included in inference times here
+				timer2 = new EngineExperimentTimer("consistency", resultTimes);
+				timer2.begin();
+
+				expResults.setConsistent(classifier.isConsistent());
+				Log.d("consistent: " + expResults.isConsistent());
+
+				timer2.done();
+
+				// NOTE exception when reasoning over inconsistent ontology
+				if (expResults.isConsistent())
+					classifier.classify();
+			}
+
+			timer.done();
+
+			// NOTE storing persistent state included in times
+			timer = new EngineExperimentTimer("storeIncrState", resultTimes);
+			timer.begin();
+
+			persistIncrementalClassifier(classifier);
+
+			timer.done();
+
+			collectInferred(classifier.getTaxonomy(), expResults, curOption);
+
+			return expResults;
+
+		} catch (IOException e) {
+			throw new BenchmarkException("Error in <inference_owlapiv3_"
+					+ "incrClassify>: " + e.getMessage());
+		}
+	}
+
+	private OWLOntology getOntology(String path, DatasetConfig ontology) {
+		OWLAPILoader loader = (OWLAPILoader) getLoader("OWLAPIv3", ontology);
+		loader.parse(path);
+
+		return loader.getOntology();
+	}
+
+	private void persistIncrementalClassifier(
+			IncrementalClassifier incrementalClassifier) {
+
+		Log.d("saving classifier state");
+
+		try {
+			// TODO doesn't work
+			if (!stateFile.exists())
+				stateFile.createNewFile();
+
+			FileOutputStream outputStream = new FileOutputStream(stateFile,
+					false);
+
+			IncrementalClassifierPersistence.save(incrementalClassifier,
+					outputStream);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private IncrementalClassifier createIncrementalClassifier(
+			OWLOntology ontology) {
+
+		IncrementalClassifier result = null;
+
+		if (stateFile.exists()) {
+			Log.d("loading previous classifier");
+
+			result = loadIncrementalClassifier(ontology);
+
+		} else {
+			Log.d("creating new classifier");
+
+			result = new IncrementalClassifier(ontology);
+		}
+
+		// TODO consider commenting this part (logging may slow down operations)
+		// result.getReasoner()
+		// .getKB()
+		// .setTaxonomyBuilderProgressMonitor(
+		// PelletOptions.USE_CLASSIFICATION_MONITOR.create());
+
+		return result;
+	}
+
+	private IncrementalClassifier loadIncrementalClassifier(
+			OWLOntology ontology) {
+		try {
+			Log.d("loading classifier state");
+
+			FileInputStream inputStream = new FileInputStream(stateFile);
+			IncrementalClassifier classifier = IncrementalClassifierPersistence
+					.load(inputStream, ontology);
+
+			OntologyDiff ontologyDiff = OntologyDiff
+					.diffAxioms(classifier.getAxioms(), ontology.getAxioms());
+
+			Log.d("diff: (# " + ontologyDiff.getDiffCount() + "): ");
+			for (OWLOntologyChange change : ontologyDiff.getChanges(ontology))
+				Log.d(change.toString());
+
+			if (ontologyDiff.getDiffCount() > 0)
+				classifier.ontologiesChanged(new LinkedList<OWLOntologyChange>(
+						ontologyDiff.getChanges(ontology)));
+
+			return classifier;
+
+		} catch (IOException e) {
+			e.printStackTrace();
+
+			return null;
+
+		} catch (OWLException e) {
+			e.printStackTrace();
+
+			return null;
+		}
+	}
+
+	private KBLoader getLoader(String loaderName, DatasetConfig ontology) {
+		String inputFormat = ontology.getRdfSyntax().getLabel();
+		boolean ignoreImports = true;
+
+		KBLoader loader = null;
+
+		if (loaderName.equalsIgnoreCase("Jena"))
+			loader = new JenaLoader();
+		else if (loaderName.equalsIgnoreCase("OWLAPIv3")
+				|| loaderName.equalsIgnoreCase("OWLAPI"))
+			loader = new OWLAPILoader();
+		else if (loaderName.equalsIgnoreCase("KRSS"))
+			loader = new KRSSLoader();
+
+		loader.setIgnoreImports(ignoreImports);
+		if (loader instanceof JenaLoader) {
+			inputFormat = inputFormat.toUpperCase();
+
+			try {
+				if (inputFormat != null) {
+					readerFactory.getReader(inputFormat.toUpperCase());
+
+					((JenaLoader) loader).setInputFormat(inputFormat);
+				}
+			} catch (NoReaderForLangException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return loader;
+	}
+
+	private EnumSet<StatementType> mapStatementTypes() {
+		EnumSet<StatementType> selector = null;
+
+		selector = selectorAddAll(StatementType.DEFAULT_STATEMENTS, selector);
+		selector = selectorAddAll(StatementType.ALL_STATEMENTS, selector);
+		selector = selectorAddAll(StatementType.ALL_STATEMENTS_INCLUDING_JENA,
+				selector);
+		selector = selectorAddAll(StatementType.ALL_CLASS_STATEMENTS, selector);
+		selector = selectorAddAll(StatementType.ALL_INDIVIDUAL_STATEMENTS,
+				selector);
+		selector = selectorAddAll(StatementType.ALL_PROPERTY_STATEMENTS,
+				selector);
+		selector = selectorAdd(StatementType.ALL_INSTANCE, selector);
+		selector = selectorAdd(StatementType.COMPLEMENT_CLASS, selector);
+		selector = selectorAdd(StatementType.DATA_PROPERTY_VALUE, selector);
+		selector = selectorAdd(StatementType.DIFFERENT_FROM, selector);
+		selector = selectorAdd(StatementType.DIRECT_INSTANCE, selector);
+		selector = selectorAdd(StatementType.DIRECT_SUBCLASS, selector);
+		selector = selectorAdd(StatementType.DIRECT_SUBPROPERTY, selector);
+		selector = selectorAdd(StatementType.DISJOINT_CLASS, selector);
+		selector = selectorAdd(StatementType.DISJOINT_PROPERTY, selector);
+		selector = selectorAdd(StatementType.EQUIVALENT_CLASS, selector);
+		selector = selectorAdd(StatementType.EQUIVALENT_PROPERTY, selector);
+		selector = selectorAdd(StatementType.INVERSE_PROPERTY, selector);
+		selector = selectorAdd(StatementType.OBJECT_PROPERTY_VALUE, selector);
+		selector = selectorAddAll(StatementType.PROPERTY_VALUE, selector);
+		selector = selectorAdd(StatementType.SAME_AS, selector);
+		selector = selectorAdd(StatementType.ALL_SUBCLASS, selector);
+		selector = selectorAdd(StatementType.ALL_SUBPROPERTY, selector);
+
+		return selector;
+	}
+
+	private EnumSet<StatementType> selectorAddAll(EnumSet<StatementType> types,
+			EnumSet<StatementType> selector) {
+
+		if (selector == null)
+			return types;
+
+		else {
+			selector.addAll(types);
+
+			return selector;
+		}
+	}
+
+	private EnumSet<StatementType> selectorAdd(StatementType type,
+			EnumSet<StatementType> selector) {
+		if (selector == null)
+			return EnumSet.of(type);
+
+		else {
+			selector.add(type);
+
+			return selector;
+		}
+	}
+
+	private void collectInferred(Model model,
+			OntologyInferenceResults expResults) {
+
+		EngineExperimentTimer timer = new EngineExperimentTimer(
+				"collectInferred", expResults.getResultTimes());
+		timer.begin();
+
+		StringWriter writer = new StringWriter();
+		model.write(writer, "N-TRIPLE");
+
+		String[] inferred = writer.getBuffer().toString().split("\n");
+		List<String> infList = Arrays.asList(inferred);
+
+		expResults.setInferred(infList);
+
+		timer.done();
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void collectInferred(Taxonomy taxonomy,
+			OntologyInferenceResults expResults, ReasoningOption option) {
+
+		EngineExperimentTimer timer = new EngineExperimentTimer(
+				"collectInferred", expResults.getResultTimes());
+		timer.begin();
+
+		StringWriter writer = new StringWriter();
+
+		TaxonomyPrinter printer = null;
+		if (option.equals("default"))
+			printer = new ClassTreePrinter();
+
+		else if (option.equals("incremental"))
+			printer = new OWLClassTreePrinter();
+
+		printer.print(taxonomy, new PrintWriter(writer));
+
+		String[] inferred = writer.getBuffer().toString().split("\n");
+		expResults.setInferred(Arrays.asList(inferred));
+
+		timer.done();
+	}
+
+	// TODO could do this using old library or owlapiv3 library
+	public EntailmentResults entails(ReasoningConfig rConfig,
+			DatasetConfigContainer serviceContainer,
+			DatasetConfigContainer goalContainer) throws BenchmarkException {
+
+		DatasetConfig service = serviceContainer.getConfig();
+		DatasetConfig goal = goalContainer.getConfig();
+
+		EntailmentResults expResults = new EntailmentResults();
+
+		EngineResultTimes resultTimes = new EngineResultTimes();
+		expResults.setResultTimes(resultTimes);
+
+		EngineExperimentTimer timer;
+
+		try {
+			String servicePath = service.toFile(true);
+			String goalPath = goal.toFile(true); // owlapiv3 library
+
+			timer = new EngineExperimentTimer("loadService", resultTimes);
+			timer.begin();
+
+			OWLOntology serviceOntology = getOntology(servicePath, service);
+			Set<OWLAxiom> serviceAxioms = serviceOntology.getAxioms();
+
+			timer.done();
+
+			timer = new EngineExperimentTimer("loadGoal", resultTimes);
+			timer.begin();
+
+			// old library - startReasoner reasoner =
+			// PelletReasonerFactory.theInstance().create();
+			// Model emptyModel = ModelFactory.createDefaultModel();
+			//
+			// InfModel goalModel = ModelFactory.createInfModel(reasoner,
+			// emptyModel);
+			// readIntoModel(goalModel, goal);
+			// old library - end
+
+			// owlapiv3 library - start
+			OWLAPILoader loader = (OWLAPILoader) getLoader("OWLAPIv3", goal);
+			loader.createKB(goalPath);
+
+			// loader.parse(goalPath);
+			// loader.getOntology();
+			// owlapiv3 library - end
+
+			timer.done();
+
+			timer = new EngineExperimentTimer("entailment", resultTimes);
+			timer.begin();
+
+			PelletReasoner reasoner = loader.getReasoner(); // owlapiv3 library
+
+			EntailmentChecker checker = new EntailmentChecker(reasoner);
+
+			boolean findAll = true;
+			Set<OWLAxiom> entailAxioms = checker
+					.findNonEntailments(serviceAxioms, findAll);
+
+			Log.d("entailAxioms: " + entailAxioms);
+
+			expResults.setEntails(!entailAxioms.isEmpty());
+
+			return expResults;
+
+		} catch (IOException e) {
+			throw new BenchmarkException(
+					"Error in <entails>: " + e.getMessage());
+		}
+	}
+
+	private void readIntoModel(Model model, DatasetConfig ontology) {
+		StringReader reader = new StringReader(ontology.getDataString());
+
+		model.read(reader, "", ontology.getRdfSyntax().toString());
+	}
+}

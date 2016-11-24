@@ -1,0 +1,255 @@
+/**
+ * Copyright 2016 William Van Woensel
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ * 
+ * 
+ * @author wvw
+ * 
+ */
+
+package wvw.mobibench.engine;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import org.semanticweb.HermiT.Configuration;
+import org.semanticweb.HermiT.Reasoner;
+import org.semanticweb.HermiT.Reasoner.ReasonerFactory;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.reasoner.ConsoleProgressMonitor;
+import org.semanticweb.owlapi.reasoner.InferenceType;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.util.InferredAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredClassAssertionAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredDataPropertyCharacteristicAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredDisjointClassesAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredEquivalentClassAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredEquivalentDataPropertiesAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredEquivalentObjectPropertyAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredInverseObjectPropertiesAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredObjectPropertyCharacteristicAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredPropertyAssertionGenerator;
+import org.semanticweb.owlapi.util.InferredSubClassAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredSubDataPropertyAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredSubObjectPropertyAxiomGenerator;
+
+import com.clarkparsia.owlapi.explanation.BlackBoxExplanation;
+import com.clarkparsia.owlapi.explanation.HSTExplanationGenerator;
+
+import wvw.mobibench.config.data.DataFormats;
+import wvw.mobibench.config.engine.EngineConfig;
+import wvw.mobibench.config.engine.EngineReasoningConfig;
+import wvw.mobibench.config.engine.res.EngineDatasetConfig;
+import wvw.mobibench.config.reason.MechanismTypes;
+import wvw.mobibench.config.reason.ReasoningConfig;
+import wvw.mobibench.config.reason.ReasoningMechanism;
+import wvw.mobibench.config.reason.ReasoningScope;
+import wvw.mobibench.config.reason.ScopeTypes;
+import wvw.mobibench.config.reason.TaskTypes;
+import wvw.mobibench.results.OntologyInferenceResults;
+import wvw.mobibench.timer.EngineExperimentTimer;
+import wvw.utils.timer.ResultTimes;
+import wvw.utils.log2.Log;
+import wvw.utils.timer.ResultTime;
+
+public class HermiT extends OWLAPIEngine {
+
+	// NOTE pre-computable inference types (returned by
+	// getPrecomputableInferenceTypes):
+	// infTypes: [object property hierarchy, data property hierarchy, class
+	// hierarchy,
+	// same individuals, object property assertions, class assertions]
+
+	// NOTE for HermiT, pre-computing inferences always includes checking
+	// consistency (exceptions are thrown for inconsistent ontologies)
+
+	// NOTE HermiT throws NullPointerException when pre-computing inferences
+	// over an inconsistent ontology (even when setting
+	// configuration.throwInconsistentOntologyException to false)
+	// however, setting this option does work when checking for entailment
+
+	// NOTE currently relying on OWLReasoner for checking entailment, instead of
+	// Reasoner, for consistency with other OWLAPI-based reasoners (in their
+	// example code, it is implied that both could be used)
+
+	public HermiT() {
+		super("HermiT", true);
+	}
+
+	protected EngineConfig createEngineConfig() {
+		EngineDatasetConfig dataConfig = new EngineDatasetConfig(DataFormats.RDF);
+
+		// > reasoning
+
+		EngineReasoningConfig reasonConfig = new EngineReasoningConfig();
+
+		// - ontology_inference
+
+		// -- builtin
+		ReasoningMechanism owlMech = new ReasoningMechanism(MechanismTypes.BUILTIN);
+		owlMech.addScope(new ReasoningScope(ScopeTypes.FULL));
+
+		reasonConfig.addMechanism(TaskTypes.ONTOLOGY_INFERENCE, owlMech);
+
+		// ReasoningMechanism smMech = new
+		// ReasoningMechanism(MechanismTypes.ENTAILMENT);
+		// reasonConfig.addMechanism(TaskTypes.SERVICE_MATCH, smMech);
+
+		return new EngineConfig(dataConfig, reasonConfig);
+	}
+
+	protected OWLReasoner createReasoner(OWLOntology ontology) {
+		ReasonerFactory factory = new ReasonerFactory();
+
+		Configuration configuration = new Configuration();
+
+		// NOTE else, an exception is thrown in case of an inconsistent ontology
+		configuration.throwInconsistentOntologyException = false;
+		configuration.reasonerProgressMonitor = new ConsoleProgressMonitor();
+
+		return factory.createReasoner(ontology, configuration);
+	}
+
+	protected List<InferredAxiomGenerator<? extends OWLAxiom>> getInferredAxiomGenerators(
+			ReasoningConfig rConfig) {
+
+		List<InferredAxiomGenerator<? extends OWLAxiom>> generators =
+				new ArrayList<InferredAxiomGenerator<? extends OWLAxiom>>();
+
+		switch (rConfig.getScope().getType()) {
+
+		case FULL:
+			CustomDisjointAxiomGenerator customGen = new CustomDisjointAxiomGenerator();
+			generators.add(customGen);
+			
+			// InferredClassAxiomGenerator subclasses
+			generators.add(new InferredEquivalentClassAxiomGenerator());
+			generators.add(new InferredSubClassAxiomGenerator());
+			// InferredDataPropertyAxiomGenerator subclasses
+			generators.add(new
+					InferredDataPropertyCharacteristicAxiomGenerator());
+			generators.add(new
+					InferredEquivalentDataPropertiesAxiomGenerator());
+			generators.add(new InferredSubDataPropertyAxiomGenerator());
+			// InferredIndividualAxiomGenerator subclasses
+			generators.add(new InferredClassAssertionAxiomGenerator());
+			generators.add(new InferredPropertyAssertionGenerator());
+			// InferredObjectPropertyAxiomGenerator subclasses
+			generators.add(new
+					InferredEquivalentObjectPropertyAxiomGenerator());
+			generators.add(new
+					InferredInverseObjectPropertiesAxiomGenerator());
+			generators
+					.add(new InferredObjectPropertyCharacteristicAxiomGenerator());
+			generators.add(new InferredSubObjectPropertyAxiomGenerator());
+
+			break;
+
+		default:
+			return super.getInferredAxiomGenerators(rConfig);
+		}
+
+		return generators;
+	}
+
+	protected void checkConsistency(OntologyInferenceResults expResults) {
+		ResultTimes resultTimes = expResults.getResultTimes();
+
+		EngineExperimentTimer timer = new EngineExperimentTimer("consistency", resultTimes);
+		timer.begin();
+
+		boolean consistent = reasoner.isConsistent();
+		timer.done();
+
+		expResults.setConsistent(consistent);
+		Log.d("consistent: " + consistent);
+
+		if (!consistent) {
+			timer = new EngineExperimentTimer("explanations", resultTimes);
+			timer.begin();
+
+			OWLDataFactory dataFactory = inputOntologyManager
+					.getOWLDataFactory();
+
+			ReasonerFactory factory = new Reasoner.ReasonerFactory() {
+				protected OWLReasoner createHermiTOWLReasoner(
+						org.semanticweb.HermiT.Configuration configuration,
+						OWLOntology ontology) {
+
+					configuration.throwInconsistentOntologyException = false;
+					return new Reasoner(configuration, ontology);
+				}
+			};
+			BlackBoxExplanation exp = new BlackBoxExplanation(owlOnt, factory,
+					reasoner);
+			HSTExplanationGenerator multExplanator = new HSTExplanationGenerator(
+					exp);
+
+			Set<Set<OWLAxiom>> explanations = multExplanator
+					.getExplanations(dataFactory.getOWLThing());
+
+			// NOTE each explanation is one possible set of axioms that cause
+			// the unsatisfiability
+			String explStr = "";
+
+			int ctr = 0;
+			for (Set<OWLAxiom> explanation : explanations) {
+				explStr += "> explanation " + ctr++ + ":\n ";
+
+				for (OWLAxiom causingAxiom : explanation)
+					explStr += causingAxiom + "\n";
+
+				explStr += "\n";
+			}
+
+			timer.done();
+
+			Log.d("explanations: " + explStr);
+			expResults.setConflicts(explStr);
+		}
+	}
+
+	private class CustomDisjointAxiomGenerator extends InferredDisjointClassesAxiomGenerator {
+
+		boolean precomputed = false;
+
+		protected void addAxioms(OWLClass entity, OWLReasoner reasoner,
+				OWLDataFactory dataFactory,
+				Set<OWLDisjointClassesAxiom> result) {
+
+			if (!precomputed) {
+				EngineExperimentTimer timer = new EngineExperimentTimer("inference", curResults);
+				timer.begin();
+
+				reasoner.precomputeInferences(InferenceType.DISJOINT_CLASSES);
+
+				ResultTime time = timer.done();
+				curResults.subtractTime(time, "collectInferred");
+
+				precomputed = true;
+			}
+
+			for (OWLClass cls : reasoner.getDisjointClasses(entity)
+					.getFlattened()) {
+				result.add(dataFactory.getOWLDisjointClassesAxiom(entity,
+						cls));
+			}
+		}
+	}
+}

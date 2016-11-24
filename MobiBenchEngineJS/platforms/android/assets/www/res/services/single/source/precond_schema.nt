@@ -1,0 +1,507 @@
+# bookpersoncreditcardaccount_price_service
+
+
+# bookpersoncreditcardaccount__service
+
+
+# citycountry_hotel_service
+
+
+# EBookOrder1
+
+
+# fall_down_pill
+
+
+# geocodeUSAddress
+
+
+# geographical-regiongeographical-region_map_service
+
+
+# getAltitudeAboveSeaLevelOfLocation
+
+
+# getDistanceBetweenCitiesWorldwide
+
+
+# getLocationOfCityState
+
+
+# getLocationOfUSCity
+
+
+# getMapOfUSAddress
+
+
+# getSunsetSunriseTimeOfLocation
+
+
+# getZipcodeForUSCity
+
+
+# lock_door
+
+
+# open_door
+
+
+# userscience-fiction-novel_price_service
+
+
+# AddLinks__service
+
+
+# addressDistanceCalculator
+
+
+# agent_movement
+
+
+# AuthorizePhysician_service
+
+
+# BookMedicalFlight_service
+
+
+# BookMedicalTransport_service
+
+
+# BookNonMedicalFlight_service
+
+
+# BookNonMedicalTransport_service
+
+
+# bookpersoncreditaccount__Beaservice
+
+
+# bookpersoncreditaccount__service
+
+
+# bookpersoncreditcardaccount_price_service
+
+
+# bookpersoncreditcardaccount_recommendedprice_service
+
+
+# bookpersoncreditcardaccount_taxedfreeprice_service
+
+
+# bookpersoncreditcardaccount__BShopservice
+
+
+# bookpersoncreditcardaccount__service
+
+
+# bookperson_price_service
+
+
+# bookperson__service
+
+
+# bookusercreditcardaccount__service
+
+
+# book_authorprice_service
+
+
+# book_recommendedprice_RegisteredUserservice
+
+
+# book__ShoppingCartservice
+
+
+# calculateDistanceInMiles
+
+
+# calculateDistanceUsingSphericalGeometry
+
+
+# calculateSunriseTime
+
+
+# calculatorDistanceSphericalLawOfCosines
+
+
+# checkAndLookupAddress
+
+
+# citycity_arrowfigure_service
+
+
+# citycity_map_service
+
+
+# citycountryduration__HotelReserveservice
+
+
+# citycountry_accommodation_service
+
+
+# citycountry_destinationhotel_service
+
+
+# citycountry_hotel_service
+
+
+# citycountry_skilledoccupation_service
+
+
+# city_hotel_Germanservice
+
+
+# city_hotel_Saarlandservice
+
+
+# city_state_ZipCodes
+
+
+# close_door
+
+
+# countrycapital-city_hotel_service
+
+
+# countrycity_hotel_service
+
+
+# countrycity_luxuryhotel_Gelservice
+
+
+# countrycity_luxuryhotel_service
+
+
+# countrycity_sportshotel_service
+
+
+# countryvillage_hotel_service
+
+
+# DJob_service
+
+
+# durationcountrycity_hotel_service
+
+
+# durationgeopolitical-entitycity_accommodation_service
+
+
+# durationgeopolitical-entitycity_bedandbreakfast_service
+
+
+# durationgeopolitical-entitycity_hotel_service
+
+
+# EBookOrder1
+
+
+# EBookOrder2
+
+
+# EBookOrder3
+
+
+# fall_down_pill
+
+
+# fantansynoveluser_price_service
+
+
+# fill_pills
+
+
+# findNearbyPostalCodes
+
+
+# findNearbyWikipediaArticles
+
+
+# findPlaceNamePostalCode
+
+
+# flip_down_slider
+
+
+# flip_slider
+
+
+# flip_up_slider
+
+
+# geocodeUSAddress
+
+
+# geographical-regiongeographical-region_icon_service
+
+
+# geographical-regiongeographical-region_map_Gorgservice
+
+
+# geographical-regiongeographical-region_map_service
+
+
+# getAddressOfLocation
+
+
+# getAltitudeAboveSeaLevelOfLocation
+
+
+# getAltitudeOfLocation
+
+
+# getATMLocationsInCity
+
+
+# getCoordinatesOfAddress
+
+
+# getDistanceBetweenCitiesWorldwide
+
+
+# getDistanceBetweenLocations
+
+
+# getDistanceBetweenPlaces
+
+
+# getDrivingDirections
+
+
+# getElevationFromLocation
+
+
+# getGeographicAreaOfZipCode
+
+
+# getListOfMatchingCities
+
+
+# getLocationOfAddress
+
+
+# getLocationOfAddressWorldwide
+
+
+# getLocationOfCityState
+
+
+# getLocationOfCityWorldwide
+
+
+# getLocationOfUSCity
+
+
+# getLocationOfZipCodeWorldwide
+
+
+# getMapOfAddress
+
+
+# getMapOfUSAddress
+
+
+# GetMedicalFlightAccount_service
+
+
+# GetMedicalTransportAccount_service
+
+
+# GetNonMedicalFlightAccount_service
+
+
+# GetNonMedicalTransportAccount_service
+
+
+# getPlaceOfAddress
+
+
+# getPopulationDensityOfLocation
+
+
+# getSunsetAndSunriseTime
+
+
+# getSunsetSunriseTimeOfLocation
+
+
+# getSunsetSunriseTwilightTime
+
+
+# getTrafficInformation
+
+
+# getUSZipCodeLocation
+
+
+# getZipcodeForUSCity
+
+
+# getZipCodeInfo
+
+
+# getZipCodeInfoWorldwide
+
+
+# getZipCodeLocation
+
+
+# getZipCodesWithinCityState
+
+
+# greenLight_to_off
+
+
+# greenLight_to_on
+
+
+# HospitalPhysician_service
+
+
+# locationlocation_arrowfigure_service
+
+
+# locationlocation_icon_service
+
+
+# locationlocation_map_service
+
+
+# locationlocation_map_SRIservice
+
+
+# lock_door
+
+
+# monographpersoncreditcardaccount_recommendedprice_service
+
+
+# monographperson__service
+
+
+# NonMedicalFlightCompany_service
+
+
+# novelperson__Reservationservice
+
+
+# novel_person_Reserverservice
+
+
+# objectpersoncreditaccount_price_service
+
+
+# objectperson__service
+
+
+# open_door
+
+
+# PatientTransport_service
+
+
+# personbookliabilityaccount__service
+
+
+# personcountrycity_sportshotel_service
+
+
+# personmonographcreditcardaccount__service
+
+
+# postal-addresscity_hotel_service
+
+
+# printedmaterialpersoncreditcardaccount_price_service
+
+
+# printedmaterialpersoncreditcardaccount__service
+
+
+# printedmaterialperson__service
+
+
+# ProvideMedicalFlightInformation_services
+
+
+# publicationperson__service
+
+
+# redLight_to_off
+
+
+# redLight_to_on
+
+
+# science-fiction-noveluser_recommendedpriceindollar_service
+
+
+# sciencefictionbookuser_price_service
+
+
+# ScienceFNovelReview_service
+
+
+# SeePatientMedicalRecords_service
+
+
+# SetUpCostAndHealingPlan_service
+
+
+# SFNovelReview_service
+
+
+# SFNRecommendedPrice_service
+
+
+# surfingorganizationperson_destination_service
+
+
+# switch_off_messemodul
+
+
+# switch_on_messemodul
+
+
+# time-measurecountrycity_hotel_service
+
+
+# time-measuregeopolitical-entitycity_accommodation_service
+
+
+# time-measuregeopolitical-entitycity_bedandbreakfast_service
+
+
+# time-measuregeopolitical-entitycity_hotel_service
+
+
+# towncountry_hotel_service
+
+
+# unlock_door
+
+
+# UnsuccessfulDiagnosis_service
+
+
+# UpdatePatientMedicalRecords_service
+
+
+# userbook_price_service
+
+
+# userRomanticnovel_price_service
+
+
+# userscience-fiction-novel_price_Bestservice
+
+
+# userscience-fiction-novel_price_service
+
+
+# userscience-fiction-novel_Relprice_service
+
+
+# user_price_ShoppingStatusservice
+
+

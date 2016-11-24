@@ -1,0 +1,99 @@
+# prp-sl
+# <== eq-rep-p, prp-spo1
+CONSTRUCT {
+    ?x ?p2 ?y .
+}
+WHERE {
+	?p1 ?p ?p2 .
+	?p a <http://niche.cs.dal.ca/owl#SubLink> .
+    ?x ?p1 ?y .
+}
+<http://www.w3.org/2002/07/owl#sameAs> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl#SubLink> .
+<http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl#SubLink> .
+
+# scm-vr
+# <== scm-hv, scm-svf2
+CONSTRUCT {
+    ?c1 <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?c2 .
+}
+WHERE {
+	?p a <http://niche.cs.dal.ca/owl#ValueRestriction> .
+	?c1 ?p ?y .
+    ?c1 <http://www.w3.org/2002/07/owl#onProperty> ?p1 .
+    ?c2 ?p ?y .
+    ?c2 <http://www.w3.org/2002/07/owl#onProperty> ?p2 .
+    ?p1 <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> ?p2 .
+}
+<http://www.w3.org/2002/07/owl#hasValue> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl#ValueRestriction> .
+<http://www.w3.org/2002/07/owl#someValuesFrom> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl#ValueRestriction> .
+
+# scm-mvr
+# <== scm-avf1, scm-svf1
+CONSTRUCT {
+    ?c1 <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?c2 .
+}
+WHERE {
+	?p1 a <http://niche.cs.dal.ca/owl#MultiValueRestriction> .
+    ?c1 ?p1 ?y1 .
+    ?c1 <http://www.w3.org/2002/07/owl#onProperty> ?p .
+    ?c2 ?p1 ?y2 .
+    ?c2 <http://www.w3.org/2002/07/owl#onProperty> ?p .
+    ?y1 <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?y2 .
+}
+<http://www.w3.org/2002/07/owl#allValuesFrom> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl#MultiValueRestriction> .
+<http://www.w3.org/2002/07/owl#someValuesFrom> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl#MultiValueRestriction> .
+
+# eq-diff
+# <== eq-diff2, eq-diff3
+CONSTRUCT {
+    <http://spinrdf.org/spin#constraintViolation_allDifferent> a <http://spinrdf.org/spin#ConstraintViolation> .
+    <http://spinrdf.org/spin#constraintViolation_allDifferent> <http://spinrdf.org/spin#violationRoot> ?y1 .
+    <http://spinrdf.org/spin#constraintViolation_allDifferent> <http://spinrdf.org/spin#violationPath> ?p .
+    <http://spinrdf.org/spin#constraintViolation_allDifferent> <http://www.w3.org/2000/01/rdf-schema#label> "Violation of <http://www.w3.org/2002/07/owl#AllDifferent>" .
+}
+WHERE {
+    ?x a <http://www.w3.org/2002/07/owl#AllDifferent> .
+    ?p a <http://niche.cs.dal.ca/owl#GenericMembersProperty> .
+    ?x ?p ?list .
+    ?list <http://niche.cs.dal.ca/owl/list#hasMember> ?y1 .
+    ?list <http://niche.cs.dal.ca/owl/list#hasMember> ?y2 .
+    FILTER (?y1 != ?y2) .
+    ?y1 <http://www.w3.org/2002/07/owl#sameAs> ?y2 .
+}
+<http://www.w3.org/2002/07/owl#members> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl#GenericMembersProperty> .
+<http://www.w3.org/2002/07/owl#distinctMembers> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl#GenericMembersProperty> .
+
+# prp-npa
+# <== prp-npa1, prp-npa2
+CONSTRUCT {
+    <http://spinrdf.org/spin#constraintViolation_negativePropertyAssertion> a <http://spinrdf.org/spin#ConstraintViolation> .
+    <http://spinrdf.org/spin#constraintViolation_negativePropertyAssertion> <http://spinrdf.org/spin#violationRoot> ?i1 .
+    <http://spinrdf.org/spin#constraintViolation_negativePropertyAssertion> <http://spinrdf.org/spin#violationPath> ?p .
+    <http://spinrdf.org/spin#constraintViolation_negativePropertyAssertion> <http://www.w3.org/2000/01/rdf-schema#label> "Negative Property Assertion" .
+}
+WHERE {
+    ?x <http://www.w3.org/2002/07/owl#sourceIndividual> ?i1 .
+    ?x <http://www.w3.org/2002/07/owl#assertionProperty> ?p .
+    ?p1 a <http://niche.cs.dal.ca/owl#NpaTargetProperty> .
+    ?x ?p1 ?i2 .
+    ?i1 ?p ?i2 .
+}
+<http://www.w3.org/2002/07/owl#targetValue> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl#NpaTargetProperty> .
+<http://www.w3.org/2002/07/owl#targetIndividual> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl#NpaTargetProperty> .
+
+# cls-dsj
+# <== cls-com, cax-dw
+CONSTRUCT {
+    <http://spinrdf.org/spin#constraintViolation_disjointClass> a <http://spinrdf.org/spin#ConstraintViolation> .
+    <http://spinrdf.org/spin#constraintViolation_disjointClass> <http://spinrdf.org/spin#violationRoot> ?x .
+    <http://spinrdf.org/spin#constraintViolation_disjointClass> <http://spinrdf.org/spin#violationPath> ?p .
+    <http://spinrdf.org/spin#constraintViolation_disjointClass> <http://www.w3.org/2000/01/rdf-schema#label> "Resource is instance of two disjoint classes" .
+}
+WHERE {
+	?p a <http://niche.cs.dal.ca/owl#GenericDisjointClassProperty> .
+    ?c1 ?p ?c2 .
+    ?x a ?c1 .
+    ?x a ?c2 .
+}
+<http://www.w3.org/2002/07/owl#complementOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl#GenericDisjointClassProperty> .
+<http://www.w3.org/2002/07/owl#disjointWith> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://niche.cs.dal.ca/owl#GenericDisjointClassProperty> .

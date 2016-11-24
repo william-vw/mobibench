@@ -1,0 +1,23 @@
+<html>
+<head>
+<script type="text/javascript" src="js/libs/utils.js"></script>
+</head>
+<body>
+	<script>
+		applyOnEach([ [ "r1", "r2", "r3" ], [ "a1", "a2", "a3" ] ], [ [ 1, 2, 3, 4 ] ], {
+			target : null,
+			fn : function(a1, a2, cb) {
+				
+				setTimeout(function() {
+					console.log(JSON.stringify(a1) + ", " + JSON.stringify(a2));
+					cb();
+					
+				}, 500);
+			}
+
+		}, function() {
+			console.log("all done");
+		});
+	</script>
+</body>
+</html>

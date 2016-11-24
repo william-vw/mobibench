@@ -1,0 +1,150 @@
+@prefix vub: <http://vub.ac.be/> .
+@prefix region: <http://wise.vub.ac.be/region/> .
+@prefix dcmi: <http://purl.org/dc/elements/1.1/> .
+@prefix : <#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://vub.ac.be/buildingF> .
+
+<> a region:EducationalBuilding .
+<> rdfs:label "Gebouw F"@nl .
+<> dcmi:title "Gebouw F"@nl .
+<> region:housesAcademicUnit <http://we.vub.ac.be/> .
+<http://we.vub.ac.be/> a region:University-Faculty .
+<> region:housesAcademicUnit <http://dinf.vub.ac.be/> .
+<http://dinf.vub.ac.be/> a region:University-Department .
+<> region:nrFloors 10 .
+
+<http://www.vub.ac.be/> a region:University ;
+	region:has-faculty <http://we.vub.ac.be/> .
+
+<http://we.vub.ac.be/> region:has-academic-unit <http://dinf.vub.ac.be/> ;
+	a region:University-Faculty .
+<http://dinf.vub.ac.be/> region:has-academic-unit <http://wise.vub.ac.be/> ;
+	a region:University-Department .
+<http://wise.vub.ac.be/> a region:University-Lab .
+<http://dinf.vub.ac.be/> region:has-academic-unit <http://soft.vub.ac.be/> ;
+	a region:University-Department .
+<http://soft.vub.ac.be/> a region:University-Lab .
+
+<http://wise.vub.ac.be/members/william/> region:works-in-unit <http://wise.vub.ac.be/> ;
+	a region:Research-Assistant-In-Academia ;
+	a region:PhDStudent ;
+	region:has-academic-degree <http://www.aktors.org/ontology/portal#MSc> .
+<http://wise.vub.ac.be/members/sven/> region:works-in-unit <http://wise.vub.ac.be/>;
+	a region:Research-Assistant-In-Academia ;
+	region:has-academic-degree <http://www.aktors.org/ontology/portal#PhD> .
+<http://wise.vub.ac.be/members/lamia/> region:works-in-unit <http://wise.vub.ac.be/> ;
+	a region:Researcher-In-Academia ;
+	a region:PhDStudent ;
+	region:has-academic-degree <http://www.aktors.org/ontology/portal#MSc> .
+<http://wise.vub.ac.be/members/wael/> region:works-in-unit <http://wise.vub.ac.be/> ;
+	a region:Researcher-In-Academia ;
+	a region:PhDStudent ;
+	region:has-academic-degree <http://www.aktors.org/ontology/portal#MSc> .
+<http://wise.vub.ac.be/members/mohammed/> region:works-in-unit <http://wise.vub.ac.be/> ;
+	a region:Researcher-In-Academia ;
+	a region:PhDStudent ;
+	region:has-academic-degree <http://www.aktors.org/ontology/portal#MSc> .
+<http://wise.vub.ac.be/members/ahmed/> region:works-in-unit <http://wise.vub.ac.be/> ;
+	a region:Researcher-In-Academia ;
+	a region:PhDStudent ;
+	region:has-academic-degree <http://www.aktors.org/ontology/portal#MSc> .
+<http://wise.vub.ac.be/members/frederic/> region:works-in-unit <http://wise.vub.ac.be/> ;
+	a region:Researcher-In-Academia ;
+	region:has-academic-degree <http://www.aktors.org/ontology/portal#PhD> .
+<http://wise.vub.ac.be/members/bram/> region:works-in-unit <http://wise.vub.ac.be/> ;
+	a region:Researcher-In-Academia ;
+	region:has-academic-degree <http://www.aktors.org/ontology/portal#PhD> .
+<http://wise.vub.ac.be/members/gabriel/> region:works-in-unit <http://wise.vub.ac.be/> ;
+	a region:Researcher-In-Academia ;
+	a region:PhDStudent ;
+	region:has-academic-degree <http://www.aktors.org/ontology/portal#MSc> .
+<http://wise.vub.ac.be/members/haithem/> region:works-in-unit <http://wise.vub.ac.be/> ;
+	a region:Researcher-In-Academia ;
+	a region:PhDStudent ;
+	region:has-academic-degree <http://www.aktors.org/ontology/portal#MSc> .
+<http://wise.vub.ac.be/members/mushtaha/> region:works-in-unit <http://wise.vub.ac.be/> ;
+	a region:Researcher-In-Academia ;
+	a region:PhDStudent ;
+	region:has-academic-degree <http://www.aktors.org/ontology/portal#MSc> .
+<http://wise.vub.ac.be/members/olga/> region:works-in-unit <http://wise.vub.ac.be/> ;
+	a region:Professor-In-Academia ;
+	region:has-academic-degree <http://www.aktors.org/ontology/portal#PhD> .
+<http://wise.vub.ac.be/members/beat/> region:works-in-unit <http://wise.vub.ac.be/> ;
+	a region:Professor-In-Academia ;
+	region:has-academic-degree <http://www.aktors.org/ontology/portal#PhD> .
+	
+<http://dinf.vub.ac.be/secr.html#Lydie_Seghers> a region:Secretary ;
+	region:works-in-unit <http://dinf.vub.ac.be/secr.html> .
+<http://dinf.vub.ac.be/secr.html#Simonne_De_Schrijver> a region:Secretary ;
+	region:works-in-unit <http://dinf.vub.ac.be/secr.html> .
+<http://dinf.vub.ac.be/secr.html#Brigitte_Beyens> a region:Secretary ;
+	region:works-in-unit <http://dinf.vub.ac.be/secr.html> .
+
+<http://dinf.vub.ac.be/secr.html> a region:Secretariat .
+
+<> region:containsFloor _:floor1 .
+_:floor1 region:floorNr 10 ;
+					region:housesUnit <http://wise.vub.ac.be/> , <http://soft.vub.ac.be> ;
+					region:containsRoom [
+											a region:Office ;
+											region:roomNr 703 ;
+											region:housesPerson <http://wise.vub.ac.be/members/lamia/> , <http://wise.vub.ac.be/members/wael/> 
+										] ;
+					region:containsRoom [
+											a region:Office ;
+											region:roomNr 704 ;
+											region:housesPerson <http://wise.vub.ac.be/members/mohammed/> , <http://wise.vub.ac.be/members/mushtaha/> 
+										] ;
+					region:containsRoom _:room1 .
+
+_:room1	a region:Office ;
+	region:roomNr 705 ;
+	region:housesPerson <http://wise.vub.ac.be/members/william/> , <http://wise.vub.ac.be/members/sven/> .
+
+_:floor1 region:containsRoom [
+											a region:Office ;
+											region:roomNr 706 ;
+											region:housesPerson <http://dinf.vub.ac.be/secr.html#Lydie_Seghers> , <http://dinf.vub.ac.be/secr.html#Simonne_De_Schrijver> , <http://dinf.vub.ac.be/secr.html#Brigitte_Beyens> ;
+											region:housesUnit <http://dinf.vub.ac.be/secr.html>
+										] ;
+					region:containsRoom [
+											a region:Office ;
+											region:roomNr 707 ;
+											region:housesPerson <http://wise.vub.ac.be/members/bram/> 
+										] ;
+					region:containsRoom [
+											a region:Office ;
+											region:roomNr 709 ;
+											region:housesPerson <http://wise.vub.ac.be/members/frederic/> , <http://wise.vub.ac.be/members/ahmed/> 
+										] ;
+					region:containsRoom [
+											a region:Office ;
+											region:roomNr 710 ;
+											region:housesPerson <http://wise.vub.ac.be/members/haithem/> 
+										] ;
+					region:containsRoom [
+											a region:MeetingRoom ;
+											region:roomNr 715 ;
+											region:belongsToUnit <http://wise.vub.ac.be/> 
+										] ;
+					region:containsRoom [
+											a region:Office ;
+											region:roomNr 718 ;
+											region:housesPerson <http://wise.vub.ac.be/members/olga/> 
+										] ;
+					region:containsRoom [
+											a region:ClassRoom , region:MeetingRoom ;
+											region:roomNr 720 ;
+											region:belongsToUnit <http://dinf.vub.ac.be/> 
+										] ;
+					region:containsRoom [
+											a region:Office ;
+											region:roomNr 721 ;
+											region:housesPerson <http://wise.vub.ac.be/members/beat/> 
+										] ;
+					region:containsRoom [
+											a region:MeetingRoom ;
+											region:roomNr 729 ;
+											region:belongsToUnit <http://soft.vub.ac.be/> , <http://wise.vub.ac.be/>
+										] .

@@ -1,0 +1,45 @@
+# bookpersoncreditcardaccount__service
+<http://127.0.0.1/frozenVar#bookpersoncreditcardaccount__service> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_CREDITCARDACCOUNT> .
+<http://127.0.0.1/frozenVar#_CREDITCARDACCOUNT> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/Mid-level-ontology.owl#CreditCardAccount> .
+<http://127.0.0.1/frozenVar#bookpersoncreditcardaccount__service> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_BOOK> .
+<http://127.0.0.1/frozenVar#_BOOK> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/books.owl#Book> .
+<http://127.0.0.1/frozenVar#bookpersoncreditcardaccount__service> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_PERSON> .
+<http://127.0.0.1/frozenVar#_PERSON> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/books.owl#Person> .
+<http://127.0.0.1/frozenVar#_BOOK> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/ShoppingCart.owl#ShoppingCartRequestItems> .
+
+# EBookOrder1
+<http://127.0.0.1/frozenVar#EBookOrder1> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#EBookRequest> .
+<http://127.0.0.1/frozenVar#EBookRequest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/books.owl#Title> .
+<http://127.0.0.1/frozenVar#EBookOrder1> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#UserAccount> .
+<http://127.0.0.1/frozenVar#UserAccount> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/books.owl#User> .
+<http://127.0.0.1/frozenVar#EBookOrder1> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#EBook> .
+<http://127.0.0.1/frozenVar#EBook> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/books.owl#Book> .
+<http://127.0.0.1/frozenVar#EBook> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/ShoppingCart.owl#ShoppingCartRequestItems> .
+
+# fall_down_pill
+<http://127.0.0.1/frozenVar#fall_down_pill> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#MesseModul> .
+<http://127.0.0.1/frozenVar#MesseModul> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#MesseModul> .
+<http://127.0.0.1/frozenVar#fall_down_pill> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#Slider> .
+<http://127.0.0.1/frozenVar#Slider> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#Slider> .
+<http://127.0.0.1/frozenVar#fall_down_pill> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#Cup> .
+<http://127.0.0.1/frozenVar#Cup> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#Cup> .
+<http://127.0.0.1/frozenVar#fall_down_pill> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#UltraSoundSensor> .
+<http://127.0.0.1/frozenVar#UltraSoundSensor> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#UltraSoundSensor> .
+<http://127.0.0.1/frozenVar#fall_down_pill> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#Pill> .
+<http://127.0.0.1/frozenVar#Pill> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#Pill> .
+<http://127.0.0.1/frozenVar#fall_down_pill> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#SliderZone> .
+<http://127.0.0.1/frozenVar#SliderZone> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/spatial_ontology.owl#SpatialZone> .
+<http://127.0.0.1/frozenVar#fall_down_pill> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#CupZone> .
+<http://127.0.0.1/frozenVar#CupZone> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/spatial_ontology.owl#SpatialZone> .
+<http://127.0.0.1/frozenVar#Pill> <http://127.0.0.1/ontology/spatial_ontology.owl#isLocatedIn> <http://127.0.0.1/frozenVar#CupZone> .
+
+# lock_door
+<http://127.0.0.1/frozenVar#lock_door> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#Door> .
+<http://127.0.0.1/frozenVar#Door> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#Door> .
+<http://127.0.0.1/frozenVar#Door> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#Locked> .
+
+# open_door
+<http://127.0.0.1/frozenVar#open_door> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#Door> .
+<http://127.0.0.1/frozenVar#Door> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#Door> .
+<http://127.0.0.1/frozenVar#Door> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#Open> .
+

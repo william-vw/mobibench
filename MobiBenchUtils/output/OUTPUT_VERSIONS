@@ -1,0 +1,6 @@
+output1, 2, 3: only including hierarchical relations (subClassOf, subPropertyOf)
+output1.txt: _schema: also includes populated source/precond_schema.nt 
+output2.txt: _schema: does not include populated source/precond_schema.nt
+output3.txt: same as output2.txt, but applying OWL2RL subclass rule instead of all rules
+
+output4.txt: includes a number of relations (see OntologyAnalyzer (CUSTOM_RELATION))

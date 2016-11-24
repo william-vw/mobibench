@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MobiBenchEnginePc" default="jar">
+
+	<target name="jar">
+		<!-- create staging directory to store .class files to be packaged -->
+		<mkdir dir="target/temp" />
+
+		<!-- copy all required class files to staging directory -->
+
+		<copy todir="target/temp">
+			<fileset dir="target/classes/">
+				<include name="wvw/mobibench/engine/*.class" />
+				<include name="android/util/*.class" />
+			</fileset>
+		</copy>
+
+		<jar destfile="pack/libs/reasoning_engine.jar" basedir="target/temp" />
+
+		<zip destfile="pack/packaged.jar">
+			<zipgroupfileset dir="pack/libs" includes="*.jar" />
+		</zip>
+
+		<delete dir="target/temp" />
+		
+	</target>
+</project>

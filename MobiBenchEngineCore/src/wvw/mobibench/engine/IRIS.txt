@@ -1,0 +1,332 @@
+/**
+ * Copyright 2016 William Van Woensel
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ * 
+ * 
+ * @author wvw
+ * 
+ */
+package wvw.mobibench.engine;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+
+import org.deri.iris.Configuration;
+import org.deri.iris.EvaluationException;
+import org.deri.iris.KnowledgeBaseFactory;
+import org.deri.iris.api.IKnowledgeBase;
+import org.deri.iris.api.basics.IPredicate;
+import org.deri.iris.api.basics.IQuery;
+import org.deri.iris.api.basics.IRule;
+import org.deri.iris.api.basics.ITuple;
+import org.deri.iris.api.terms.IVariable;
+import org.deri.iris.compiler.Parser;
+import org.deri.iris.compiler.ParserException;
+import org.deri.iris.evaluation.stratifiedbottomup.StratifiedBottomUpEvaluationStrategyFactory;
+import org.deri.iris.evaluation.stratifiedbottomup.naive.NaiveEvaluatorFactory;
+import org.deri.iris.evaluation.stratifiedbottomup.seminaive.SemiNaiveEvaluatorFactory;
+import org.deri.iris.evaluation.wellfounded.WellFoundedEvaluationStrategyFactory;
+import org.deri.iris.rules.safety.StandardRuleSafetyProcessor;
+import org.deri.iris.storage.IRelation;
+
+import wvw.mobibench.config.ProcessFlows;
+import wvw.mobibench.config.data.DataFormats;
+import wvw.mobibench.config.data.DatasetConfig;
+import wvw.mobibench.config.data.DatasetConfigContainer;
+import wvw.mobibench.config.engine.EngineConfig;
+import wvw.mobibench.config.engine.EngineReasoningConfig;
+import wvw.mobibench.config.engine.res.EngineDatasetConfig;
+import wvw.mobibench.config.engine.res.EngineRulesetConfig;
+import wvw.mobibench.config.reason.MechanismTypes;
+import wvw.mobibench.config.reason.ReasoningConfig;
+import wvw.mobibench.config.reason.ReasoningMechanism;
+import wvw.mobibench.config.reason.ReasoningOption;
+import wvw.mobibench.config.reason.ReasoningScope;
+import wvw.mobibench.config.reason.ScopeTypes;
+import wvw.mobibench.config.reason.TaskTypes;
+import wvw.mobibench.config.rules.RuleFormats;
+import wvw.mobibench.config.rules.RulesetConfig;
+import wvw.mobibench.config.rules.RulesetConfigContainer;
+import wvw.mobibench.exception.BenchmarkException;
+import wvw.mobibench.exception.OperationNotSupportedException;
+import wvw.mobibench.results.ExperimentResults;
+import wvw.mobibench.results.InferenceResults;
+import wvw.mobibench.timer.EngineExperimentTimer;
+import wvw.mobibench.timer.EngineResultTimes;
+
+public class IRIS extends ReasoningEngine {
+
+	private static String stratBotUp_naive = "StratifiedBottomUpNaive";
+	private static String stratBotUp_semiNaive = "StratifiedBottomUpSemiNaive";
+	private static String wellFounded = "WellFounded";
+
+	private Map<IPredicate, IRelation> facts = new HashMap<IPredicate, IRelation>();
+	private List<IRule> rules = new Vector<IRule>();
+
+	// private IQuery query;
+
+	public IRIS() {
+		super("IRIS");
+	}
+
+	protected EngineConfig createEngineConfig() {
+		EngineRulesetConfig ruleConfig = new EngineRulesetConfig(
+				RuleFormats.Datalog);
+		EngineDatasetConfig dataConfig = new EngineDatasetConfig(
+				DataFormats.Datalog);
+
+		EngineReasoningConfig reasonConfig = new EngineReasoningConfig();
+
+		// - rules_inference
+		ReasoningMechanism rulesMech = new ReasoningMechanism(MechanismTypes.BUILTIN,
+				ProcessFlows.load_rules_data_exec);
+
+		rulesMech.addScope(new ReasoningScope(ScopeTypes.FULL,
+				new ReasoningOption(stratBotUp_naive),
+				new ReasoningOption(stratBotUp_semiNaive),
+				new ReasoningOption(wellFounded)));
+
+		reasonConfig.addMechanism(TaskTypes.RULE_INFERENCE, rulesMech);
+
+		return new EngineConfig(ruleConfig, dataConfig, reasonConfig);
+	}
+
+	public void init() {
+	}
+
+	public void reset() {
+		facts.clear();
+
+		rules.clear();
+	}
+
+	public EngineResultTimes loadData(ReasoningConfig rConfig, DatasetConfigContainer datasetContainer)
+			throws BenchmarkException {
+
+		DatasetConfig dataset = datasetContainer.getConfig();
+
+		EngineResultTimes resultTimes = new EngineResultTimes();
+		EngineExperimentTimer timer;
+
+		try {
+			timer = new EngineExperimentTimer("loadData", resultTimes);
+
+			timer.begin();
+
+			Parser parser = new Parser();
+			parser.parse(dataset.getDataString());
+
+			handle(parser);
+
+			timer.done();
+
+			return resultTimes;
+
+		} catch (ParserException e) {
+			throw new BenchmarkException("Error in <loadData>: "
+					+ e.getMessage());
+		}
+
+	}
+
+	public ExperimentResults executeRules(ReasoningConfig rConfig,
+			RulesetConfigContainer rulesetContainer) throws BenchmarkException {
+
+		throw new OperationNotSupportedException("executeRules");
+	}
+
+	public EngineResultTimes loadRules(ReasoningConfig rConfig, RulesetConfigContainer rulesetContainer)
+			throws BenchmarkException {
+
+		RulesetConfig ruleset = rulesetContainer.getConfig();
+
+		EngineResultTimes resultTimes = new EngineResultTimes();
+		EngineExperimentTimer timer;
+
+		try {
+			String rules = ruleset.getRulesString().replaceAll("\n\n", "\n");
+
+			timer = new EngineExperimentTimer("loadRules", resultTimes);
+			timer.begin();
+
+			Parser parser = new Parser();
+			parser.parse(rules);
+
+			handle(parser);
+
+			timer.done();
+
+			return resultTimes;
+
+		} catch (ParserException e) {
+			throw new BenchmarkException("Error in <loadRules>: "
+					+ e.getMessage());
+		}
+	}
+
+	public ExperimentResults execute(ReasoningConfig rConfig)
+			throws BenchmarkException {
+
+		InferenceResults expResults = new InferenceResults();
+
+		EngineResultTimes resultTimes = new EngineResultTimes();
+		expResults.setResultTimes(resultTimes);
+
+		EngineExperimentTimer timer, timer2;
+
+		try {
+			timer = new EngineExperimentTimer("execute", resultTimes);
+			timer.begin();
+
+			timer2 = new EngineExperimentTimer("createKB", resultTimes);
+			timer2.begin();
+
+			Configuration configuration = KnowledgeBaseFactory
+					.getDefaultConfiguration();
+
+			configuration.evaluationTimeoutMilliseconds = 10000;
+
+			// NOTE these either block or raise an exception
+			// configuration.evaluationStrategyFactory = new
+			// OLDTEvaluationStrategyFactory();
+			// configuration.evaluationStrategyFactory = new
+			// SLDNFEvaluationStrategyFactory();
+
+			ReasoningScope scope = rConfig.getScope();
+			String option = scope.getOptions().next().getLabel();
+
+			if (option.equals(stratBotUp_naive))
+				configuration.evaluationStrategyFactory = new
+						StratifiedBottomUpEvaluationStrategyFactory(
+								new NaiveEvaluatorFactory());
+
+			else if (option.equals(stratBotUp_semiNaive))
+				configuration.evaluationStrategyFactory = new
+						StratifiedBottomUpEvaluationStrategyFactory(
+								new SemiNaiveEvaluatorFactory());
+
+			else if (option.equals(wellFounded))
+				configuration.evaluationStrategyFactory = new
+						WellFoundedEvaluationStrategyFactory();
+
+			configuration.ruleSafetyProcessor = new StandardRuleSafetyProcessor();
+
+			IKnowledgeBase knowledgeBase = KnowledgeBaseFactory
+					.createKnowledgeBase(facts, rules, configuration);
+			
+			timer2.done();
+
+			timer2 = new EngineExperimentTimer("executeQuery", resultTimes);
+			timer2.begin();
+
+			Parser qParser = new Parser();
+			// TODO query hardcoded for rules_inference
+			// qParser.parse("?-stmt(?S,'impactaf/hasDSSFinding',?O).");
+			qParser.parse("?-stmt(?S,?P,?O).");
+
+			// NOTE there's currently only 1
+			IRelation results = null;
+			for (IQuery query : qParser.getQueries()) {
+				List<IVariable> variableBindings = new ArrayList<IVariable>();
+
+				IRelation results2 = knowledgeBase.execute(query,
+						variableBindings);
+
+				if (results == null)
+					results = results2;
+
+				else
+					results.addAll(results2);
+			}
+
+			timer2.done();
+
+			timer.done();
+
+			timer = new EngineExperimentTimer("collectInferred", resultTimes);
+			timer.begin();
+
+			expResults.setInferred(collectInferred(results));
+
+			timer.done();
+
+			return expResults;
+
+		} catch (EvaluationException e) {
+			throw new BenchmarkException("Error in <execute>: "
+					+ e.getMessage());
+
+		} catch (ParserException e) {
+			throw new BenchmarkException("Error in <execute>: "
+					+ e.getMessage());
+		}
+	}
+
+	public ExperimentResults inference(ReasoningConfig rConfig,
+			DatasetConfigContainer ontologyContainer) throws BenchmarkException {
+
+		throw new OperationNotSupportedException("inference");
+	}
+
+	public ExperimentResults entails(ReasoningConfig rConfig,
+			DatasetConfigContainer serviceContainer, DatasetConfigContainer goalContainer)
+			throws BenchmarkException {
+
+		throw new OperationNotSupportedException("entails");
+	}
+
+	private void handle(Parser parser) {
+		addFacts(parser.getFacts());
+		addRules(parser.getRules());
+	}
+
+	private void addFacts(Map<IPredicate, IRelation> facts) {
+		Iterator<Map.Entry<IPredicate, IRelation>> factIt = facts.entrySet()
+				.iterator();
+		while (factIt.hasNext()) {
+			Map.Entry<IPredicate, IRelation> fact = factIt.next();
+
+			if (this.facts.containsKey(fact.getKey())) {
+				IRelation rel = this.facts.get(fact.getKey());
+
+				rel.addAll(fact.getValue());
+
+			} else
+				this.facts.put(fact.getKey(), fact.getValue());
+		}
+	}
+
+	private void addRules(List<IRule> rules) {
+		this.rules.addAll(rules);
+	}
+
+	private List<String> collectInferred(IRelation m) {
+		List<String> inferred = new ArrayList<String>();
+
+		for (int t = 0; t < m.size(); ++t) {
+			ITuple tuple = m.get(t);
+
+			String str = tuple.toString();
+			str = "stmt" + str.replaceAll(", ", ",") + ".";
+
+			inferred.add(str);
+		}
+
+		return inferred;
+	}
+}

@@ -1,0 +1,52 @@
+> HermiT, JFact 
+
+flag conf2/ dataset as inconsistent
+	(not AndroJena)
+
+	
+> AndroJena
+
+OWL scope: doesn't work with conf/ dataset
+	complains about illegal list structure
+
+heap dumps for some test cases cannot be parsed (tried multiple times)
+	(see BenchmarkUtils/failed_generateDumpReport.txt)
+	
+the following rule doesn't work in AndroJena:
+
+	[R6: 
+	(?p <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#IrreflexiveProperty>)
+	(?x ?p ?x)
+	->
+	(?p <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://spinrdf.org/spin#ViolationIrreflexiveProperty>)
+	]
+	
+(apparently, due to "(?x ?p ?x) part; if one of the x'es is replaced by another variable & accompanied by FILTER
+	sameAs, it does work ..)
+	
+	
+> Elk
+
+conf/ dataset: throws java.lang.NullPointerException: Attempt to invoke virtual method 
+	'org.semanticweb.elk.util.collections.chains.Chain org.semanticweb.elk.reasoner.indexing.hierarchy.
+	IndexedClassExpression.getCompositionRuleChain()' on a null object reference
+
+conf2/ dataset: no inferences
+
+huge amount of output to console; will likely slow down inferencing
+	in fact, eclipse crashes when opening logcat tool for 10 runs
+	
+	
+> HermiT
+
+conf/ dataset: Error: Parsed DisjointClasses(<http://www.example.org#c_27>). A DisjointClasses axiom in 
+	OWL 2 DL must have at least two classes as parameters.
+
+conf2/ dataset: Error: Parsed DisjointClasses(<http://www.example.org#c_27>). A DisjointClasses axiom in 
+	OWL 2 DL must have at least two classes as parameters.
+	
+	
+> IRIS
+
+when trying SLDNFEvaluationStrategy: 
+	Error in <execute>: You may ran into an infinite loop. SLDNF evaluation does not support tabling.

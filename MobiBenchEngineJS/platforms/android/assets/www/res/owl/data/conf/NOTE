@@ -1,0 +1,27 @@
+checking conformance (full.nt) raises the following exception for AndroJena:
+	Exception in thread "main" java.lang.NullPointerException
+		at com.hp.hpl.jena.reasoner.rulesys.impl.RETEQueue.fire(RETEQueue.java:105)
+		at com.hp.hpl.jena.reasoner.rulesys.impl.RETEClauseFilter.fire(RETEClauseFilter.java:220)
+		at com.hp.hpl.jena.reasoner.rulesys.impl.RETEEngine.inject(RETEEngine.java:422)
+		at com.hp.hpl.jena.reasoner.rulesys.impl.RETEEngine.runAll(RETEEngine.java:404)
+		at com.hp.hpl.jena.reasoner.rulesys.impl.RETEEngine.fastInit(RETEEngine.java:150)
+		at com.hp.hpl.jena.reasoner.rulesys.FBRuleInfGraph.prepare(FBRuleInfGraph.java:473)
+		at com.hp.hpl.jena.reasoner.rulesys.BasicForwardRuleInfGraph.getDeductionsGraph(BasicForwardRuleInfGraph.java:391)
+		at com.hp.hpl.jena.rdf.model.impl.InfModelImpl.getDeductionsModel(InfModelImpl.java:152)
+		at wvw.mobibench.engine.AndroJena.executeRules(AndroJena.java:228)
+		..
+
+caused by irreflexive property (case 14)
+so, removed the following:
+
+res/owl/data/conf/full.nt:
+	<http://www.example.org#x_14> <http://www.example.org#p_14> <http://www.example.org#x_14> .
+	<http://www.example.org#p_14> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#IrreflexiveProperty> .
+
+res/owl/conf/ontology_inference/owl2rl/conf/full/full.nt:
+	<http://spinrdf.org/spin#constraintViolation_irreflexiveProperty> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://spinrdf.org/spin#ConstraintViolation> .
+	<http://spinrdf.org/spin#constraintViolation_irreflexiveProperty> <http://spinrdf.org/spin#violationRoot> <http://www.example.org#x_14> .
+	<http://spinrdf.org/spin#constraintViolation_irreflexiveProperty> <http://spinrdf.org/spin#violationPath> <http://www.example.org#p_14> .
+	<http://spinrdf.org/spin#constraintViolation_irreflexiveProperty> <http://www.w3.org/2000/01/rdf-schema#label> "Irreflexive property" .
+	
+(tried the full conformance set of rdfstore_js, no issues)

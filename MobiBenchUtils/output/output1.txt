@@ -1,0 +1,598 @@
+- inferred vs. non-inferred
+> precond
+
+>> # extra inferences (separate, goal > service): 
+non-inf: #22
+inf: #30
+(1) extra inf: userscience-fiction-novel_price_service > science-fiction-noveluser_recommendedpriceindollar_service
+(1) extra inf: userscience-fiction-novel_price_service > ScienceFNovelReview_service
+(1) extra inf: userscience-fiction-novel_price_service > SFNovelReview_service
+(1) extra inf: userscience-fiction-novel_price_service > SFNRecommendedPrice_service
+(0) extra inf: bookpersoncreditcardaccount_price_service > bookpersoncreditcardaccount_recommendedprice_service
+(0) extra inf: bookpersoncreditcardaccount_price_service > bookpersoncreditcardaccount_taxedfreeprice_service
+(1) extra inf: citycountry_hotel_service > countrycapital-city_hotel_service
+(1) extra inf: geographical-regiongeographical-region_map_service > citycity_map_service
+
+
+>> # extra inferences (separate, service > goal): 
+non-inf: #23
+inf: #53
+(0) extra inf: publicationperson__service > bookpersoncreditcardaccount_price_service
+(0) extra inf: publicationperson__service > bookpersoncreditcardaccount__service
+(0) extra inf: publicationperson__service > userscience-fiction-novel_price_service
+(0) extra inf: objectperson__service > bookpersoncreditcardaccount__service
+(0) extra inf: locationlocation_icon_service > geographical-regiongeographical-region_map_service
+(0) extra inf: bookpersoncreditaccount__Beaservice > bookpersoncreditcardaccount_price_service
+(0) extra inf: bookpersoncreditaccount__Beaservice > bookpersoncreditcardaccount__service
+(0) extra inf: monographperson__service > bookpersoncreditcardaccount_price_service
+(0) extra inf: monographperson__service > bookpersoncreditcardaccount__service
+(0) extra inf: monographperson__service > userscience-fiction-novel_price_service
+(0) extra inf: locationlocation_map_SRIservice > geographical-regiongeographical-region_map_service
+(0) extra inf: geographical-regiongeographical-region_icon_service > geographical-regiongeographical-region_map_service
+(0) extra inf: printedmaterialpersoncreditcardaccount__service > bookpersoncreditcardaccount_price_service
+(0) extra inf: printedmaterialpersoncreditcardaccount__service > bookpersoncreditcardaccount__service
+(1) extra inf: bookperson_price_service > userscience-fiction-novel_price_service
+(0) extra inf: printedmaterialpersoncreditcardaccount_price_service > bookpersoncreditcardaccount_price_service
+(0) extra inf: locationlocation_map_service > geographical-regiongeographical-region_map_service
+(0) extra inf: sciencefictionbookuser_price_service > userscience-fiction-novel_price_service
+(0) extra inf: userbook_price_service > userscience-fiction-novel_price_service
+(0) extra inf: personbookliabilityaccount__service > bookpersoncreditcardaccount_price_service
+(0) extra inf: personbookliabilityaccount__service > bookpersoncreditcardaccount__service
+(0) extra inf: personmonographcreditcardaccount__service > bookpersoncreditcardaccount_price_service
+(0) extra inf: personmonographcreditcardaccount__service > bookpersoncreditcardaccount__service
+(0) extra inf: printedmaterialperson__service > bookpersoncreditcardaccount_price_service
+(0) extra inf: printedmaterialperson__service > bookpersoncreditcardaccount__service
+(0) extra inf: printedmaterialperson__service > userscience-fiction-novel_price_service
+(0) extra inf: objectpersoncreditaccount_price_service > bookpersoncreditcardaccount_price_service
+(1) extra inf: bookperson__service > userscience-fiction-novel_price_service
+(0) extra inf: bookpersoncreditaccount__service > bookpersoncreditcardaccount_price_service
+(0) extra inf: bookpersoncreditaccount__service > bookpersoncreditcardaccount__service
+
+
+>> # extra inferences (single): 
+non-inf: #114
+inf: #343
+(0) extra inf: publicationperson__service > bookpersoncreditaccount__Beaservice
+(0) extra inf: publicationperson__service > bookpersoncreditaccount__service
+(0) extra inf: publicationperson__service > bookpersoncreditcardaccount_price_service
+(0) extra inf: publicationperson__service > bookpersoncreditcardaccount_recommendedprice_service
+(0) extra inf: publicationperson__service > bookpersoncreditcardaccount_taxedfreeprice_service
+(0) extra inf: publicationperson__service > bookpersoncreditcardaccount__BShopservice
+(0) extra inf: publicationperson__service > bookpersoncreditcardaccount__service
+(0) extra inf: publicationperson__service > bookperson_price_service
+(0) extra inf: publicationperson__service > bookperson__service
+(0) extra inf: publicationperson__service > bookusercreditcardaccount__service
+(0) extra inf: publicationperson__service > fantansynoveluser_price_service
+(0) extra inf: publicationperson__service > monographpersoncreditcardaccount_recommendedprice_service
+(0) extra inf: publicationperson__service > monographperson__service
+(0) extra inf: publicationperson__service > personbookliabilityaccount__service
+(0) extra inf: publicationperson__service > personmonographcreditcardaccount__service
+(0) extra inf: publicationperson__service > science-fiction-noveluser_recommendedpriceindollar_service
+(0) extra inf: publicationperson__service > sciencefictionbookuser_price_service
+(0) extra inf: publicationperson__service > ScienceFNovelReview_service
+(0) extra inf: publicationperson__service > SFNovelReview_service
+(0) extra inf: publicationperson__service > SFNRecommendedPrice_service
+(0) extra inf: publicationperson__service > userbook_price_service
+(0) extra inf: publicationperson__service > userRomanticnovel_price_service
+(0) extra inf: publicationperson__service > userscience-fiction-novel_price_Bestservice
+(0) extra inf: publicationperson__service > userscience-fiction-novel_price_service
+(0) extra inf: publicationperson__service > userscience-fiction-novel_Relprice_service
+(0) extra inf: citycountry_accommodation_service > citycountry_destinationhotel_service
+(0) extra inf: citycountry_accommodation_service > countrycity_luxuryhotel_Gelservice
+(0) extra inf: citycountry_accommodation_service > countrycity_luxuryhotel_service
+(0) extra inf: citycountry_accommodation_service > countrycity_sportshotel_service
+(0) extra inf: citycountry_accommodation_service > durationcountrycity_hotel_service
+(0) extra inf: citycountry_accommodation_service > personcountrycity_sportshotel_service
+(0) extra inf: citycountry_accommodation_service > time-measurecountrycity_hotel_service
+(0) extra inf: locationlocation_icon_service > citycity_arrowfigure_service
+(0) extra inf: locationlocation_icon_service > citycity_map_service
+(0) extra inf: locationlocation_icon_service > geographical-regiongeographical-region_icon_service
+(0) extra inf: locationlocation_icon_service > geographical-regiongeographical-region_map_Gorgservice
+(0) extra inf: locationlocation_icon_service > geographical-regiongeographical-region_map_service
+(0) extra inf: locationlocation_icon_service > locationlocation_arrowfigure_service
+(0) extra inf: locationlocation_icon_service > locationlocation_map_service
+(0) extra inf: locationlocation_icon_service > locationlocation_map_SRIservice
+(0) extra inf: time-measuregeopolitical-entitycity_hotel_service > time-measurecountrycity_hotel_service
+(1) extra inf: city_hotel_Germanservice > countrycapital-city_hotel_service
+(0) extra inf: locationlocation_arrowfigure_service > citycity_arrowfigure_service
+(0) extra inf: AddLinks__service > citycity_arrowfigure_service
+(0) extra inf: AddLinks__service > citycity_map_service
+(1) extra inf: bookpersoncreditaccount__Beaservice > bookpersoncreditcardaccount_price_service
+(1) extra inf: bookpersoncreditaccount__Beaservice > bookpersoncreditcardaccount_recommendedprice_service
+(1) extra inf: bookpersoncreditaccount__Beaservice > bookpersoncreditcardaccount_taxedfreeprice_service
+(1) extra inf: bookpersoncreditaccount__Beaservice > bookpersoncreditcardaccount__BShopservice
+(1) extra inf: bookpersoncreditaccount__Beaservice > bookpersoncreditcardaccount__service
+(1) extra inf: bookpersoncreditaccount__Beaservice > bookusercreditcardaccount__service
+(1) extra inf: monographperson__service > bookpersoncreditaccount__Beaservice
+(1) extra inf: monographperson__service > bookpersoncreditaccount__service
+(1) extra inf: monographperson__service > bookpersoncreditcardaccount_price_service
+(1) extra inf: monographperson__service > bookpersoncreditcardaccount_recommendedprice_service
+(1) extra inf: monographperson__service > bookpersoncreditcardaccount_taxedfreeprice_service
+(1) extra inf: monographperson__service > bookpersoncreditcardaccount__BShopservice
+(1) extra inf: monographperson__service > bookpersoncreditcardaccount__service
+(1) extra inf: monographperson__service > bookperson_price_service
+(1) extra inf: monographperson__service > bookperson__service
+(1) extra inf: monographperson__service > bookusercreditcardaccount__service
+(1) extra inf: monographperson__service > fantansynoveluser_price_service
+(1) extra inf: monographperson__service > personbookliabilityaccount__service
+(1) extra inf: monographperson__service > science-fiction-noveluser_recommendedpriceindollar_service
+(1) extra inf: monographperson__service > sciencefictionbookuser_price_service
+(1) extra inf: monographperson__service > ScienceFNovelReview_service
+(1) extra inf: monographperson__service > SFNovelReview_service
+(1) extra inf: monographperson__service > SFNRecommendedPrice_service
+(1) extra inf: monographperson__service > userbook_price_service
+(1) extra inf: monographperson__service > userRomanticnovel_price_service
+(1) extra inf: monographperson__service > userscience-fiction-novel_price_Bestservice
+(1) extra inf: monographperson__service > userscience-fiction-novel_price_service
+(1) extra inf: monographperson__service > userscience-fiction-novel_Relprice_service
+(0) extra inf: geographical-regiongeographical-region_icon_service > citycity_arrowfigure_service
+(0) extra inf: geographical-regiongeographical-region_icon_service > citycity_map_service
+(0) extra inf: geographical-regiongeographical-region_icon_service > geographical-regiongeographical-region_map_Gorgservice
+(0) extra inf: geographical-regiongeographical-region_icon_service > geographical-regiongeographical-region_map_service
+(1) extra inf: geographical-regiongeographical-region_map_Gorgservice > citycity_map_service
+(1) extra inf: printedmaterialpersoncreditcardaccount__service > bookpersoncreditcardaccount_price_service
+(1) extra inf: printedmaterialpersoncreditcardaccount__service > bookpersoncreditcardaccount_recommendedprice_service
+(1) extra inf: printedmaterialpersoncreditcardaccount__service > bookpersoncreditcardaccount_taxedfreeprice_service
+(1) extra inf: printedmaterialpersoncreditcardaccount__service > bookpersoncreditcardaccount__BShopservice
+(1) extra inf: printedmaterialpersoncreditcardaccount__service > bookpersoncreditcardaccount__service
+(1) extra inf: printedmaterialpersoncreditcardaccount__service > bookusercreditcardaccount__service
+(1) extra inf: printedmaterialpersoncreditcardaccount__service > monographpersoncreditcardaccount_recommendedprice_service
+(1) extra inf: printedmaterialpersoncreditcardaccount__service > personmonographcreditcardaccount__service
+(1) extra inf: bookperson_price_service > bookpersoncreditcardaccount_recommendedprice_service
+(1) extra inf: bookperson_price_service > bookpersoncreditcardaccount_taxedfreeprice_service
+(1) extra inf: bookperson_price_service > fantansynoveluser_price_service
+(1) extra inf: bookperson_price_service > science-fiction-noveluser_recommendedpriceindollar_service
+(1) extra inf: bookperson_price_service > sciencefictionbookuser_price_service
+(1) extra inf: bookperson_price_service > ScienceFNovelReview_service
+(1) extra inf: bookperson_price_service > SFNovelReview_service
+(1) extra inf: bookperson_price_service > SFNRecommendedPrice_service
+(1) extra inf: bookperson_price_service > userbook_price_service
+(1) extra inf: bookperson_price_service > userRomanticnovel_price_service
+(1) extra inf: bookperson_price_service > userscience-fiction-novel_price_Bestservice
+(1) extra inf: bookperson_price_service > userscience-fiction-novel_price_service
+(1) extra inf: bookperson_price_service > userscience-fiction-novel_Relprice_service
+(1) extra inf: userscience-fiction-novel_price_Bestservice > science-fiction-noveluser_recommendedpriceindollar_service
+(1) extra inf: userscience-fiction-novel_price_Bestservice > ScienceFNovelReview_service
+(1) extra inf: userscience-fiction-novel_price_Bestservice > SFNovelReview_service
+(1) extra inf: userscience-fiction-novel_price_Bestservice > SFNRecommendedPrice_service
+(0) extra inf: durationgeopolitical-entitycity_hotel_service > durationcountrycity_hotel_service
+(1) extra inf: bookpersoncreditcardaccount__BShopservice > bookusercreditcardaccount__service
+(1) extra inf: geographical-regiongeographical-region_map_service > citycity_map_service
+(1) extra inf: locationlocation_map_service > citycity_map_service
+(1) extra inf: locationlocation_map_service > geographical-regiongeographical-region_map_Gorgservice
+(1) extra inf: locationlocation_map_service > geographical-regiongeographical-region_map_service
+(0) extra inf: userbook_price_service > fantansynoveluser_price_service
+(0) extra inf: userbook_price_service > science-fiction-noveluser_recommendedpriceindollar_service
+(0) extra inf: userbook_price_service > sciencefictionbookuser_price_service
+(0) extra inf: userbook_price_service > ScienceFNovelReview_service
+(0) extra inf: userbook_price_service > SFNovelReview_service
+(0) extra inf: userbook_price_service > SFNRecommendedPrice_service
+(0) extra inf: userbook_price_service > userRomanticnovel_price_service
+(0) extra inf: userbook_price_service > userscience-fiction-novel_price_Bestservice
+(0) extra inf: userbook_price_service > userscience-fiction-novel_price_service
+(0) extra inf: userbook_price_service > userscience-fiction-novel_Relprice_service
+(0) extra inf: durationgeopolitical-entitycity_accommodation_service > durationcountrycity_hotel_service
+(0) extra inf: durationgeopolitical-entitycity_accommodation_service > durationgeopolitical-entitycity_bedandbreakfast_service
+(0) extra inf: durationgeopolitical-entitycity_accommodation_service > durationgeopolitical-entitycity_hotel_service
+(1) extra inf: userscience-fiction-novel_price_service > science-fiction-noveluser_recommendedpriceindollar_service
+(1) extra inf: userscience-fiction-novel_price_service > ScienceFNovelReview_service
+(1) extra inf: userscience-fiction-novel_price_service > SFNovelReview_service
+(1) extra inf: userscience-fiction-novel_price_service > SFNRecommendedPrice_service
+(0) extra inf: personbookliabilityaccount__service > bookpersoncreditaccount__Beaservice
+(0) extra inf: personbookliabilityaccount__service > bookpersoncreditaccount__service
+(0) extra inf: personbookliabilityaccount__service > bookpersoncreditcardaccount_price_service
+(0) extra inf: personbookliabilityaccount__service > bookpersoncreditcardaccount_recommendedprice_service
+(0) extra inf: personbookliabilityaccount__service > bookpersoncreditcardaccount_taxedfreeprice_service
+(0) extra inf: personbookliabilityaccount__service > bookpersoncreditcardaccount__BShopservice
+(0) extra inf: personbookliabilityaccount__service > bookpersoncreditcardaccount__service
+(0) extra inf: personbookliabilityaccount__service > bookusercreditcardaccount__service
+(0) extra inf: ScienceFNovelReview_service > SFNovelReview_service
+(0) extra inf: objectpersoncreditaccount_price_service > bookpersoncreditcardaccount_price_service
+(0) extra inf: objectpersoncreditaccount_price_service > bookpersoncreditcardaccount_recommendedprice_service
+(0) extra inf: objectpersoncreditaccount_price_service > bookpersoncreditcardaccount_taxedfreeprice_service
+(0) extra inf: objectpersoncreditaccount_price_service > monographpersoncreditcardaccount_recommendedprice_service
+(0) extra inf: objectpersoncreditaccount_price_service > printedmaterialpersoncreditcardaccount_price_service
+(1) extra inf: bookperson__service > bookusercreditcardaccount__service
+(1) extra inf: bookperson__service > fantansynoveluser_price_service
+(1) extra inf: bookperson__service > science-fiction-noveluser_recommendedpriceindollar_service
+(1) extra inf: bookperson__service > sciencefictionbookuser_price_service
+(1) extra inf: bookperson__service > ScienceFNovelReview_service
+(1) extra inf: bookperson__service > SFNovelReview_service
+(1) extra inf: bookperson__service > SFNRecommendedPrice_service
+(1) extra inf: bookperson__service > userbook_price_service
+(1) extra inf: bookperson__service > userRomanticnovel_price_service
+(1) extra inf: bookperson__service > userscience-fiction-novel_price_Bestservice
+(1) extra inf: bookperson__service > userscience-fiction-novel_price_service
+(1) extra inf: bookperson__service > userscience-fiction-novel_Relprice_service
+(0) extra inf: objectperson__service > bookpersoncreditcardaccount__service
+(0) extra inf: bookpersoncreditcardaccount_price_service > bookpersoncreditcardaccount_recommendedprice_service
+(0) extra inf: bookpersoncreditcardaccount_price_service > bookpersoncreditcardaccount_taxedfreeprice_service
+(1) extra inf: countrycity_hotel_service > countrycapital-city_hotel_service
+(1) extra inf: city_hotel_Saarlandservice > countrycity_luxuryhotel_Gelservice
+(1) extra inf: city_hotel_Saarlandservice > countrycity_luxuryhotel_service
+(1) extra inf: SFNRecommendedPrice_service > science-fiction-noveluser_recommendedpriceindollar_service
+(1) extra inf: SFNRecommendedPrice_service > SFNovelReview_service
+(1) extra inf: locationlocation_map_SRIservice > citycity_map_service
+(1) extra inf: locationlocation_map_SRIservice > geographical-regiongeographical-region_map_Gorgservice
+(1) extra inf: locationlocation_map_SRIservice > geographical-regiongeographical-region_map_service
+(0) extra inf: printedmaterialpersoncreditcardaccount_price_service > bookpersoncreditcardaccount_price_service
+(0) extra inf: printedmaterialpersoncreditcardaccount_price_service > bookpersoncreditcardaccount_recommendedprice_service
+(0) extra inf: printedmaterialpersoncreditcardaccount_price_service > bookpersoncreditcardaccount_taxedfreeprice_service
+(0) extra inf: printedmaterialpersoncreditcardaccount_price_service > monographpersoncreditcardaccount_recommendedprice_service
+(0) extra inf: time-measuregeopolitical-entitycity_accommodation_service > time-measurecountrycity_hotel_service
+(0) extra inf: time-measuregeopolitical-entitycity_accommodation_service > time-measuregeopolitical-entitycity_bedandbreakfast_service
+(0) extra inf: time-measuregeopolitical-entitycity_accommodation_service > time-measuregeopolitical-entitycity_hotel_service
+(1) extra inf: citycountry_hotel_service > countrycapital-city_hotel_service
+(0) extra inf: monographpersoncreditcardaccount_recommendedprice_service > bookpersoncreditcardaccount_recommendedprice_service
+(1) extra inf: book_recommendedprice_RegisteredUserservice > science-fiction-noveluser_recommendedpriceindollar_service
+(1) extra inf: book_recommendedprice_RegisteredUserservice > ScienceFNovelReview_service
+(1) extra inf: book_recommendedprice_RegisteredUserservice > SFNovelReview_service
+(1) extra inf: book_recommendedprice_RegisteredUserservice > SFNRecommendedPrice_service
+(0) extra inf: sciencefictionbookuser_price_service > science-fiction-noveluser_recommendedpriceindollar_service
+(0) extra inf: sciencefictionbookuser_price_service > ScienceFNovelReview_service
+(0) extra inf: sciencefictionbookuser_price_service > SFNovelReview_service
+(0) extra inf: sciencefictionbookuser_price_service > SFNRecommendedPrice_service
+(0) extra inf: sciencefictionbookuser_price_service > userscience-fiction-novel_price_Bestservice
+(0) extra inf: sciencefictionbookuser_price_service > userscience-fiction-novel_price_service
+(0) extra inf: sciencefictionbookuser_price_service > userscience-fiction-novel_Relprice_service
+(1) extra inf: personmonographcreditcardaccount__service > bookpersoncreditcardaccount_price_service
+(1) extra inf: personmonographcreditcardaccount__service > bookpersoncreditcardaccount_recommendedprice_service
+(1) extra inf: personmonographcreditcardaccount__service > bookpersoncreditcardaccount_taxedfreeprice_service
+(1) extra inf: personmonographcreditcardaccount__service > bookpersoncreditcardaccount__BShopservice
+(1) extra inf: personmonographcreditcardaccount__service > bookpersoncreditcardaccount__service
+(1) extra inf: personmonographcreditcardaccount__service > bookusercreditcardaccount__service
+(1) extra inf: printedmaterialperson__service > bookpersoncreditaccount__Beaservice
+(1) extra inf: printedmaterialperson__service > bookpersoncreditaccount__service
+(1) extra inf: printedmaterialperson__service > bookpersoncreditcardaccount_price_service
+(1) extra inf: printedmaterialperson__service > bookpersoncreditcardaccount_recommendedprice_service
+(1) extra inf: printedmaterialperson__service > bookpersoncreditcardaccount_taxedfreeprice_service
+(1) extra inf: printedmaterialperson__service > bookpersoncreditcardaccount__BShopservice
+(1) extra inf: printedmaterialperson__service > bookpersoncreditcardaccount__service
+(1) extra inf: printedmaterialperson__service > bookperson_price_service
+(1) extra inf: printedmaterialperson__service > bookperson__service
+(1) extra inf: printedmaterialperson__service > bookusercreditcardaccount__service
+(1) extra inf: printedmaterialperson__service > fantansynoveluser_price_service
+(1) extra inf: printedmaterialperson__service > monographpersoncreditcardaccount_recommendedprice_service
+(1) extra inf: printedmaterialperson__service > monographperson__service
+(1) extra inf: printedmaterialperson__service > personbookliabilityaccount__service
+(1) extra inf: printedmaterialperson__service > personmonographcreditcardaccount__service
+(1) extra inf: printedmaterialperson__service > publicationperson__service
+(1) extra inf: printedmaterialperson__service > science-fiction-noveluser_recommendedpriceindollar_service
+(1) extra inf: printedmaterialperson__service > sciencefictionbookuser_price_service
+(1) extra inf: printedmaterialperson__service > ScienceFNovelReview_service
+(1) extra inf: printedmaterialperson__service > SFNovelReview_service
+(1) extra inf: printedmaterialperson__service > SFNRecommendedPrice_service
+(1) extra inf: printedmaterialperson__service > userbook_price_service
+(1) extra inf: printedmaterialperson__service > userRomanticnovel_price_service
+(1) extra inf: printedmaterialperson__service > userscience-fiction-novel_price_Bestservice
+(1) extra inf: printedmaterialperson__service > userscience-fiction-novel_price_service
+(1) extra inf: printedmaterialperson__service > userscience-fiction-novel_Relprice_service
+(1) extra inf: user_price_ShoppingStatusservice > science-fiction-noveluser_recommendedpriceindollar_service
+(1) extra inf: user_price_ShoppingStatusservice > ScienceFNovelReview_service
+(1) extra inf: user_price_ShoppingStatusservice > SFNovelReview_service
+(1) extra inf: user_price_ShoppingStatusservice > SFNRecommendedPrice_service
+(1) extra inf: bookpersoncreditaccount__service > bookpersoncreditcardaccount_price_service
+(1) extra inf: bookpersoncreditaccount__service > bookpersoncreditcardaccount_recommendedprice_service
+(1) extra inf: bookpersoncreditaccount__service > bookpersoncreditcardaccount_taxedfreeprice_service
+(1) extra inf: bookpersoncreditaccount__service > bookpersoncreditcardaccount__BShopservice
+(1) extra inf: bookpersoncreditaccount__service > bookpersoncreditcardaccount__service
+(1) extra inf: bookpersoncreditaccount__service > bookusercreditcardaccount__service
+(1) extra inf: userscience-fiction-novel_Relprice_service > science-fiction-noveluser_recommendedpriceindollar_service
+(1) extra inf: userscience-fiction-novel_Relprice_service > ScienceFNovelReview_service
+(1) extra inf: userscience-fiction-novel_Relprice_service > SFNovelReview_service
+(1) extra inf: userscience-fiction-novel_Relprice_service > SFNRecommendedPrice_service
+
+
+>> # bi-directional (separate, non-inf):
+goal-service: #22
+service-goal: #23
+bi-dir: userscience-fiction-novel_price_Bestservice, userscience-fiction-novel_price_service
+bi-dir: open_door, lock_door
+bi-dir: lock_door, open_door
+bi-dir: countrycity_hotel_service, citycountry_hotel_service
+bi-dir: EBookOrder3, EBookOrder1
+bi-dir: EBookOrder2, EBookOrder1
+bi-dir: getElevationFromLocation, getAltitudeAboveSeaLevelOfLocation
+bi-dir: city_state_ZipCodes, getZipcodeForUSCity
+bi-dir: userscience-fiction-novel_Relprice_service, userscience-fiction-novel_price_service
+bi-dir: geographical-regiongeographical-region_map_Gorgservice, geographical-regiongeographical-region_map_service
+# bi-dir: 10
+
+
+>> # bi-directional (separate, inf):
+goal-service: #30
+service-goal: #53
+bi-dir: lock_door, open_door
+bi-dir: countrycity_hotel_service, citycountry_hotel_service
+bi-dir: city_state_ZipCodes, getZipcodeForUSCity
+bi-dir: geographical-regiongeographical-region_map_Gorgservice, geographical-regiongeographical-region_map_service
+bi-dir: userscience-fiction-novel_price_Bestservice, userscience-fiction-novel_price_service
+bi-dir: open_door, lock_door
+bi-dir: EBookOrder3, EBookOrder1
+bi-dir: EBookOrder2, EBookOrder1
+bi-dir: getElevationFromLocation, getAltitudeAboveSeaLevelOfLocation
+bi-dir: userscience-fiction-novel_Relprice_service, userscience-fiction-novel_price_service
+# bi-dir: 10
+
+
+>> # bi-directional (single, non-inf):
+all: #114
+bi-dir: bookpersoncreditaccount__Beaservice, bookpersoncreditaccount__service
+bi-dir: calculatorDistanceSphericalLawOfCosines, calculateDistanceInMiles
+bi-dir: calculatorDistanceSphericalLawOfCosines, calculateDistanceUsingSphericalGeometry
+bi-dir: calculatorDistanceSphericalLawOfCosines, getDistanceBetweenLocations
+bi-dir: countrycity_luxuryhotel_service, countrycity_luxuryhotel_Gelservice
+bi-dir: city_state_ZipCodes, getZipcodeForUSCity
+bi-dir: geographical-regiongeographical-region_map_Gorgservice, geographical-regiongeographical-region_map_service
+bi-dir: getAltitudeAboveSeaLevelOfLocation, getElevationFromLocation
+bi-dir: getDistanceBetweenLocations, calculateDistanceInMiles
+bi-dir: getDistanceBetweenLocations, calculateDistanceUsingSphericalGeometry
+bi-dir: getDistanceBetweenLocations, calculatorDistanceSphericalLawOfCosines
+bi-dir: userscience-fiction-novel_price_Bestservice, userscience-fiction-novel_price_service
+bi-dir: userscience-fiction-novel_price_Bestservice, userscience-fiction-novel_Relprice_service
+bi-dir: open_door, lock_door
+bi-dir: geographical-regiongeographical-region_map_service, geographical-regiongeographical-region_map_Gorgservice
+bi-dir: locationlocation_map_service, locationlocation_map_SRIservice
+bi-dir: calculateDistanceUsingSphericalGeometry, calculateDistanceInMiles
+bi-dir: calculateDistanceUsingSphericalGeometry, calculatorDistanceSphericalLawOfCosines
+bi-dir: calculateDistanceUsingSphericalGeometry, getDistanceBetweenLocations
+bi-dir: userscience-fiction-novel_price_service, userscience-fiction-novel_price_Bestservice
+bi-dir: userscience-fiction-novel_price_service, userscience-fiction-novel_Relprice_service
+bi-dir: getZipcodeForUSCity, city_state_ZipCodes
+bi-dir: lock_door, open_door
+bi-dir: countrycity_hotel_service, citycountry_hotel_service
+bi-dir: locationlocation_map_SRIservice, locationlocation_map_service
+bi-dir: calculateDistanceInMiles, calculateDistanceUsingSphericalGeometry
+bi-dir: calculateDistanceInMiles, calculatorDistanceSphericalLawOfCosines
+bi-dir: calculateDistanceInMiles, getDistanceBetweenLocations
+bi-dir: countrycity_luxuryhotel_Gelservice, countrycity_luxuryhotel_service
+bi-dir: citycountry_hotel_service, countrycity_hotel_service
+bi-dir: EBookOrder1, EBookOrder2
+bi-dir: EBookOrder1, EBookOrder3
+bi-dir: EBookOrder3, EBookOrder1
+bi-dir: EBookOrder3, EBookOrder2
+bi-dir: EBookOrder2, EBookOrder1
+bi-dir: EBookOrder2, EBookOrder3
+bi-dir: getElevationFromLocation, getAltitudeAboveSeaLevelOfLocation
+bi-dir: bookpersoncreditaccount__service, bookpersoncreditaccount__Beaservice
+bi-dir: userscience-fiction-novel_Relprice_service, userscience-fiction-novel_price_Bestservice
+bi-dir: userscience-fiction-novel_Relprice_service, userscience-fiction-novel_price_service
+# bi-dir: 40
+
+
+>> # bi-directional (single, inf):
+all: #343
+bi-dir: bookpersoncreditaccount__Beaservice, bookpersoncreditaccount__service
+bi-dir: calculatorDistanceSphericalLawOfCosines, calculateDistanceInMiles
+bi-dir: calculatorDistanceSphericalLawOfCosines, calculateDistanceUsingSphericalGeometry
+bi-dir: calculatorDistanceSphericalLawOfCosines, getDistanceBetweenLocations
+bi-dir: countrycity_luxuryhotel_service, countrycity_luxuryhotel_Gelservice
+bi-dir: city_state_ZipCodes, getZipcodeForUSCity
+bi-dir: geographical-regiongeographical-region_map_Gorgservice, geographical-regiongeographical-region_map_service
+bi-dir: getAltitudeAboveSeaLevelOfLocation, getElevationFromLocation
+bi-dir: getDistanceBetweenLocations, calculateDistanceInMiles
+bi-dir: getDistanceBetweenLocations, calculateDistanceUsingSphericalGeometry
+bi-dir: getDistanceBetweenLocations, calculatorDistanceSphericalLawOfCosines
+bi-dir: userscience-fiction-novel_price_Bestservice, userscience-fiction-novel_price_service
+bi-dir: userscience-fiction-novel_price_Bestservice, userscience-fiction-novel_Relprice_service
+bi-dir: open_door, lock_door
+bi-dir: geographical-regiongeographical-region_map_service, geographical-regiongeographical-region_map_Gorgservice
+bi-dir: locationlocation_map_service, locationlocation_map_SRIservice
+bi-dir: calculateDistanceUsingSphericalGeometry, calculateDistanceInMiles
+bi-dir: calculateDistanceUsingSphericalGeometry, calculatorDistanceSphericalLawOfCosines
+bi-dir: calculateDistanceUsingSphericalGeometry, getDistanceBetweenLocations
+bi-dir: userscience-fiction-novel_price_service, userscience-fiction-novel_price_Bestservice
+bi-dir: userscience-fiction-novel_price_service, userscience-fiction-novel_Relprice_service
+bi-dir: getZipcodeForUSCity, city_state_ZipCodes
+bi-dir: lock_door, open_door
+bi-dir: countrycity_hotel_service, citycountry_hotel_service
+bi-dir: locationlocation_map_SRIservice, locationlocation_map_service
+bi-dir: calculateDistanceInMiles, calculateDistanceUsingSphericalGeometry
+bi-dir: calculateDistanceInMiles, calculatorDistanceSphericalLawOfCosines
+bi-dir: calculateDistanceInMiles, getDistanceBetweenLocations
+bi-dir: countrycity_luxuryhotel_Gelservice, countrycity_luxuryhotel_service
+bi-dir: citycountry_hotel_service, countrycity_hotel_service
+bi-dir: EBookOrder1, EBookOrder2
+bi-dir: EBookOrder1, EBookOrder3
+bi-dir: EBookOrder3, EBookOrder1
+bi-dir: EBookOrder3, EBookOrder2
+bi-dir: EBookOrder2, EBookOrder1
+bi-dir: EBookOrder2, EBookOrder3
+bi-dir: getElevationFromLocation, getAltitudeAboveSeaLevelOfLocation
+bi-dir: bookpersoncreditaccount__service, bookpersoncreditaccount__Beaservice
+bi-dir: userscience-fiction-novel_Relprice_service, userscience-fiction-novel_price_Bestservice
+bi-dir: userscience-fiction-novel_Relprice_service, userscience-fiction-novel_price_service
+# bi-dir: 40
+
+
+
+> effect
+
+>> # extra inferences (separate, goal > service): 
+non-inf: #3
+inf: #4
+(1) extra inf: bookpersoncreditcardaccount__service > bookusercreditcardaccount__service
+
+
+>> # extra inferences (separate, service > goal): 
+non-inf: #5
+inf: #14
+(0) extra inf: publicationperson__service > bookpersoncreditcardaccount__service
+(0) extra inf: objectperson__service > bookpersoncreditcardaccount__service
+(0) extra inf: printedmaterialpersoncreditcardaccount__service > bookpersoncreditcardaccount__service
+(0) extra inf: bookpersoncreditaccount__Beaservice > bookpersoncreditcardaccount__service
+(0) extra inf: monographperson__service > bookpersoncreditcardaccount__service
+(0) extra inf: personbookliabilityaccount__service > bookpersoncreditcardaccount__service
+(0) extra inf: personmonographcreditcardaccount__service > bookpersoncreditcardaccount__service
+(0) extra inf: printedmaterialperson__service > bookpersoncreditcardaccount__service
+(0) extra inf: bookpersoncreditaccount__service > bookpersoncreditcardaccount__service
+
+
+>> # extra inferences (single): 
+non-inf: #36
+inf: #95
+(0) extra inf: publicationperson__service > bookpersoncreditaccount__Beaservice
+(0) extra inf: publicationperson__service > bookpersoncreditaccount__service
+(0) extra inf: publicationperson__service > bookpersoncreditcardaccount__BShopservice
+(0) extra inf: publicationperson__service > bookpersoncreditcardaccount__service
+(0) extra inf: publicationperson__service > bookperson__service
+(0) extra inf: publicationperson__service > bookusercreditcardaccount__service
+(0) extra inf: publicationperson__service > monographperson__service
+(0) extra inf: publicationperson__service > personbookliabilityaccount__service
+(0) extra inf: publicationperson__service > personmonographcreditcardaccount__service
+(0) extra inf: objectperson__service > bookpersoncreditaccount__Beaservice
+(0) extra inf: objectperson__service > bookpersoncreditaccount__service
+(0) extra inf: objectperson__service > bookpersoncreditcardaccount__BShopservice
+(0) extra inf: objectperson__service > bookpersoncreditcardaccount__service
+(0) extra inf: objectperson__service > bookperson__service
+(0) extra inf: objectperson__service > bookusercreditcardaccount__service
+(0) extra inf: objectperson__service > monographperson__service
+(0) extra inf: objectperson__service > personbookliabilityaccount__service
+(0) extra inf: objectperson__service > personmonographcreditcardaccount__service
+(0) extra inf: objectperson__service > printedmaterialpersoncreditcardaccount__service
+(0) extra inf: objectperson__service > printedmaterialperson__service
+(0) extra inf: objectperson__service > publicationperson__service
+(0) extra inf: printedmaterialpersoncreditcardaccount__service > bookpersoncreditcardaccount__BShopservice
+(0) extra inf: printedmaterialpersoncreditcardaccount__service > bookpersoncreditcardaccount__service
+(0) extra inf: printedmaterialpersoncreditcardaccount__service > bookusercreditcardaccount__service
+(0) extra inf: printedmaterialpersoncreditcardaccount__service > personmonographcreditcardaccount__service
+(1) extra inf: bookpersoncreditcardaccount__BShopservice > bookusercreditcardaccount__service
+(1) extra inf: bookpersoncreditcardaccount__service > bookusercreditcardaccount__service
+(1) extra inf: bookpersoncreditaccount__Beaservice > bookpersoncreditcardaccount__BShopservice
+(1) extra inf: bookpersoncreditaccount__Beaservice > bookpersoncreditcardaccount__service
+(1) extra inf: bookpersoncreditaccount__Beaservice > bookusercreditcardaccount__service
+(1) extra inf: monographperson__service > bookpersoncreditaccount__Beaservice
+(1) extra inf: monographperson__service > bookpersoncreditaccount__service
+(1) extra inf: monographperson__service > bookpersoncreditcardaccount__BShopservice
+(1) extra inf: monographperson__service > bookpersoncreditcardaccount__service
+(1) extra inf: monographperson__service > bookperson__service
+(1) extra inf: monographperson__service > bookusercreditcardaccount__service
+(1) extra inf: monographperson__service > personbookliabilityaccount__service
+(0) extra inf: personbookliabilityaccount__service > bookpersoncreditaccount__Beaservice
+(0) extra inf: personbookliabilityaccount__service > bookpersoncreditaccount__service
+(0) extra inf: personbookliabilityaccount__service > bookpersoncreditcardaccount__BShopservice
+(0) extra inf: personbookliabilityaccount__service > bookpersoncreditcardaccount__service
+(0) extra inf: personbookliabilityaccount__service > bookusercreditcardaccount__service
+(0) extra inf: personmonographcreditcardaccount__service > bookpersoncreditcardaccount__BShopservice
+(0) extra inf: personmonographcreditcardaccount__service > bookpersoncreditcardaccount__service
+(0) extra inf: personmonographcreditcardaccount__service > bookusercreditcardaccount__service
+(1) extra inf: printedmaterialperson__service > bookpersoncreditaccount__Beaservice
+(1) extra inf: printedmaterialperson__service > bookpersoncreditaccount__service
+(1) extra inf: printedmaterialperson__service > bookpersoncreditcardaccount__BShopservice
+(1) extra inf: printedmaterialperson__service > bookpersoncreditcardaccount__service
+(1) extra inf: printedmaterialperson__service > bookperson__service
+(1) extra inf: printedmaterialperson__service > bookusercreditcardaccount__service
+(1) extra inf: printedmaterialperson__service > monographperson__service
+(1) extra inf: printedmaterialperson__service > personbookliabilityaccount__service
+(1) extra inf: printedmaterialperson__service > personmonographcreditcardaccount__service
+(1) extra inf: printedmaterialperson__service > publicationperson__service
+(1) extra inf: bookperson__service > bookusercreditcardaccount__service
+(1) extra inf: bookpersoncreditaccount__service > bookpersoncreditcardaccount__BShopservice
+(1) extra inf: bookpersoncreditaccount__service > bookpersoncreditcardaccount__service
+(1) extra inf: bookpersoncreditaccount__service > bookusercreditcardaccount__service
+
+
+>> # bi-directional (separate, non-inf):
+goal-service: #3
+service-goal: #5
+bi-dir: EBookOrder3, EBookOrder1
+bi-dir: EBookOrder2, EBookOrder1
+bi-dir: bookpersoncreditcardaccount__BShopservice, bookpersoncreditcardaccount__service
+# bi-dir: 3
+
+
+>> # bi-directional (separate, inf):
+goal-service: #4
+service-goal: #14
+bi-dir: bookpersoncreditcardaccount__BShopservice, bookpersoncreditcardaccount__service
+bi-dir: EBookOrder3, EBookOrder1
+bi-dir: EBookOrder2, EBookOrder1
+# bi-dir: 3
+
+
+>> # bi-directional (single, non-inf):
+all: #36
+bi-dir: bookpersoncreditcardaccount__BShopservice, bookpersoncreditcardaccount__service
+bi-dir: bookpersoncreditcardaccount__service, bookpersoncreditcardaccount__BShopservice
+bi-dir: CheckRoomAvailability_service, CheckEquipmentAvailability_service
+bi-dir: CheckRoomAvailability_service, CheckHospitalAvailability_service
+bi-dir: CheckRoomAvailability_service, CheckPersonnelAvailability_service
+bi-dir: CheckPersonnelAvailability_service, CheckEquipmentAvailability_service
+bi-dir: CheckPersonnelAvailability_service, CheckHospitalAvailability_service
+bi-dir: CheckPersonnelAvailability_service, CheckRoomAvailability_service
+bi-dir: EBookOrder1, EBookOrder2
+bi-dir: EBookOrder1, EBookOrder3
+bi-dir: CheckEquipmentAvailability_service, CheckHospitalAvailability_service
+bi-dir: CheckEquipmentAvailability_service, CheckPersonnelAvailability_service
+bi-dir: CheckEquipmentAvailability_service, CheckRoomAvailability_service
+bi-dir: EBookOrder3, EBookOrder1
+bi-dir: EBookOrder3, EBookOrder2
+bi-dir: EBookOrder2, EBookOrder1
+bi-dir: EBookOrder2, EBookOrder3
+bi-dir: bookpersoncreditaccount__Beaservice, bookpersoncreditaccount__service
+bi-dir: CheckHospitalAvailability_service, CheckEquipmentAvailability_service
+bi-dir: CheckHospitalAvailability_service, CheckPersonnelAvailability_service
+bi-dir: CheckHospitalAvailability_service, CheckRoomAvailability_service
+bi-dir: bookpersoncreditaccount__service, bookpersoncreditaccount__Beaservice
+# bi-dir: 22
+
+
+>> # bi-directional (single, inf):
+all: #95
+bi-dir: bookpersoncreditcardaccount__BShopservice, bookpersoncreditcardaccount__service
+bi-dir: bookpersoncreditcardaccount__service, bookpersoncreditcardaccount__BShopservice
+bi-dir: CheckRoomAvailability_service, CheckEquipmentAvailability_service
+bi-dir: CheckRoomAvailability_service, CheckHospitalAvailability_service
+bi-dir: CheckRoomAvailability_service, CheckPersonnelAvailability_service
+bi-dir: CheckPersonnelAvailability_service, CheckEquipmentAvailability_service
+bi-dir: CheckPersonnelAvailability_service, CheckHospitalAvailability_service
+bi-dir: CheckPersonnelAvailability_service, CheckRoomAvailability_service
+bi-dir: EBookOrder1, EBookOrder2
+bi-dir: EBookOrder1, EBookOrder3
+bi-dir: CheckEquipmentAvailability_service, CheckHospitalAvailability_service
+bi-dir: CheckEquipmentAvailability_service, CheckPersonnelAvailability_service
+bi-dir: CheckEquipmentAvailability_service, CheckRoomAvailability_service
+bi-dir: EBookOrder3, EBookOrder1
+bi-dir: EBookOrder3, EBookOrder2
+bi-dir: EBookOrder2, EBookOrder1
+bi-dir: EBookOrder2, EBookOrder3
+bi-dir: bookpersoncreditaccount__Beaservice, bookpersoncreditaccount__service
+bi-dir: CheckHospitalAvailability_service, CheckEquipmentAvailability_service
+bi-dir: CheckHospitalAvailability_service, CheckPersonnelAvailability_service
+bi-dir: CheckHospitalAvailability_service, CheckRoomAvailability_service
+bi-dir: bookpersoncreditaccount__service, bookpersoncreditaccount__Beaservice
+# bi-dir: 22
+
+
+
+- preconditions vs. effects
+
+>> matching precond + effect (single, non-inf) 
+preconds: #114
+effects: #36
+precond + effect: bookpersoncreditaccount__Beaservice, bookpersoncreditaccount__service
+precond + effect: bookpersoncreditcardaccount__BShopservice, bookpersoncreditcardaccount__service
+precond + effect: EBookOrder1, EBookOrder2
+precond + effect: EBookOrder1, EBookOrder3
+precond + effect: EBookOrder3, EBookOrder1
+precond + effect: EBookOrder3, EBookOrder2
+precond + effect: EBookOrder2, EBookOrder1
+precond + effect: EBookOrder2, EBookOrder3
+precond + effect: bookpersoncreditaccount__service, bookpersoncreditaccount__Beaservice
+# precond + effect: 9
+
+
+>> matching precond + effect (single, inf) 
+preconds: #343
+effects: #95
+precond + effect: bookpersoncreditaccount__Beaservice, bookpersoncreditaccount__service
+precond + effect: bookpersoncreditcardaccount__BShopservice, bookpersoncreditcardaccount__service
+precond + effect: EBookOrder1, EBookOrder2
+precond + effect: EBookOrder1, EBookOrder3
+precond + effect: EBookOrder3, EBookOrder1
+precond + effect: EBookOrder3, EBookOrder2
+precond + effect: EBookOrder2, EBookOrder1
+precond + effect: EBookOrder2, EBookOrder3
+precond + effect: bookpersoncreditaccount__service, bookpersoncreditaccount__Beaservice
+# precond + effect: 9
+

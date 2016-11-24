@@ -1,0 +1,218 @@
+# bookpersoncreditcardaccount_price_service
+<http://127.0.0.1/frozenVar#bookpersoncreditcardaccount_price_service> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_PERSON> .
+<http://127.0.0.1/frozenVar#_PERSON> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/books.owl#Person> .
+<http://127.0.0.1/frozenVar#bookpersoncreditcardaccount_price_service> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_BOOK> .
+<http://127.0.0.1/frozenVar#_BOOK> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/books.owl#Book> .
+<http://127.0.0.1/frozenVar#bookpersoncreditcardaccount_price_service> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_CREDITCARDACCOUNT> .
+<http://127.0.0.1/frozenVar#_CREDITCARDACCOUNT> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/Mid-level-ontology.owl#CreditCardAccount> .
+<http://127.0.0.1/frozenVar#bookpersoncreditcardaccount_price_service> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#_PRICE> .
+<http://127.0.0.1/frozenVar#_PRICE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/concept.owl#Price> .
+<http://127.0.0.1/frozenVar#_CREDITCARDACCOUNT> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/ontosem.owl#Accepted> .
+<http://127.0.0.1/frozenVar#_PERSON> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/core-plus-office.owl#Authorized> .
+<http://127.0.0.1/frozenVar#_PERSON> <http://127.0.0.1/ontology/Mid-level-ontology.owl#accountHolder> <http://127.0.0.1/frozenVar#_CREDITCARDACCOUNT> .
+
+# bookpersoncreditcardaccount__service
+<http://127.0.0.1/frozenVar#bookpersoncreditcardaccount__service> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_CREDITCARDACCOUNT> .
+<http://127.0.0.1/frozenVar#_CREDITCARDACCOUNT> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/Mid-level-ontology.owl#CreditCardAccount> .
+<http://127.0.0.1/frozenVar#bookpersoncreditcardaccount__service> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_BOOK> .
+<http://127.0.0.1/frozenVar#_BOOK> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/books.owl#Book> .
+<http://127.0.0.1/frozenVar#bookpersoncreditcardaccount__service> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_PERSON> .
+<http://127.0.0.1/frozenVar#_PERSON> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/books.owl#Person> .
+<http://127.0.0.1/frozenVar#_CREDITCARDACCOUNT> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/ontosem.owl#Accepted> .
+<http://127.0.0.1/frozenVar#_PERSON> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/core-plus-office.owl#Authorized> .
+<http://127.0.0.1/frozenVar#_PERSON> <http://127.0.0.1/ontology/Mid-level-ontology.owl#accountHolder> <http://127.0.0.1/frozenVar#_CREDITCARDACCOUNT> .
+<http://127.0.0.1/frozenVar#_BOOK> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/ontosem.owl#be-available> .
+
+# citycountry_hotel_service
+<http://127.0.0.1/frozenVar#citycountry_hotel_service> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_COUNTRY> .
+<http://127.0.0.1/frozenVar#_COUNTRY> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/portal.owl#Country> .
+<http://127.0.0.1/frozenVar#citycountry_hotel_service> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_CITY> .
+<http://127.0.0.1/frozenVar#_CITY> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/portal.owl#City> .
+<http://127.0.0.1/frozenVar#citycountry_hotel_service> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#_HOTEL> .
+<http://127.0.0.1/frozenVar#_HOTEL> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/travel.owl#Hotel> .
+<http://127.0.0.1/frozenVar#_CITY> <http://127.0.0.1/ontology/protont.owl#locatedIn> <http://127.0.0.1/frozenVar#_COUNTRY> .
+
+# EBookOrder1
+<http://127.0.0.1/frozenVar#EBookOrder1> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#EBookRequest> .
+<http://127.0.0.1/frozenVar#EBookRequest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/books.owl#Title> .
+<http://127.0.0.1/frozenVar#EBookOrder1> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#UserAccount> .
+<http://127.0.0.1/frozenVar#UserAccount> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/books.owl#User> .
+<http://127.0.0.1/frozenVar#EBookOrder1> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#EBook> .
+<http://127.0.0.1/frozenVar#EBook> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/books.owl#Book> .
+<http://127.0.0.1/frozenVar#EBookRequest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/ontosem.owl#Accepted> .
+<http://127.0.0.1/frozenVar#UserAccount> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/core-plus-office.owl#Authorized> .
+
+# fall_down_pill
+<http://127.0.0.1/frozenVar#fall_down_pill> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#MesseModul> .
+<http://127.0.0.1/frozenVar#MesseModul> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#MesseModul> .
+<http://127.0.0.1/frozenVar#fall_down_pill> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#Slider> .
+<http://127.0.0.1/frozenVar#Slider> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#Slider> .
+<http://127.0.0.1/frozenVar#fall_down_pill> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#Cup> .
+<http://127.0.0.1/frozenVar#Cup> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#Cup> .
+<http://127.0.0.1/frozenVar#fall_down_pill> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#UltraSoundSensor> .
+<http://127.0.0.1/frozenVar#UltraSoundSensor> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#UltraSoundSensor> .
+<http://127.0.0.1/frozenVar#fall_down_pill> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#Pill> .
+<http://127.0.0.1/frozenVar#Pill> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#Pill> .
+<http://127.0.0.1/frozenVar#fall_down_pill> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#SliderZone> .
+<http://127.0.0.1/frozenVar#SliderZone> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/spatial_ontology.owl#SpatialZone> .
+<http://127.0.0.1/frozenVar#fall_down_pill> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#CupZone> .
+<http://127.0.0.1/frozenVar#CupZone> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/spatial_ontology.owl#SpatialZone> .
+<http://127.0.0.1/frozenVar#Slider> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#Down> .
+<http://127.0.0.1/frozenVar#UltraSoundSensor> <http://127.0.0.1/ontology/messemodul.owl#detectsCup> <http://127.0.0.1/frozenVar#Cup> .
+<http://127.0.0.1/frozenVar#MesseModul> <http://127.0.0.1/ontology/messemodul.owl#consistsOf> <http://127.0.0.1/frozenVar#Slider> .
+<http://127.0.0.1/frozenVar#MesseModul> <http://127.0.0.1/ontology/messemodul.owl#consistsOf> <http://127.0.0.1/frozenVar#UltraSoundSensor> .
+<http://127.0.0.1/frozenVar#Slider> <http://127.0.0.1/ontology/messemodul.owl#hasCargoArea> <http://127.0.0.1/frozenVar#SliderZone> .
+<http://127.0.0.1/frozenVar#Cup> <http://127.0.0.1/ontology/messemodul.owl#hasCargoArea> <http://127.0.0.1/frozenVar#CupZone> .
+<http://127.0.0.1/frozenVar#Pill> <http://127.0.0.1/ontology/spatial_ontology.owl#isLocatedIn> <http://127.0.0.1/frozenVar#SliderZone> .
+
+# geocodeUSAddress
+<http://127.0.0.1/frozenVar#geocodeUSAddress> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_ADDRESS> .
+<http://127.0.0.1/frozenVar#_ADDRESS> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protonu.owl#Address> .
+<http://127.0.0.1/frozenVar#geocodeUSAddress> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_CITY> .
+<http://127.0.0.1/frozenVar#_CITY> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protonu.owl#City> .
+<http://127.0.0.1/frozenVar#geocodeUSAddress> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_STATE> .
+<http://127.0.0.1/frozenVar#_STATE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protonu.owl#State> .
+<http://127.0.0.1/frozenVar#geocodeUSAddress> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_ZIPCODE> .
+<http://127.0.0.1/frozenVar#_ZIPCODE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/geographydataset.owl#PostalCode> .
+<http://127.0.0.1/frozenVar#geocodeUSAddress> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#_LATITUDE> .
+<http://127.0.0.1/frozenVar#_LATITUDE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protont.owl#latitude> .
+<http://127.0.0.1/frozenVar#geocodeUSAddress> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#_LONGITUDE> .
+<http://127.0.0.1/frozenVar#_LONGITUDE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protont.owl#longitude> .
+<http://127.0.0.1/frozenVar#_CITY> <http://127.0.0.1/ontology/protont.owl#locatedIn> <http://127.0.0.1/frozenVar#_STATE> .
+
+# geographical-regiongeographical-region_map_service
+<http://127.0.0.1/frozenVar#geographical_regiongeographical_region_map_service> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_GEOGRAPHICAL_REGION1> .
+<http://127.0.0.1/frozenVar#_GEOGRAPHICAL_REGION1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/portal.owl#Geographical-Region> .
+<http://127.0.0.1/frozenVar#geographical_regiongeographical_region_map_service> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_GEOGRAPHICAL_REGION2> .
+<http://127.0.0.1/frozenVar#_GEOGRAPHICAL_REGION2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/portal.owl#Geographical-Region> .
+<http://127.0.0.1/frozenVar#geographical_regiongeographical_region_map_service> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#_MAP> .
+<http://127.0.0.1/frozenVar#_MAP> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/Mid-level-ontology.owl#Map> .
+<http://www.w3.org/2002/07/owl#AllDifferent> <http://www.w3.org/2002/07/owl#distinctMembers> _:cR0anSFcyYbL8Zn2d3B0YqxxMOofF7Ym37rw .
+_:cR0anSFcyYbL8Zn2d3B0YqxxMOofF7Ym37rw <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://127.0.0.1/frozenVar#_GEOGRAPHICAL_REGION1> .
+_:cR0anSFcyYbL8Zn2d3B0YqxxMOofF7Ym37rw <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:CGFukuyjFLEMBEovXukt0Fb24f4nmQb0QTrH .
+_:CGFukuyjFLEMBEovXukt0Fb24f4nmQb0QTrH <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://127.0.0.1/frozenVar#_GEOGRAPHICAL_REGION2> .
+_:CGFukuyjFLEMBEovXukt0Fb24f4nmQb0QTrH <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+
+# getAltitudeAboveSeaLevelOfLocation
+<http://127.0.0.1/frozenVar#getAltitudeAboveSeaLevelOfLocation> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_USERID> .
+<http://127.0.0.1/frozenVar#_USERID> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/geographydataset.owl#UniqueIdentifier> .
+<http://127.0.0.1/frozenVar#getAltitudeAboveSeaLevelOfLocation> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_LATITUDE> .
+<http://127.0.0.1/frozenVar#_LATITUDE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protont.owl#latitude> .
+<http://127.0.0.1/frozenVar#getAltitudeAboveSeaLevelOfLocation> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_LONGITUDE> .
+<http://127.0.0.1/frozenVar#_LONGITUDE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protont.owl#longitude> .
+<http://127.0.0.1/frozenVar#getAltitudeAboveSeaLevelOfLocation> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#_ALTITUDE> .
+<http://127.0.0.1/frozenVar#_ALTITUDE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/geographydataset.owl#AltitudeAboveSeaLevel> .
+<http://127.0.0.1/frozenVar#_USERID> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/core-plus-office.owl#Authorized> .
+
+# getDistanceBetweenCitiesWorldwide
+<http://127.0.0.1/frozenVar#getDistanceBetweenCitiesWorldwide> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_COUNTRY1> .
+<http://127.0.0.1/frozenVar#_COUNTRY1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protonu.owl#Country> .
+<http://127.0.0.1/frozenVar#getDistanceBetweenCitiesWorldwide> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_COUNTRY2> .
+<http://127.0.0.1/frozenVar#_COUNTRY2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protonu.owl#Country> .
+<http://127.0.0.1/frozenVar#getDistanceBetweenCitiesWorldwide> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_CITY1> .
+<http://127.0.0.1/frozenVar#_CITY1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protonu.owl#City> .
+<http://127.0.0.1/frozenVar#getDistanceBetweenCitiesWorldwide> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_CITY2> .
+<http://127.0.0.1/frozenVar#_CITY2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protonu.owl#City> .
+<http://127.0.0.1/frozenVar#getDistanceBetweenCitiesWorldwide> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_STATE1> .
+<http://127.0.0.1/frozenVar#_STATE1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protonu.owl#State> .
+<http://127.0.0.1/frozenVar#getDistanceBetweenCitiesWorldwide> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_STATE2> .
+<http://127.0.0.1/frozenVar#_STATE2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protonu.owl#State> .
+<http://127.0.0.1/frozenVar#getDistanceBetweenCitiesWorldwide> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#_DISTANCE> .
+<http://127.0.0.1/frozenVar#_DISTANCE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/geographydataset.owl#GeographicDistance> .
+<http://www.w3.org/2002/07/owl#AllDifferent> <http://www.w3.org/2002/07/owl#distinctMembers> _:cqeqP3Yuu7B4Kd9Ye4EnDz9bmVfqY4cH0Jw5 .
+_:cqeqP3Yuu7B4Kd9Ye4EnDz9bmVfqY4cH0Jw5 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://127.0.0.1/frozenVar#_CITY1> .
+_:cqeqP3Yuu7B4Kd9Ye4EnDz9bmVfqY4cH0Jw5 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:56XtpkkwIv62bcNbKaUzC9gvPkVkv6rVQNoY .
+_:56XtpkkwIv62bcNbKaUzC9gvPkVkv6rVQNoY <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://127.0.0.1/frozenVar#_CITY2> .
+_:56XtpkkwIv62bcNbKaUzC9gvPkVkv6rVQNoY <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+<http://127.0.0.1/frozenVar#_CITY1> <http://127.0.0.1/ontology/protont.owl#locatedIn> <http://127.0.0.1/frozenVar#_STATE1> .
+<http://127.0.0.1/frozenVar#_CITY2> <http://127.0.0.1/ontology/protont.owl#locatedIn> <http://127.0.0.1/frozenVar#_STATE2> .
+<http://127.0.0.1/frozenVar#_STATE1> <http://127.0.0.1/ontology/protont.owl#locatedIn> <http://127.0.0.1/frozenVar#_COUNTRY1> .
+<http://127.0.0.1/frozenVar#_STATE2> <http://127.0.0.1/ontology/protont.owl#locatedIn> <http://127.0.0.1/frozenVar#_COUNTRY2> .
+
+# getLocationOfCityState
+<http://127.0.0.1/frozenVar#getLocationOfCityState> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_CITY> .
+<http://127.0.0.1/frozenVar#_CITY> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protonu.owl#City> .
+<http://127.0.0.1/frozenVar#getLocationOfCityState> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_STATE> .
+<http://127.0.0.1/frozenVar#_STATE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protonu.owl#State> .
+<http://127.0.0.1/frozenVar#getLocationOfCityState> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#_ZIPCODE> .
+<http://127.0.0.1/frozenVar#_ZIPCODE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/geographydataset.owl#US5DigitZipCode> .
+<http://127.0.0.1/frozenVar#getLocationOfCityState> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#_AREACODE> .
+<http://127.0.0.1/frozenVar#_AREACODE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/geographydataset.owl#US3DigitZipCode> .
+<http://127.0.0.1/frozenVar#getLocationOfCityState> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#_LATITUDE> .
+<http://127.0.0.1/frozenVar#_LATITUDE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protont.owl#latitude> .
+<http://127.0.0.1/frozenVar#getLocationOfCityState> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#_LONGITUDE> .
+<http://127.0.0.1/frozenVar#_LONGITUDE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protont.owl#longitude> .
+<http://127.0.0.1/frozenVar#_CITY> <http://127.0.0.1/ontology/protont.owl#locatedIn> <http://127.0.0.1/frozenVar#_STATE> .
+
+# getLocationOfUSCity
+<http://127.0.0.1/frozenVar#getLocationOfUSCity> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_CITY> .
+<http://127.0.0.1/frozenVar#_CITY> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protonu.owl#City> .
+<http://127.0.0.1/frozenVar#getLocationOfUSCity> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_STATE> .
+<http://127.0.0.1/frozenVar#_STATE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protonu.owl#State> .
+<http://127.0.0.1/frozenVar#getLocationOfUSCity> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#_LATITUDE> .
+<http://127.0.0.1/frozenVar#_LATITUDE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protont.owl#latitude> .
+<http://127.0.0.1/frozenVar#getLocationOfUSCity> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#_LONGITUDE> .
+<http://127.0.0.1/frozenVar#_LONGITUDE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protont.owl#longitude> .
+<http://127.0.0.1/frozenVar#_CITY> <http://127.0.0.1/ontology/protont.owl#locatedIn> <http://127.0.0.1/frozenVar#_STATE> .
+
+# getMapOfUSAddress
+<http://127.0.0.1/frozenVar#getMapOfUSAddress> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_ADDRESS> .
+<http://127.0.0.1/frozenVar#_ADDRESS> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protonu.owl#PostalAddress> .
+<http://127.0.0.1/frozenVar#getMapOfUSAddress> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_CITY> .
+<http://127.0.0.1/frozenVar#_CITY> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protonu.owl#City> .
+<http://127.0.0.1/frozenVar#getMapOfUSAddress> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_STATE> .
+<http://127.0.0.1/frozenVar#_STATE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protonu.owl#State> .
+<http://127.0.0.1/frozenVar#getMapOfUSAddress> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_ZIPCODE> .
+<http://127.0.0.1/frozenVar#_ZIPCODE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/geographydataset.owl#PostalCode> .
+<http://127.0.0.1/frozenVar#getMapOfUSAddress> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#_MAP> .
+<http://127.0.0.1/frozenVar#_MAP> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/geographydataset.owl#Map> .
+<http://127.0.0.1/frozenVar#_CITY> <http://127.0.0.1/ontology/protont.owl#locatedIn> <http://127.0.0.1/frozenVar#_STATE> .
+
+# getSunsetSunriseTimeOfLocation
+<http://127.0.0.1/frozenVar#getSunsetSunriseTimeOfLocation> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_LICENSEKEY> .
+<http://127.0.0.1/frozenVar#_LICENSEKEY> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/geographydataset.owl#Code> .
+<http://127.0.0.1/frozenVar#getSunsetSunriseTimeOfLocation> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_LATITUDE> .
+<http://127.0.0.1/frozenVar#_LATITUDE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protont.owl#latitude> .
+<http://127.0.0.1/frozenVar#getSunsetSunriseTimeOfLocation> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_LONGITUDE> .
+<http://127.0.0.1/frozenVar#_LONGITUDE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protont.owl#longitude> .
+<http://127.0.0.1/frozenVar#getSunsetSunriseTimeOfLocation> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_DATE> .
+<http://127.0.0.1/frozenVar#_DATE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protonu.owl#Date> .
+<http://127.0.0.1/frozenVar#getSunsetSunriseTimeOfLocation> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#_SUNRISE> .
+<http://127.0.0.1/frozenVar#_SUNRISE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/geographydataset.owl#Sunrise> .
+<http://127.0.0.1/frozenVar#getSunsetSunriseTimeOfLocation> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#_SUNSET> .
+<http://127.0.0.1/frozenVar#_SUNSET> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/geographydataset.owl#Sunset> .
+<http://127.0.0.1/frozenVar#_LICENSEKEY> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/core-plus-office.owl#Authorized> .
+
+# getZipcodeForUSCity
+<http://127.0.0.1/frozenVar#getZipcodeForUSCity> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_LICENSEKEY> .
+<http://127.0.0.1/frozenVar#_LICENSEKEY> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/geographydataset.owl#Code> .
+<http://127.0.0.1/frozenVar#getZipcodeForUSCity> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_CITY> .
+<http://127.0.0.1/frozenVar#_CITY> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protonu.owl#City> .
+<http://127.0.0.1/frozenVar#getZipcodeForUSCity> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_STATE> .
+<http://127.0.0.1/frozenVar#_STATE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/protonu.owl#State> .
+<http://127.0.0.1/frozenVar#getZipcodeForUSCity> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#_ZIPCODE> .
+<http://127.0.0.1/frozenVar#_ZIPCODE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/geographydataset.owl#US5DigitZipCode> .
+<http://127.0.0.1/frozenVar#_LICENSEKEY> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/core-plus-office.owl#Authorized> .
+<http://127.0.0.1/frozenVar#_CITY> <http://127.0.0.1/ontology/protont.owl#locatedIn> <http://127.0.0.1/frozenVar#_STATE> .
+
+# lock_door
+<http://127.0.0.1/frozenVar#lock_door> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#Door> .
+<http://127.0.0.1/frozenVar#Door> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#Door> .
+<http://127.0.0.1/frozenVar#Door> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#Closed> .
+<http://127.0.0.1/frozenVar#Door> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#Unlocked> .
+
+# open_door
+<http://127.0.0.1/frozenVar#open_door> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#Door> .
+<http://127.0.0.1/frozenVar#Door> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#Door> .
+<http://127.0.0.1/frozenVar#Door> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#Closed> .
+<http://127.0.0.1/frozenVar#Door> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/messemodul.owl#Unlocked> .
+
+# userscience-fiction-novel_price_service
+<http://127.0.0.1/frozenVar#userscience_fiction_novel_price_service> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_SCIENCE_FICTION_NOVEL> .
+<http://127.0.0.1/frozenVar#_SCIENCE_FICTION_NOVEL> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/books.owl#Science-Fiction-Novel> .
+<http://127.0.0.1/frozenVar#userscience_fiction_novel_price_service> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasInput> <http://127.0.0.1/frozenVar#_USER> .
+<http://127.0.0.1/frozenVar#_USER> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/books.owl#User> .
+<http://127.0.0.1/frozenVar#userscience_fiction_novel_price_service> <http://www.daml.org/services/owl-s/1.1/Process.owl#hasOutput> <http://127.0.0.1/frozenVar#_PRICE> .
+<http://127.0.0.1/frozenVar#_PRICE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/concept.owl#Price> .
+<http://127.0.0.1/frozenVar#_USER> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://127.0.0.1/ontology/core-plus-office.owl#Authorized> .
+

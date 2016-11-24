@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="io.cordova.helloCordova" version="2.0.0" xmlns="http://www.w3.org/ns/widgets">
+    <name>MobiBench</name>
+    <description>
+        MobiBench deployed on the Android platform.
+    </description>
+    <author email="william.van.woensel@gmail.com" href="http://niche.cs.dal.ca/william-van-woensel">
+		William Van Woensel
+    </author>
+    <content src="index.html" />
+    <feature name="App">
+        <param name="android-package" value="org.apache.cordova.App" />
+    </feature>
+    <feature name="NativeEnginesPlugin">
+        <param name="android-package" value="wvw.mobile.plugins.engine.NativeEnginesPlugin" />
+    </feature>
+    <plugin name="NativeEnginesPlugin" value="wvw.mobile.plugins.engine.NativeEnginesPlugin" />
+    <feature name="HttpRequestPlugin">
+        <param name="android-package" value="wvw.mobile.plugins.HttpRequestPlugin" />
+    </feature>
+    <plugin name="HttpRequestPlugin" value="wvw.mobile.plugins.HttpRequestPlugin" />
+    <feature name="CallbackPlugin">
+        <param name="android-package" value="wvw.mobile.plugins.cb.CallbackPlugin" />
+    </feature>
+    <plugin name="CallbackPlugin" value="wvw.mobile.plugins.cb.CallbackPlugin" />
+    <feature name="KeyValueDbPlugin">
+	    <param name="android-package" value="wvw.mobile.plugins.db.KeyValueDbPlugin" />
+	</feature>
+	<plugin name="KeyValueDbPlugin" value="wvw.mobile.plugins.db.KeyValueDbPlugin" />
+    <access origin="*" />
+    <allow-navigation href="*" />
+    <preference name="useBrowserHistory" value="true" />
+    <preference name="exit-on-suspend" value="false" />
+    <preference name="permissions" value="none" />
+    <preference name="orientation" value="default" />
+    <preference name="target-device" value="universal" />
+    <preference name="fullscreen" value="true" />
+    <preference name="webviewbounce" value="true" />
+    <preference name="prerendered-icon" value="true" />
+    <preference name="stay-in-webview" value="false" />
+    <preference name="ios-statusbarstyle" value="black-opaque" />
+    <preference name="detect-data-types" value="true" />
+    <preference name="show-splash-screen-spinner" value="true" />
+    <preference name="auto-hide-splash-screen" value="true" />
+    <preference name="disable-cursor" value="false" />
+    <preference name="android-minSdkVersion" value="7" />
+    <preference name="android-installLocation" value="auto" />
+</widget>

@@ -1,0 +1,144 @@
+-- Limitations
+
+- rules such as 
+	
+		INSERT { 
+		?p <http://www.dal.ca/nichegroup/impactaf#hasDSSFinding> <http://www.dal.ca/nichegroup/impactaf#HighSystolicBloodPressure> . 
+		} WHERE { 
+		?h <http://www.dal.ca/nichegroup/impactaf#hasLatestDate> "true"^^<http://www.w3.org/2001/XMLSchema#boolean> . 
+		?p <http://www.dal.ca/nichegroup/impactaf#hasSystolicBloodPressure> ?h . 
+		?h <http://www.dal.ca/nichegroup/impactaf#hasValue> ?v . 
+		FILTER (?v >= "135"^^<http://www.w3.org/2001/XMLSchema#integer>) }
+		
+which are optimized to have the most restrictive patterns first, don't work properly
+triple patterns before the "main selector", namely "?p <http://www.dal.ca/nichegroup/impactaf#hasSystolicBloodPressure> ?h . "
+	are ignored; this selector needs to be first in the WHERE body
+	
+	
+so, IMPORTANT: don't use optimized ruleset (under opt/ folder), but rules under main folder 
+
+
+- when applying OWL2RL rules (frequent; all rules or only inf rules), keep getting exception below on emulator & Nexus 5.
+	given the unreliable nature of the INSERT queries WHERE clause (see above), maybe best to drop this engine for owl_inference and service_match
+	
+	01-30 20:15:10.680: V/MusicFXControlPanelReceiver(1078): onReceive
+	01-30 20:15:10.680: V/MusicFXControlPanelReceiver(1078): Action: android.media.action.CLOSE_AUDIO_EFFECT_CONTROL_SESSION
+	01-30 20:15:10.680: V/MusicFXControlPanelReceiver(1078): Package name: com.android.music
+	01-30 20:15:10.680: V/MusicFXControlPanelReceiver(1078): Audio session: 4
+	01-30 20:15:10.680: V/MusicFXControlPanelEffect(1078): closeSession(android.app.ReceiverRestrictedContext@52a12afc, com.android.music, 4)
+	01-30 20:15:10.680: I/AudioService(248):  AudioFocus  abandonAudioFocus() from android.media.AudioManager@52a16aa0com.android.music.MediaPlaybackService$3@52a16270
+	01-30 20:15:10.684: I/ActivityManager(248): No longer want com.android.music (pid 669): empty #17
+	01-30 20:15:23.892: A/libc(1139): Fatal signal 11 (SIGSEGV) at 0xbbadbeef (code=1), thread 1154 (WebViewCoreThre)
+	01-30 20:15:23.992: I/DEBUG(116): *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+	01-30 20:15:23.992: I/DEBUG(116): Build fingerprint: 'generic/vbox86p/vbox86p:4.3/JLS36G/eng.buildbot.20141001.104431:userdebug/test-keys'
+	01-30 20:15:23.992: I/DEBUG(116): Revision: '0'
+	01-30 20:15:23.992: I/DEBUG(116): pid: 1139, tid: 1154, name: WebViewCoreThre  >>> dal.niche.mobile.benchmark <<<
+	01-30 20:15:23.992: I/DEBUG(116): signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr bbadbeef
+	01-30 20:15:24.136: I/DEBUG(116):     eax 00000065  ebx 99f18174  ecx 00000482  edx 00000001
+	01-30 20:15:24.140: I/DEBUG(116):     esi b985b1f0  edi 00000000
+	01-30 20:15:24.140: I/DEBUG(116):     xcs 00000073  xds 0000007b  xes 0000007b  xfs 00000000  xss 0000007b
+	01-30 20:15:24.140: I/DEBUG(116):     eip 991eeefb  ebp 99f2e7fc  esp 97bec710  flags 00210246
+	01-30 20:15:24.144: I/DEBUG(116): backtrace:
+	01-30 20:15:24.144: I/DEBUG(116):     #00  pc 004edefb  /system/lib/libwebcore.so (WebCore::reportFatalErrorInV8(char const*, char const*)+59)
+	01-30 20:15:24.144: I/DEBUG(116):     #01  pc 00b7ac7f  /system/lib/libwebcore.so (v8::internal::V8::FatalProcessOutOfMemory(char const*, bool)+463)
+	01-30 20:15:24.144: I/DEBUG(116):     #02  pc 00cb6176  /system/lib/libwebcore.so (v8::internal::JSReceiver::SetProperty(v8::internal::Handle<v8::internal::JSReceiver>, v8::internal::Handle<v8::internal::String>, v8::internal::Handle<v8::internal::Object>, PropertyAttributes, v8::internal::StrictModeFlag)+534)
+	01-30 20:15:24.144: I/DEBUG(116):     #03  pc 00d053f1  /system/lib/libwebcore.so (v8::internal::Runtime::SetObjectProperty(v8::internal::Isolate*, v8::internal::Handle<v8::internal::Object>, v8::internal::Handle<v8::internal::Object>, v8::internal::Handle<v8::internal::Object>, PropertyAttributes, v8::internal::StrictModeFlag)+1009)
+	01-30 20:15:24.144: I/DEBUG(116):     #04  pc 000fdefb  [stack:1154]
+	01-30 20:15:24.144: I/DEBUG(116): stack:
+	01-30 20:15:24.144: I/DEBUG(116):          97bec6d0  00000000  
+	01-30 20:15:24.144: I/DEBUG(116):          97bec6d4  00000000  
+	01-30 20:15:24.144: I/DEBUG(116):          97bec6d8  00000000  
+	01-30 20:15:24.144: I/DEBUG(116):          97bec6dc  00000000  
+	01-30 20:15:24.144: I/DEBUG(116):          97bec6e0  00000000  
+	01-30 20:15:24.144: I/DEBUG(116):          97bec6e4  00000000  
+	01-30 20:15:24.144: I/DEBUG(116):          97bec6e8  00000000  
+	01-30 20:15:24.144: I/DEBUG(116):          97bec6ec  00000000  
+	01-30 20:15:24.144: I/DEBUG(116):          97bec6f0  00000000  
+	01-30 20:15:24.144: I/DEBUG(116):          97bec6f4  00000000  
+	01-30 20:15:24.144: I/DEBUG(116):          97bec6f8  00000000  
+	01-30 20:15:24.144: I/DEBUG(116):          97bec6fc  00000000  
+	01-30 20:15:24.144: I/DEBUG(116):          97bec700  00000000  
+	01-30 20:15:24.144: I/DEBUG(116):          97bec704  00000000  
+	01-30 20:15:24.144: I/DEBUG(116):          97bec708  00000000  
+	01-30 20:15:24.144: I/DEBUG(116):          97bec70c  00000000  
+	01-30 20:15:24.144: I/DEBUG(116):     #00  97bec710  99b5b748  /system/lib/libwebcore.so
+	01-30 20:15:24.144: I/DEBUG(116):          97bec714  99bc3228  /system/lib/libwebcore.so
+	01-30 20:15:24.144: I/DEBUG(116):          97bec718  99b48be1  /system/lib/libwebcore.so
+	01-30 20:15:24.144: I/DEBUG(116):          97bec71c  ffffffff  
+	01-30 20:15:24.144: I/DEBUG(116):          97bec720  b985b1f0  [heap]
+	01-30 20:15:24.148: I/DEBUG(116):          97bec724  991eeec6  /system/lib/libwebcore.so (WebCore::reportFatalErrorInV8(char const*, char const*)+6)
+	01-30 20:15:24.148: I/DEBUG(116):          97bec728  99f18174  /system/lib/libwebcore.so
+	01-30 20:15:24.148: I/DEBUG(116):          97bec72c  9987bc80  /system/lib/libwebcore.so (v8::internal::V8::FatalProcessOutOfMemory(char const*, bool)+464)
+	01-30 20:15:24.148: I/DEBUG(116):     #01  97bec730  99b48be1  /system/lib/libwebcore.so
+	01-30 20:15:24.148: I/DEBUG(116):          97bec734  99bc3228  /system/lib/libwebcore.so
+	01-30 20:15:24.148: I/DEBUG(116):          97bec738  00000000  
+	01-30 20:15:24.148: I/DEBUG(116):          97bec73c  00000000  
+	01-30 20:15:24.148: I/DEBUG(116):          97bec740  00000000  
+	01-30 20:15:24.148: I/DEBUG(116):          97bec744  00000000  
+	01-30 20:15:24.148: I/DEBUG(116):          97bec748  decade00  
+	01-30 20:15:24.148: I/DEBUG(116):          97bec74c  003d6760  
+	01-30 20:15:24.148: I/DEBUG(116):          97bec750  00400000  
+	01-30 20:15:24.148: I/DEBUG(116):          97bec754  0b902080  
+	01-30 20:15:24.148: I/DEBUG(116):          97bec758  0b902080  
+	01-30 20:15:24.148: I/DEBUG(116):          97bec75c  000bed00  
+	01-30 20:15:24.148: I/DEBUG(116):          97bec760  000f7f80  
+	01-30 20:15:24.148: I/DEBUG(116):          97bec764  001d9980  
+	01-30 20:15:24.148: I/DEBUG(116):          97bec768  002df000  
+	01-30 20:15:24.148: I/DEBUG(116):          97bec76c  00012940  
+	01-30 20:15:24.148: I/DEBUG(116):          ........  ........
+	01-30 20:15:24.148: I/DEBUG(116):     #02  97becdd0  99b48be1  /system/lib/libwebcore.so
+	01-30 20:15:24.148: I/DEBUG(116):          97becdd4  00000001  
+	01-30 20:15:24.148: I/DEBUG(116):          97becdd8  00000012  
+	01-30 20:15:24.148: I/DEBUG(116):          97becddc  00000000  
+	01-30 20:15:24.148: I/DEBUG(116):          97becde0  00000000  
+	01-30 20:15:24.148: I/DEBUG(116):          97becde4  2ddcac91  
+	01-30 20:15:24.148: I/DEBUG(116):          97becde8  00000005  
+	01-30 20:15:24.148: I/DEBUG(116):          97becdec  00000000  
+	01-30 20:15:24.148: I/DEBUG(116):          97becdf0  99f18174  /system/lib/libwebcore.so
+	01-30 20:15:24.148: I/DEBUG(116):          97becdf4  2ebf8105  
+	01-30 20:15:24.148: I/DEBUG(116):          97becdf8  2ddcac91  
+	01-30 20:15:24.148: I/DEBUG(116):          97becdfc  97bece0f  [stack:1154]
+	01-30 20:15:24.148: I/DEBUG(116):          97bece00  00000012  
+	01-30 20:15:24.148: I/DEBUG(116):          97bece04  2ddcac91  
+	01-30 20:15:24.148: I/DEBUG(116):          97bece08  97becf30  [stack:1154]
+	01-30 20:15:24.148: I/DEBUG(116):          97bece0c  99b224c3  /system/lib/libwebcore.so (v8::internal::LoadIC::Load(v8::internal::InlineCacheState, v8::internal::Handle<v8::internal::Object>, v8::internal::Handle<v8::internal::String>)+51)
+	01-30 20:15:24.148: I/DEBUG(116):          ........  ........
+	01-30 20:15:24.148: I/DEBUG(116): memory map around fault addr bbadbeef:
+	01-30 20:15:24.148: I/DEBUG(116):     b98e4000-b9caa000 rw- [heap]
+	01-30 20:15:24.148: I/DEBUG(116):     (no map for address)
+	01-30 20:15:24.148: I/DEBUG(116):     bff79000-bff9a000 rw- [stack]
+	01-30 20:15:24.212: I/BootReceiver(248): Copying /data/tombstones/tombstone_00 to DropBox (SYSTEM_TOMBSTONE)
+	01-30 20:15:24.220: D/dalvikvm(248): GC_FOR_ALLOC freed 356K, 14% free 13295K/15428K, paused 7ms, total 9ms
+	01-30 20:15:24.224: W/ActivityManager(248):   Force finishing activity dal.niche.mobile.benchmark/.BenchmarkEngineJS
+	01-30 20:15:24.244: D/(248): HostConnection::get() New Host Connection established 0xb9a51170, tid 1173
+	01-30 20:15:24.268: W/InputDispatcher(248): channel '52b2cd38 dal.niche.mobile.benchmark/dal.niche.mobile.benchmark.BenchmarkEngineJS (server)' ~ Consumer closed input channel or an error occurred.  events=0x9
+	01-30 20:15:24.268: E/InputDispatcher(248): channel '52b2cd38 dal.niche.mobile.benchmark/dal.niche.mobile.benchmark.BenchmarkEngineJS (server)' ~ Channel is unrecoverably broken and will be disposed!
+	01-30 20:15:24.280: D/Zygote(135): Process 1139 terminated by signal (11)
+	01-30 20:15:24.364: D/dalvikvm(248): GC_FOR_ALLOC freed 507K, 16% free 13109K/15428K, paused 7ms, total 8ms
+	01-30 20:15:24.364: I/dalvikvm-heap(248): Grow heap (frag case) to 13.194MB for 380492-byte allocation
+	01-30 20:15:24.376: D/dalvikvm(248): GC_FOR_ALLOC freed <1K, 15% free 13480K/15800K, paused 11ms, total 11ms
+	01-30 20:15:24.384: D/dalvikvm(248): GC_FOR_ALLOC freed 1K, 15% free 13479K/15800K, paused 7ms, total 7ms
+	01-30 20:15:24.384: I/dalvikvm-heap(248): Grow heap (frag case) to 13.556MB for 380492-byte allocation
+	01-30 20:15:24.392: D/dalvikvm(248): GC_FOR_ALLOC freed <1K, 15% free 13851K/16172K, paused 8ms, total 8ms
+	01-30 20:15:24.404: D/dalvikvm(248): GC_FOR_ALLOC freed 743K, 19% free 13108K/16172K, paused 10ms, total 11ms
+	01-30 20:15:24.404: W/InputDispatcher(248): Attempted to unregister already unregistered input channel '52b2cd38 dal.niche.mobile.benchmark/dal.niche.mobile.benchmark.BenchmarkEngineJS (server)'
+	01-30 20:15:24.404: W/ActivityManager(248): Exception thrown during pause
+	01-30 20:15:24.404: W/ActivityManager(248): android.os.DeadObjectException
+	01-30 20:15:24.404: W/ActivityManager(248): 	at android.os.BinderProxy.transact(Native Method)
+	01-30 20:15:24.404: W/ActivityManager(248): 	at android.app.ApplicationThreadProxy.schedulePauseActivity(ApplicationThreadNative.java:635)
+	01-30 20:15:24.404: W/ActivityManager(248): 	at com.android.server.am.ActivityStack.startPausingLocked(ActivityStack.java:990)
+	01-30 20:15:24.404: W/ActivityManager(248): 	at com.android.server.am.ActivityStack.finishActivityLocked(ActivityStack.java:3834)
+	01-30 20:15:24.404: W/ActivityManager(248): 	at com.android.server.am.ActivityStack.finishActivityLocked(ActivityStack.java:3766)
+	01-30 20:15:24.404: W/ActivityManager(248): 	at com.android.server.am.ActivityManagerService.handleAppCrashLocked(ActivityManagerService.java:8344)
+	01-30 20:15:24.404: W/ActivityManager(248): 	at com.android.server.am.ActivityManagerService.makeAppCrashingLocked(ActivityManagerService.java:8221)
+	01-30 20:15:24.404: W/ActivityManager(248): 	at com.android.server.am.ActivityManagerService.crashApplication(ActivityManagerService.java:8900)
+	01-30 20:15:24.404: W/ActivityManager(248): 	at com.android.server.am.ActivityManagerService.handleApplicationCrashInner(ActivityManagerService.java:8455)
+	01-30 20:15:24.404: W/ActivityManager(248): 	at com.android.server.am.NativeCrashListener$NativeCrashReporter.run(NativeCrashListener.java:86)
+	01-30 20:15:24.404: I/WindowState(248): WIN DEATH: Window{52b2cd38 u0 dal.niche.mobile.benchmark/dal.niche.mobile.benchmark.BenchmarkEngineJS}
+	01-30 20:15:24.408: I/ActivityManager(248): Process dal.niche.mobile.benchmark (pid 1139) has died.
+	01-30 20:15:24.412: I/qtaguid(248): Failed write_ctrl(s 1 10023) res=-1 errno=1
+	01-30 20:15:24.412: W/NetworkManagementSocketTagger(248): setKernelCountSet(10023, 1) failed with errno -1
+	01-30 20:15:24.420: I/qtaguid(248): Failed write_ctrl(s 0 10054) res=-1 errno=1
+	01-30 20:15:24.420: W/NetworkManagementSocketTagger(248): setKernelCountSet(10054, 0) failed with errno -1
+	01-30 20:15:24.452: D/(248): HostConnection::get() New Host Connection established 0xb9b74dd0, tid 270
+	01-30 20:15:24.512: W/EGL_genymotion(590): eglSurfaceAttrib not implemented

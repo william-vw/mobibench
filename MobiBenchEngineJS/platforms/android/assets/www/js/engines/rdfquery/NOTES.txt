@@ -1,0 +1,4 @@
+-- Limitations
+
+- library had to be extended to automatically resolve variables in the right-hand side
+.. also found a bug or 2

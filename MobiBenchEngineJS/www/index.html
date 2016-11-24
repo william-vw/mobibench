@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<!-- General configuration -->
+<script type="text/javascript" src="js/config.js"></script>
+
+<!-- jQuery Mobile -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/themes/custom.min.css" />
+<link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
+<link rel="stylesheet" href="css/jquery.mobile.structure-1.4.5.min.css" />
+<!-- <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css"> -->
+
+<script src="js/libs/jquery-1.11.2.min.js"></script>
+<script src="js/libs/jquery.mobile-1.4.5.min.js"></script>
+<script src="js/libs/jquery.mobile.dynamic.popup.js"></script>
+
+<style>
+.ui-icon-loading {
+    background-image:url('img/ajax-loader.gif');
+}
+</style>
+
+<!-- Libraries -->
+
+<!-- (native) -->
+<script type="text/javascript" src="js/platforms/native/libs/log.js"></script>
+<script type="text/javascript" src="js/platforms/native/libs/load.js"></script>
+
+<script type="text/javascript" src="js/libs/webservice_utils.js"></script>
+<script type="text/javascript" src="js/libs/storage.js"></script>
+<script type="text/javascript" src="js/libs/logging.js"></script>
+<script type="text/javascript" src="js/libs/ResultTimes.js"></script>
+<script type="text/javascript" src="js/libs/BenchmarkTimes.js"></script>
+<script type="text/javascript" src="js/libs/ComposedIterableObject.js"></script>
+<script type="text/javascript" src="js/libs/ComposedIterableArray.js"></script>
+<script type="text/javascript" src="js/libs/IterableArray.js"></script>
+<script type="text/javascript" src="js/libs/IterableMap.js"></script>
+<script type="text/javascript" src="js/libs/Timer.js"></script>
+<script type="text/javascript" src="js/libs/Enum.js"></script>
+<script type="text/javascript" src="js/libs/moment.js"></script>
+<script type="text/javascript" src="js/libs/utils.js"></script>
+<script type="text/javascript" src="js/libs/owl2rl-utils.js"></script>
+<script type="text/javascript" src="js/libs/ReasoningEngine.js"></script>
+<script type="text/javascript" src="js/libs/Proxy.js"></script>
+<script type="text/javascript" src="js/libs/conformance.js"></script>
+
+<!-- Loaders -->
+<script type="text/javascript" src="js/engines/loader.js"></script>
+<script type="text/javascript" src="js/setups/loader.js"></script>
+<script type="text/javascript" src="js/setups/tasks/loader.js"></script>
+<script type="text/javascript" src="js/setups/flows/loader.js"></script>
+
+<!-- Benchmark -->
+<script type="text/javascript" src="js/benchmark.js"></script>
+
+<!-- UI -->
+<script type="text/javascript" src="js/ui/ui.js"></script>
+
+<!-- Plugins -->
+<script type="text/javascript" src="js/platforms/native/plugins/HttpRequestPlugin.js"></script>
+<script type="text/javascript" src="js/platforms/native/plugins/NativeEnginesPlugin.js"></script>
+<script type="text/javascript" src="js/platforms/native/plugins/CallbackPlugin.js"></script>
+<script type="text/javascript" src="js/platforms/native/plugins/KeyValueDbPlugin.js"></script>
+
+<!-- Phonegap -->
+<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+
+<script type="text/javascript">
+function loadEvent() {
+	console.log("loading engines");
+	loadEngines(function() {
+		
+		console.log("loading tasks");
+		loadTasks(function() {
+			
+			console.log("loading flows");
+			loadFlows(function() {
+				
+				callbackPlugin.doneLoading(function(fn) {
+					if (fn)
+						// execute returned function
+						// (see MobiBenchEngineJS#doneLoading)
+						fn();
+					
+					else {
+						// NOTE uncomment one of these two options
+						
+						// load the UI
+						loadUI();
+						
+						// execute benchmarks manually
+// 						loadScript("js/bConfig.js", function() {
+// 							execBenchmark(bConfig, function() {
+								
+// 								console.log("manual:benchmark done");
+// 							});
+// 						});
+					}
+				});
+			});	
+		});
+	});
+}
+</script>
+
+</head>
+<body onload="loadEvent()">
+
+	<div data-role="page">
+		<div data-role="header">
+			<h1>MobiBench</h1>
+		</div>
+
+		<div id="contentContainer" data-role="main" class="ui-content"></div>
+
+		<div data-role="footer">
+			<h1>By <a href="mailto:william.van.woensel@gmail.com?subject=MobiBench Mobile UI">wvw</a></h1>
+		</div>
+	</div>
+</body>
+</html>

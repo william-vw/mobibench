@@ -1,0 +1,6 @@
+wvw.mobibench.service.convert.rdf.nools.RDF2Nools
+wvw.mobibench.service.convert.rdf.baretriples.RDF2BareTriples
+wvw.mobibench.service.convert.rdf.rdfquery.RDF2RDFQuery
+wvw.mobibench.service.convert.rdf.rdfstore_js.RDF2RDFStore_JS
+wvw.mobibench.service.convert.rdf.datalog.RDF2Datalog
+wvw.mobibench.service.convert.rdf.mtableaux.RDF2MTableaux

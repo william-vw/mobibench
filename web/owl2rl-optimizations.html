@@ -1,0 +1,587 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>OWL2 RL optimizations | MobiBench</title>
+
+	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+	<link rel="stylesheet" href="css/default.css" />
+	<style>
+		ul.nav-menu {
+			width: 400px;
+		}
+		.ref {
+			color: black !important;
+		}
+	</style>
+	
+	<script type="text/x-mathjax-config">
+	  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+	</script>
+	<script type="text/javascript"
+	  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+	</script>
+	<style>
+		.math {
+			font-size: 14px;
+		}
+	</style>
+	
+    <script type="text/javascript" src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+	<style>
+		li.L0, li.L1, li.L2, li.L3,
+		li.L5, li.L6, li.L7, li.L8
+		{ list-style-type: decimal !important }
+	</style>
+	
+	<a href="javascript:" id="return-to-top"><i class="icon-chevron-up"></i></a>
+	
+	<link rel="stylesheet" href="css/totop.css" />
+	<link rel="stylesheet" href="css/font-awesome.css">
+	<script type="text/javascript" src="js/totop.js"></script>
+</head>
+
+<body>
+<a class="pos" name="top"><h1>MobiBench: OWL2 RL optimizations</h1></a>
+
+<p>This page details a number of entailments that enable the identification of equivalent OWL2 RL rule subsets. In particular, these entailments indicate that, aside from two selections, each rule subset selection retains full conformance with OWL2 RL (i.e., they do not result in loss of expressivity). For "<a href="#equiv_inst_rules">Equivalence with instance-based rules</a>", we show that, although certain schema inferences will be missing, these do not result in missing instance inferences. Further, for "<a href="#remove_ineff_rules">Removal of inefficient rules</a>", we show that only a particular consistency-checking case will be no longer supported.</p>
+
+<p><a href="../index.html">MobiBench</a> allows automatically selecting such rule subsets.</p>
+
+<p><b>Contact</b>: <a href="mailto:william.van.woensel@gmail.com&subject=MobiBench">William Van Woensel</a></p>
+
+<div class="nav-menu">Navigation</div>
+<ul class="nav-menu">
+	<li><a href="#equiv_subset">Equivalent OWL2 RL subset</a>
+		<ul>
+			<li><a href="#rule_entailments">Entailments between OWL2 RL rules</a></li>
+			<li><a href="#extra_axioms">Extra supporting axiomatic triples</a></li>
+			<li><a href="#new_general_rules">New generalized OWL2 RL rules</a></li>
+			<li><a href="#equiv_inst_rules">Equivalence with instance-based rules</a></li>
+		</ul>
+	</li>
+	<li><a href="#purp_ref_subsets">Purpose- and reference-based subsets</a></li>
+	<li><a href="#remove_ineff_rules">Removal of inefficient rules</a></li>
+</ul>
+	 
+<a class="pos" name="equiv_subset">
+	<h2>Equivalent OWL2 RL subset</h2>
+</a>
+
+<a class="pos" name="rule_entailments">
+	<h2>Entailments between OWL2 RL rules</h2>
+</a>
+
+<p>This section lists logical entailments between OWL2 RL rules.</p>
+
+<h3>Entailed by <i>#cax-sco</i></h3>
+
+<p>These rules are entailed by the #cax-sco rule, each time combined with a second inference rule.</p>
+
+$$T(?c_{1}, subclassOf, ?c_{2}),T(?x, type, ?c_{1}) \rightarrow T(?x,type,?c_{2})$$
+<a class="pos" name="cax-sco"><div class="rule-caption"><b>Rule <i>#cax-sco</i></b></div></a>
+
+<h4>Combined with <i>#scm-uni</i></h4>
+$$T(?c, unionOf, ?x), T(?x, hasMember, ?cl) \rightarrow T(?cl, subClassOf, ?c)$$
+<a class="pos" name="scm-uni"><div class="rule-caption"><b>Rule <i>#scm-uni</i></b></div></a>
+
+<h5>1) <i>#cax-sco</i> and <i>#scm-uni</i> entail the rule <i>#cls-uni</i>: </h5>
+$$T(?c, unionOf, ?x), T(?x, hasMember, ?cl), T(?y, type, ?cl) \rightarrow T(?y, type, ?c)$$
+<a class="pos" name="cls-uni"><div class="rule-caption"><b>Rule <i>#cls-uni</i></b></div></a>
+
+<p>Applying #scm-uni on two premises from #cls-uni returns inference (1). Then, #cax-sco is applied on the remaining premise, together with (1). This yields the inference in (2), which equals the #cls-uni consequent.</p>
+
+$$T(?c, unionOf, ?x), T(?x, hasMember, ?cl) \rightarrow T(?cl, subClassOf, ?c) \hspace{10px} (1)\\
+T(?cl, subclassOf, ?c), T(?y, type, ?cl) \rightarrow T(?y,type,?c) \hspace{10px} (2)$$
+<a class="pos" name="cls-uni_entailment"><div class="rule-caption"><b>Entailment of <i>#cls-uni</i></b></div></a>
+
+<h4>Combined with <i>#scm-int</i></h4>
+$$T(?c, intersectionOf, ?x), T(?x, hasMember, ?cl) \rightarrow T(?c, subClassOf, ?cl)$$
+<a class="pos" name="scm-int"><div class="rule-caption"><b>Rule <i>#scm-int</i></b></div></a>
+
+<h5>1) <i>#cax-sco</i> and <i>#scm-int</i> entail the rule <i>#cls-int2</i>: </h5>	
+$$T(?c, intersectionOf, ?x), T(?x, hasMember, ?cl), T(?y, type, ?c) \rightarrow T(?y, type, ?cl)$$
+<a class="pos" name="cls-int2"><div class="rule-caption"><b>Rule <i>#cls-int2</i></b></div></a>
+
+<p>Applying #scm-int on two premises from #cls-int2 returns inference (1). Then, #cax-sco is applied on the remaining premise, together with (1). This yields the inference in (2), which equals the #cls-int2 consequent.</p>
+
+$$T(?c, intersectionOf, ?x), T(?x, hasMember, ?cl) \rightarrow T(?c, subclassOf, ?cl) \hspace{10px} (1)\\
+T(?c, subclassOf, ?cl), T(?y, type, ?c) \rightarrow T(?y, type, ?cl) \hspace{10px} (2)$$
+<a class="pos" name="cls-int2_entailment"><div class="rule-caption"><b>Entailment of <i>#cls-int2</i></b></div></a>
+
+<h4>Combined with <i>#scm-eqc1</i></h4>
+$$T(?c_{1}, equivalentClass, ?c_{2}) \rightarrow T(?c_{1}, subClassOf, ?c_{2}), T(?c_{2}, subClassOf, ?c_{1})$$
+<a class="pos" name="scm-eqc1"><div class="rule-caption"><b>Rule <i>#scm-eqc1</i></b></div></a>
+
+<h5>1) <i>#cax-sco</i> and <i>#scm-eqc1</i> entail the rule <i>#cax-eqc1</i>: </h5>
+$$T(?c_{1}, equivalentClass, ?c_{2}), T(?x, type, ?c_{1}) \rightarrow T(?x, type, ?c_{2})$$
+<a class="pos" name="cax-eqc1"><div class="rule-caption"><b>Rule <i>#cax-eqc1</i></b></div></a>
+
+<p>Applying #scm-eqc1 on the first premise from #cax-eqc1 returns inference (1). Then, #cax-sco is applied on the remaining premise, together with (1). This yields the inference in (2), which equals the #cax-eqc1 consequent.</p>
+
+$$T(?c_{1}, equivalentClass, ?c_{2}) \rightarrow T(?c_{1}, subClassOf, ?c_{2}) \hspace{10px} (1)\\
+T(?c_{1}, subClassOf, ?c_{2}), T(?x, type, ?c_{1}) \rightarrow T(?x, type, ?c_{2}) \hspace{10px}$$
+<a class="pos" name="cax-eqc1_entailment"><div class="rule-caption"><b>Entailment of <i>#cax-eqc1</i></b></div></a>
+	
+<h5>2) very similarly, <i>#cax-sco</i> and <i>#scm-eqc1</i> entail the rule <i>#cax-eqc2</i>: </h5>	
+$$T(?c_{1}, equivalentClass, ?c_{2}), T(?x, type, ?c_{2}) \rightarrow T(?x, type, ?c_{1})$$
+<a class="pos" name="cax-eqc2"><div class="rule-caption"><b>Rule <i>#cax-eqc2</i></b></div></a>
+
+<p>Applying #scm-eqc1 on one premise from #cax-eqc2 returns inference (1). Then, #cax-sco is applied on the remaining premise, together with (1). This yields the inference in (2), which equals the #cax-eqc2 consequent.</p>
+
+$$T(?c_{1}, equivalentClass, ?c_{2}) \rightarrow T(?c_{2}, subClassOf, ?c_{1}) \hspace{10px} (1)\\
+T(?c_{2}, subClassOf, ?c_{1}), T(?x, type, ?c_{2}) \rightarrow T(?x, type, ?c_{1}) \hspace{10px}$$
+<a class="pos" name="cax-eqc2_entailment"><div class="rule-caption"><b>Entailment of <i>#cax-eqc2</i></b></div></a>
+	
+<h3>Entailed by <i>#prp-spo1</i></h3>
+
+<p>These rules are entailed by the #prp-spo1 rule, each time combined with rules indicating equivalence between owl:equivalent[Class|Property] and rdfs:sub[Class|Property]Of.</p>
+	
+$$T(?p_{1}, subPropertyOf, ?p_{2}), T(?x, ?p_{1}, ?y) \rightarrow T(?x, ?p_{2}, ?y)$$
+<a class="pos" name="prp-spo1"><div class="rule-caption"><b>Rule <i>#prp-spo1</i></b></div></a>
+
+<h4>Combined with <i>#scm-eqp1</i></h4>
+
+$$T(?p_{1}, equivalentProperty, ?p_{2}) \rightarrow T(?p_{1}, subPropertyOf, ?p_{2}), T(?p_{2}, subPropertyOf, ?p_{1})$$
+<a class="pos" name="scm-eqp1"><div class="rule-caption"><b>Rule <i>#scm-eqp1</i></b></div></a>
+
+<h5>1) <i>#prp-spo1</i> and <i>#scm-eqp1</i> entail the rule <i>#prp-eqp1</i>:</h5>
+$$T(?p_{1}, equivalentProperty, ?p_{2}), T(?x, ?p_{1}, ?y) \rightarrow T(?x, ?p_{2}, ?y)$$
+<a class="pos" name="prp-eqp1"><div class="rule-caption"><b>Rule <i>#prp-eqp1</i></b></div></a>
+
+<p>Applying #scm-eqp1 on the first premise of #prp-eqp1 returns inference (1). Then, #prp-spo1 is applied on the remaining premise, together with (1). This yields the premise in (2), which equals the #prp-eqp1 consequent.</p>
+
+$$T(?p_{1}, equivalentProperty, ?p_{2}) \rightarrow T(?p_{1}, subPropertyOf, ?p_{2}) \hspace{10px} (1)\\
+T(?p_{1}, subPropertyOf, ?p_{2}), T(?x, ?p_{1}, ?y) \rightarrow T(?x, ?p_{2}, ?y) \hspace{10px} (2)$$
+<a class="pos" name="prp-eqp1_entailment"><div class="rule-caption"><b>Entailment of <i>#prp-eqp1</i></b></div></a>
+
+<h5>2) very similarly, <i>#prp-spo1</i> and <i>#scm-eqp1</i> entail the rule <i>#prp-eqp2</i>:</h5>
+$$T(?p_{1}, equivalentProperty, ?p_{2}), T(?x, ?p_{2}, ?y) \rightarrow T(?x, ?p_{1}, ?y)$$
+<a class="pos" name="prp-eqp2"><div class="rule-caption"><b>Rule <i>#prp-eqp2</i></b></div></a>
+
+<p>Applying #scm-eqp1 on the first premise of #prp-eqp2 returns inference (1). Then, #prp-spo1 is applied on the remaining premise, together with (1). This yields the premise in (2), which equals the #prp-eqp2 consequent.</p>
+
+$$T(?p_{1}, equivalentProperty, ?p_{2}) \rightarrow T(?p_{2}, subPropertyOf, ?p_{1}) \hspace{10px} (1)\\
+T(?p_{2}, subPropertyOf, ?p_{1}), T(?x, ?p_{2}, ?y) \rightarrow T(?x, ?p_{1}, ?y) \hspace{10px} (2)$$
+<a class="pos" name="prp-eqp2_entailment"><div class="rule-caption"><b>Entailment of <i>#prp-eqp2</i></b></div></a>
+
+<h3>Entailed by <i>#eq-rep-o</i></h3>
+
+$$T(?o, sameAs, ?o_{2}), T(?s, ?p, ?o) \rightarrow T(?s, ?p, ?o_{2})$$
+<a class="pos" name="eq-rep-o"><div class="rule-caption"><b>Rule <i>#eq-rep-o</i></b></div></a>
+
+<h5>1) <i>#eq-rep-o</i> entails <i>#eq-trans</i>:</h5>
+$$T(?x, sameAs, ?y), T(?y, sameAs, ?z) \rightarrow T(?x, sameAs, ?z)$$
+<a class="pos" name="eq-trans"><div class="rule-caption"><b>Rule <i>#eq-trans</i></b></div></a>
+
+<p>When executing the #eq-rep-o rule on relevant data, the ?p variable will be instantiated with owl:sameAs, thus covering each possible inference of #eq-trans.</p>
+
+$$T(?y, sameAs, ?z), T(?x, sameAs, ?y) \rightarrow T(?x, sameAs, ?z)$$
+<a class="pos" name="eq-trans_entailment"><div class="rule-caption"><b>Entailment of <i>#eq-trans</i></b></div></a>
+
+<a class="pos" name="extra_axioms">
+	<h2>Extra supporting axiomatic triples</h2>
+</a>
+
+<p>This section lists possibilities to introduce extra axioms, allowing us to leave out certain rules.</p>
+
+<h3>Entailed by <i>#prp-symp</i></h3>
+
+<p>These rules are entailed by #prp-symp, each time combined with an extra axiom and, potentially, a second rule.</p>	
+
+$$T(?p, type, SymmetricProperty), T(?x, ?p, ?y) \rightarrow T(?y, ?p, ?x)$$
+<a class="pos" name="prp-symp"><div class="rule-caption"><b>Rule <i>#prp-symp</i></b></div></a>
+
+<h5>1) <i>#prp-symp</i> &amp; <i>extra axiom</i> entail <i>#eq-sym</i>:</h5>
+
+$$T(?x, sameAs, ?y) \rightarrow T(?y, sameAs, ?x)$$
+<a class="pos" name="eq-sym"><div class="rule-caption"><b>Rule <i>#eq-sym</i></b></div></a>
+
+<p>Typing the sameAs property as a SymmetricProperty and applying #prp-symp on the #eq-sym premise yields inference (1), which equals the #eq-sym consequent.</p>
+
+$$T(sameAs, type, SymmetricProperty), T(?x, sameAs, ?y) \rightarrow T(?y, sameAs, ?x) \hspace{10px} (1)$$
+<a class="pos" name="eq-sym_entailment"><div class="rule-caption"><b>Entailment of <i>#eq-sym</i></b></div></a>
+
+<h5>2) <i>#prp-symp</i>, <i>#prp-inv1</i> &amp; <i>extra axiom</i> entail <i>#prp-inv2</i>:</h5>
+
+$$T(?p_{1}, inverseOf, ?p_{2}), T(?x, ?p_{1}, ?y) \rightarrow T(?y, ?p{2}, ?x)$$
+<a class="pos" name="prp-inv1"><div class="rule-caption"><b>Rule <i>#prp-inv1</i></b></div></a>
+
+$$T(?p_{1}, inverseOf, ?p_{2}), T(?x, ?p_{2}, ?y) \rightarrow T(?y, ?p{1}, ?x)$$
+<a class="pos" name="prp-inv2"><div class="rule-caption"><b>Rule <i>#prp-inv2</i></b></div></a>
+	
+<p>Typing the inverseOf property as a SymmetricProperty and applying #prp-symp on the first premise of #prp-inv2 returns inference (1). Then, #prp-inv1 is applied on the remaining premise, together with (1). This yields the premise in (2), which equals the #prp-inv2 consequent.</p>
+
+$$T(inverseOf, type, SymmetricProperty), T(?p_{1}, inverseOf, ?p_{2}) \rightarrow T(?p_{2}, inverseOf, ?p_{1}) \hspace{10px} (1) \\
+T(?p_{2}, inverseOf, ?p_{1}), T(?x, ?p_{2}, ?y) \rightarrow T(?y, ?p_{1}, ?x) \hspace{10px} (2)$$
+<a class="pos" name="prp-inv2_entailment"><div class="rule-caption"><b>Entailment of <i>#prp-inv2</i></b></div></a>
+
+<h3>Entailed by <i>#prp-trp</i></h3>
+<p>These rules are entailed by #prp-trp, each time combined with an extra axiom.</p>	
+
+$$T(?p, type, TransitiveProperty), T(?x, ?p, ?y), T(?y, ?p, ?z) \rightarrow T(?x, ?p, ?z)$$
+<a class="pos" name="prp-trp"><div class="rule-caption"><b>Rule <i>#prp-trp</i></b></div></a>
+
+<h5>1) <i>#prp-trp</i> &amp; <i>extra axiom</i> entail <i>#scm-sco</i>:</h5>
+$$T(?c_{1}, subClassOf, ?c_{2}), T(?c_{2}, subClassOf, ?c_{3}) \rightarrow T(?c_{1}, subClassOf, ?c_{3})$$
+<a class="pos" name="scm-sco"><div class="rule-caption"><b>Rule <i>#scm-sco</i></b></div></a>
+
+<p>Typing the subClassOf property as a TransitiveProperty and applying #prp-trp on the two premises of scm-sco returns inference (1), which equals the #scm-sco consequent.</p>
+
+$$T(subClassOf, type, TransitiveProperty), T(?c_{1}, subClassOf, ?c_{2}), T(?c_{2}, subClassOf, ?c_{3}) \rightarrow T(?c_{1}, subClassOf, ?c_{3}) \hspace{10px} (1)$$
+<a class="pos" name="scm-sco_entailment"><div class="rule-caption"><b>Entailment of <i>#scm-sco</i></b></div></a>
+
+<h5>2) very similarly, <i>#prp-trp</i> &amp; <i>extra axiom</i> entail <i>#scm-spo</i>:</h5>
+$$T(?p_{1}, subPropertyOf, ?p_{2}), T(?p_{2}, subPropertyOf, ?p_{3}) \rightarrow T(?p_{1}, subPropertyOf, ?p_{3})$$
+<a class="pos" name="scm-spo"><div class="rule-caption"><b>Rule <i>#scm-spo</i></b></div></a>
+
+<p>Typing the subPropertyOf property as a TransitiveProperty and applying #prp-trp on the two premises of scm-spo returns inference (1), which equals the #scm-spo consequent.</p>
+
+$$T(subPropertyOf, type, TransitiveProperty), T(?p_{1}, subPropertyOf, ?p_{2}), T(?p_{2}, subPropertyOf, ?p_{3}) \\ 
+\rightarrow T(?p_{1}, subPropertyOf, ?p_{3}) \hspace{10px} (1)$$
+<a class="pos" name="scm-spo_entailment"><div class="rule-caption"><b>Entailment of <i>#scm-spo</i></b></div></a>
+
+<a class="pos" name="new_general_rules">
+	<h2>New generalized OWL2 RL rules</h2>
+</a>
+
+<p>This section lists possibilities for introducing new generalized rules &amp; supporting axioms, which allows us to leave out certain specialized rules.</p>
+
+<h3>New <i>#prp-sl</i> rule</h3>
+<p>Rules #eq-rep-p and #prp-spo1 are structurally very similar:</p>
+
+$$T(?p, sameAs, ?p_{2}), T(?s, ?p, ?o) \rightarrow T(?s, ?p_{2}, ?o)$$
+<a class="pos" name="eq-rep-p"><div class="rule-caption"><b>Rule <i>#eq-rep-p</i></b></div></a>
+
+$$T(?p_{1}, subPropertyOf, ?p_{2}), T(?x, ?p_{1}, ?y) \rightarrow T(?x, ?p_{2}, ?y)$$
+<a class="pos" name="prp-spo1"><div class="rule-caption"><b>Rule <i>#prp-spo1</i></b></div></a>
+
+<p>Both may be generalized into a single new rule, with accompanying axioms:</p>
+
+$$T(?p_{1}, ?p, ?p_{2}), T(?p, type, SubLink), T(?s, ?p_{1}, ?o) \rightarrow T(?s, ?p_{2}, ?o) \\
+T(sameAs, type, SubLink) \\
+T(subPropertyOf, type, SubLink)$$
+<a class="pos" name="prp-sl"><div class="rule-caption"><b>New rule <i>#prp-sl</i></b></div></a>
+
+<h3>New <i>#scm-vr</i> rule</h3>
+<p>Rules #scm-hv and #scm-svf2 are structurally very similar:</p>
+
+$$T(?c_{1}, hasValue, ?i), T(?c_{1}, onProperty, ?p_{1}), \\
+T(?c_{2}, hasValue, ?i), T(?c_{2}, onProperty, ?p_{2}), \\
+T(?p_{1}, subPropertyOf, ?p_{2}) \rightarrow T(?c_{1}, subClassOf, ?c_{2})$$
+<a class="pos" name="scm-hv"><div class="rule-caption"><b>Rule <i>#scm-hv</i></b></div></a>
+
+$$T(?c_{1}, someValuesFrom, ?y), T(?c_{1}, onProperty, ?p_{1}), \\
+T(?c_{2}, someValuesFrom, ?y), T(?c_{2}, onProperty, ?p_{2}), \\
+T(?p_{1}, subPropertyOf, ?p_{2}) \rightarrow T(?c_{1}, subClassOf, ?c_{2})$$
+<a class="pos" name="scm-svf2"><div class="rule-caption"><b>Rule <i>#scm-svf2</i></b></div></a>
+
+<p>Both may be generalized into a single new rule, with accompanying axioms:</p>
+
+$$T(?p, type, ValueRestriction), \\
+T(?c_{1}, ?p, ?y), T(?c_{1}, onProperty, ?p_{1}), \\
+T(?c_{2}, ?p, ?y), T(?c_{2}, onProperty, ?p_{2}), \\
+T(?p_{1}, subPropertyOf, ?p_{2}) \rightarrow T(?c_{1}, subClassOf, ?c_{2})\\
+T(hasValue, type, ValueRestriction)\\
+T(someValuesFrom, type, ValueRestriction)$$
+<a class="pos" name="scm-vr"><div class="rule-caption"><b>New rule <i>#scm-vr</i></b></div></a>
+
+<h3>New <i>#scm-mvr</i> rule</h3>
+<p>Rules #scm-avf1 and #scm-svf1 are structurally very similar:</p>
+
+$$T(?c_{1}, allValuesFrom, ?y_{1}), T(?c_{1}, onProperty, ?p), \\
+T(?c_{2}, allValuesFrom, ?y_{2}), T(?c_{2}, onProperty, ?p), \\
+T(?y_{1}, subClassOf, ?y_{2}) \rightarrow T(?c_{1}, subClassOf, ?c_{2})$$
+<a class="pos" name="scm-avf1"><div class="rule-caption"><b>Rule <i>#scm-avf1</i></b></div></a>
+
+$$T(?c_{1}, someValuesFrom, ?y_{1}), T(?c_{1}, onProperty, ?p), \\
+T(?c_{2}, someValuesFrom, ?y_{2}), T(?c_{2}, onProperty, ?p), \\
+T(?y_{1}, subClassOf, ?y_{2}) \rightarrow T(?c_{1}, subClassOf, ?c_{2})$$
+<a class="pos" name="scm-svf1"><div class="rule-caption"><b>Rule <i>#scm-svf1</i></b></div></a>
+
+<p>Both may be generalized into a single new rule, with accompanying axioms:</p>
+
+$$T(?p1, type, MultiValueRestriction), \\
+T(?c_{1}, ?p1, ?y_{1}), T(?c_{1}, onProperty, ?p), \\
+T(?c_{2}, ?p1, ?y_{2}), T(?c_{2}, onProperty, ?p), \\
+T(?y_{1}, subClassOf, ?y_{2}) \rightarrow T(?c_{1}, subClassOf, ?c_{2})\\
+T(someValuesFrom, type, MultiValueRestriction)\\
+T(allValuesFrom, type, MultiValueRestriction)$$
+<a class="pos" name="scm-mvr"><div class="rule-caption"><b>Rule <i>#scm-mvr</i></b></div></a>
+
+<h3>New <i>#eq-diff</i> rule</h3>
+
+<p>Rules #eq-diff2 and #eq-diff3 are structurally very similar:</p>
+
+$$T(?x, type, AllDifferent), T(?x, members, ?list), \\
+T(?list, hasMember, ?y_{1}), T(?list, hasMember, ?y_{2}), \\
+?y_{1} != ?y_{2}, T(?y_{1}, sameAs, ?y_{2}) \rightarrow false$$
+<a class="pos" name="eq-diff2"><div class="rule-caption"><b>Rule <i>#eq-diff2</i></b></div></a>
+
+$$T(?x, type, AllDifferent), T(?x, distinctMembers, ?list), \\
+T(?list, hasMember, ?y_{1}), T(?list, hasMember, ?y_{2}), \\
+?y_{1} != ?y_{2}, T(?y_{1}, sameAs, ?y_{2}) \rightarrow false$$
+<a class="pos" name="eq-diff3"><div class="rule-caption"><b>Rule <i>#eq-diff3</i></b></div></a>
+
+<p>Both may be generalized into a single new rule, with accompanying axioms:</p>
+
+$$T(?x, type, AllDifferent), \\
+T(?p, type, GenericMembersProperty), T(?x, ?p, ?list), \\
+T(?list, hasMember, ?y_{1}), T(?list, hasMember, ?y_{2}), \\
+?y_{1} != ?y_{2}, T(?y_{1}, sameAs, ?y_{2}) \rightarrow false \\
+T(members, type, GenericMembersProperty) \\
+T(distinctMembers, type, GenericMembersProperty)$$
+<a class="pos" name="eq-diff"><div class="rule-caption"><b>Rule <i>#eq-diff</i></b></div></a>
+
+<h3>New <i>#prp-npa</i> rule</h3>
+
+<p>Rules #prp-npa1 and #prp-npa2 are structurally very similar:</p>
+
+$$T(?x, sourceIndividual, ?i_{1}), T(?x, assertionProperty, ?p), T(?x, targetIndividual, ?i_{2}), \\
+T(?i_{1}, ?p, ?i_{2}) \rightarrow false$$
+<a class="pos" name="prp-npa1"><div class="rule-caption"><b>Rule <i>#prp-npa1</i></b></div></a>
+
+$$T(?x, sourceIndividual, ?i), T(?x, assertionProperty, ?p), T(?x, targetValue, ?lt), \\
+T(?i, ?p, ?lt) \rightarrow false$$
+<a class="pos" name="prp-npa2"><div class="rule-caption"><b>Rule <i>#prp-npa2</i></b></div></a>	
+
+<p>Both may be generalized into a single new rule, with accompanying axioms:</p>
+
+$$T(?x, sourceIndividual, ?i_{1}), T(?x, assertionProperty, ?p), \\
+T(?p_{1}, type, NpaTargetProperty), T(?x, ?p_{1}, ?i_{2}), T(?i_{1}, ?p, ?i_{2}) \rightarrow false \\
+T(targetIndividual, type, NpaTargetProperty) \\
+T(targetValue, type, NpaTargetProperty)$$
+<a class="pos" name="prp-npa"><div class="rule-caption"><b>Rule <i>#prp-npa</i></b></div></a>
+
+<h3>New <i>#cls-dsj</i> rule</h3>
+
+<p>Rules #cls-com and #cax-dw are structurally very similar:</p>
+
+$$T(?c_{1}, complementOf, ?c_{2}), T(?x, type, ?c_{1}), \\
+T(?x, type, ?c_{2}) \rightarrow false $$
+<a class="pos" name="cls-com"><div class="rule-caption"><b>Rule <i>#cls-com</i></b></div></a>
+
+$$T(?c_{1}, disjointWith, ?c_{2}), T(?x, type, ?c_{1}), \\
+T(?x, type, ?c_{2}) \rightarrow false $$
+<a class="pos" name="cax-dw"><div class="rule-caption"><b>Rule <i>#cax-dw</i></b></div></a>
+
+<p>Both may be generalized into a single new rule, with accompanying axioms:</p>
+
+$$T(?p, type, GenericDisjointClassProperty), T(?c_{1}, ?p, ?c_{2}), \\
+T(?x, type, ?c_{1}), T(?x, type, ?c_{2}) \rightarrow false \\
+T(complementOf, type, GenericDisjointClassProperty) \\
+T(disjointWith, type, GenericDisjointClassProperty)$$
+<a class="pos" name="cls-dsj"><div class="rule-caption"><b>Rule <i>#cls-dsj</i></b></div></a>
+
+<a class="pos" name="equiv_inst_rules">
+	<h2>Equivalence with instance-based rules</h2>
+</a>
+
+<p>This section lists entailments showing that certain inferred schema elements will not lead to new instances being inferred. As such, they can be considered redundant at the instance level. However, we note that these schema elements could be considered valuable additions to the ontology itself, regardless of their capability of inferring new instances.</p>
+
+<h5>1) instance inferences from <i>#scm-dom1</i> are covered by <i>#prp-dom</i> &amp; <i>#cax-sco</i>:</h5>
+
+<p>Rule <i>#scm-dom1</i> generates a new schema element:</p>
+
+$$T(?p, domain, ?c_{1}), T(?c_{1}, subClassOf, ?c_{2}) \rightarrow T(?p, domain, ?c_{2})$$
+<a class="pos" name="scm-dom1"><div class="rule-caption"><b>Rule <i>#scm-dom1</i></b></div></a>
+
+<p>Based on the new element <i>T(?p, domain, ?c2)</i>, rule #prp-dom can then generate new instance inferences:</p>
+$$T(?s, ?p, ?o), T(?p, domain, ?c_{2}) \rightarrow T(?s, type, ?c_{2})$$
+<a class="pos" name="scm-dom1_inst-inf"><div class="rule-caption"><b>Instance inferences generated via <i>#scm-dom1</i> and <i>#prp-dom</i></b></div></a>
+
+<p>Below, we show that these instance inferences are already covered by rules #prp-dom (1) and #cax-sco (2):<p>
+
+$$T(?s, ?p, ?o), T(?p, domain, ?c_{1}) \rightarrow T(?s, type, ?c_{1}) \hspace{10px} (1)\\
+T(?s, type, ?c_{1}), T(?c_{1}, subClassOf, ?c_{2}) \rightarrow T(?s, type, ?c_{2}) \hspace{10px} (2)$$
+<a class="pos" name="scm-dom1_entailment"><div class="rule-caption"><b>Entailment of instance inferences generated by <i>#scm-dom1</i></b></div></a>
+
+<h5>2) very similarly, instance inferences from <i>#scm-rng1</i> are covered by <i>#prp-rng</i> &amp; <i>#cax-sco</i>:</h5>
+
+<p>Rule <i>#scm-rng1</i> generates a new schema element:</p>
+
+$$T(?p, range, ?c_{1}), T(?c_{1}, subClassOf, ?c_{2}) \rightarrow T(?p, range, ?c_{2})$$
+<a class="pos" name="scm-rng1"><div class="rule-caption"><b>Rule <i>#scm-rng1</i></b></div></a>
+
+<p>Based on the new element <i>T(?p, range, ?c2)</i>, rule #prp-rng can then generate new instance inferences :</p>
+$$T(?s, ?p, ?o), T(?p, range, ?c_{2}) \rightarrow T(?o, type, ?c_{2})$$
+<a class="pos" name="scm-rng1_inst-inf"><div class="rule-caption"><b>Instance inferences generated via <i>#scm-rng1</i> and <i>#prp-rng</i></b></div></a>
+
+<p>Below, we show that these instance inferences are already covered by rules #prp-rng (1) and #cax-sco (2):<p>
+
+$$T(?s, ?p, ?o), T(?p, range, ?c_{1}) \rightarrow T(?o, type, ?c_{1}) \hspace{10px} (1)\\
+T(?o, type, ?c_{1}), T(?c_{1}, subClassOf, ?c_{2}) \rightarrow T(?o, type, ?c_{2}) \hspace{10px} (2)$$
+<a class="pos" name="scm-rng1_entailment"><div class="rule-caption"><b>Entailment of instance inferences generated by <i>#scm-rng1</i></b></div></a>
+
+<h5>3) instance inferences from <i>scm-dom2</i> are covered by <i>#prp-dom</i> &amp; <i>prp-spo1</i>:</h5>
+
+<p>Rule <i>#scm-dom2</i> generates a new schema element:</p>
+
+$$T(?p_{2}, domain, ?c), T(?p_{1}, subPropertyOf, ?p_{2}) \rightarrow T(?p_{1}, domain, ?c)$$
+<a class="pos" name="scm-dom2"><div class="rule-caption"><b>Rule <i>#scm-dom2</i></b></div></a>
+
+<p>Based on the new element <i>T(?p1, domain, ?c)</i>, rule #prp-dom can then generate new instance inferences:</p>
+$$T(?s, ?p_{1}, ?o), T(?p_{1}, domain, ?c) \rightarrow T(?s, type, ?c) $$
+<a class="pos" name="scm-dom2_inst-inf"><div class="rule-caption"><b>Instance inferences generated via <i>#scm-dom2</i> and <i>#prp-dom</i></b></div></a>
+
+<p>Below, we show that these instance inferences are already covered by rules #prp-spo1 (1) and #prp-dom (2):<p>
+ 
+$$T(?s, ?p_{1}, ?o), T(?p_{1}, subPropertyOf, ?p_{2}) \rightarrow T(?s, ?p_{2}, ?o) \hspace{10px} (1) \\
+T(?s, ?p_{2}, ?o), T(?p_{2}, domain, ?c) \rightarrow T(?s, type, ?c) \hspace{10px} (2)$$
+<a class="pos" name="scm-dom2_entailment"><div class="rule-caption"><b>Entailment of instance inferences generated by <i>#scm-dom2</i></b></div></a>
+
+<h5>4) very similarly, instance inferences from <i>scm-rng2</i> are covered by <i>#prp-rng</i> &amp; <i>prp-spo1</i>:</h5>
+
+<p>Rule <i>#scm-rng2</i> generates a new schema element:</p>
+
+$$T(?p_{2}, range, ?c), T(?p_{1}, subPropertyOf, ?p_{2}) \rightarrow T(?p_{1}, range, ?c)$$
+<a class="pos" name="scm-rng2"><div class="rule-caption"><b>Rule <i>#scm-rng2</i></b></div></a>
+
+<p>Based on the new element <i>T(?p1, range, ?c)</i>, rule #prp-rng can then generate new instance inferences:</p>
+$$T(?s, ?p_{1}, ?o), T(?p_{1}, range, ?c) \rightarrow T(?o, type, ?c) $$
+<a class="pos" name="scm-rng2_inst-inf"><div class="rule-caption"><b>Instance inferences generated via <i>#scm-rng2</i> and <i>#prp-rng</i></b></div></a>
+
+<p>Below, we show that these instance inferences are already covered by rules #prp-spo1 (1) and #prp-rng (2):<p>
+
+$$T(?s, ?p_{1}, ?o), T(?p_{1}, subPropertyOf, ?p_{2}) \rightarrow T(?s, ?p_{2}, ?o) \hspace{10px} (1) \\
+T(?s, ?p_{2}, ?o), T(?p_{2}, range, ?c) \rightarrow T(?o, type, ?c) \hspace{10px} (2)$$
+<a class="pos" name="scm-rng2_entailment"><div class="rule-caption"><b>Entailment of instance inferences generated by <i>#scm-rng2</i></b></div></a>
+
+<a class="pos" name="purp_ref_subsets">
+	<h2>Purpose- and reference-based subsets</h2>
+</a>
+
+<p>Since ABox (instance) statements are the only statements likely to be added at runtime, 
+an option is to only perform TBox (schema) reasoning once at startup, or whenever the ontology changes; 
+and ABox reasoning each time  new instances are added. Further, we note that in case data is automatically 
+generated by the system, it has a lower likelihood of being in
+consistent, thus removing the need for
+continuous consistency checking.</p>
+
+<p>Consequently, we divided our OWL2 RL ruleset into 2 major subsets; 1) <i>inference ruleset</i>, comprising 
+inference rules (53 rules), and 2) <i>consistency-checking ruleset</i>, containing consistency checking rules (18 rules). 
+The <i>inference ruleset</i> is further subdivided into 1.1) <i>instance ruleset</i>, consisting of 
+rules referring both instance and schema elements (32 rules); and 1.2) <i>schema ruleset</i>, comprising rules 
+only referencing schema elements (23 rules). Since the consistency-checking ruleset only contains rules referring 
+to both instance and schema elements, it cannot be further subdivided.</p>
+
+<p>To ensure OWL2 RL-conformant inferences, the <i>inference-instance</i> rule subset (1.1) needs to be applied 
+to an ontology in which schema-based inferences are already materialized. For this purpose, the <i>inference-schema</i> (1.2)
+ subset is applied on the initial ontology. (For proof that this sequential application of rule subsets is equivalent to applying the entire ruleset, 
+we refer to <a href="#ref1">[1]</a>.) For instance, this may be done at design-time or install-time, and 
+ on ontology updates.The utility of separating these subsets clearly depends on the frequency of ontology updates, 
+ since each update requires re-materializing the ontology (depending on the concrete scenario, ontology updates may be infrequent; 
+ at least compared to instance data). Similarly, the <i>concistency-checking</i> ruleset needs to be applied on data where all inferences have 
+ been materialized, by applying the <i>inference</i> rule subset.</p>
+ 
+<p>Further, certain rules, not referenced by the schema or instance dataset, may be left out as well. For 
+this purpose, we implemented a domain-based ruleset selection algorithm, which is available from our
+<a href="mobibench-usage.html#mobibench_projects">web service</a> (see Tai et al. <a href="#ref2">[2]</a> for details 
+on this algorithm). Similar to separating instance and schema rulesets, its applicability depends on the 
+frequency (and, also the significance) of ontology updates; since this requires re-calculating the ruleset.</p>
+
+<p>Our <a href="mobibench-usage.html#mobibench_projects">web service</a> allows creating custom OWL2 RL rule subsets by automatically applying (individually or together) any of the presented ruleset selections.</p>
+
+<a class="pos" name="remove_ineff_rules">
+	<h2>Removal of inefficient rules</h2>
+</a>
+
+<p>The #eq-ref rule has the potential to greatly bloat the dataset:
+
+$$T(?s,?p,?o) \rightarrow T(?s,sameAs,?s), T(?p,sameAs,?p),T(?o,sameAs,?o)$$
+<a class="pos" name="eq-ref"><div class="rule-caption"><b>Rule <i>#req-ref</i></b></div></a>
+
+<p>For each unique resource, this rule creates a new statement indicating the resource's equivalence to itself. Consequently, 3 new triples are generated for each triple with unique resources, resulting in a worst-case 4x increase in dataset size (!). One could argue that there is limited practical use in materializing these self-equivalency statements: especially seeing how leaving them out will not influence other inferences, although it could influence consistency-checking in one particular case.</p>
+
+<p>To see why leaving out these self-equivalency statements does not influence other inferences, we need to look at rules that reference <i>owl:sameAs</i> statements.</p>
+
+<h3>Inference rules</h3>
+
+<h4>Rule #eq-sym</h4>
+
+$$T(?x, sameAs, ?y) \rightarrow T(?y, sameAs, ?x)$$
+<a class="pos" name="eq-sym2"><div class="rule-caption"><b>Rule <i>#eq-sym</i></b></div></a>
+
+<p>Instantiating this rule with a self-equivalency statement <i>T(X, sameAs, X)</i> yields the following inference:</p>
+
+$$T(X, sameAs, X) \rightarrow T(X, sameAs, X)$$
+<a class="pos" name="eq-sym-i"><div class="rule-caption"><b>Instantiated <i>#eq-sym</i> rule</b></div></a>
+
+<p>The same statement is again inferred, meaning no additional inferences are made.</p>
+
+<h4>Rule #eq-trans</h4>
+
+$$T(?x, sameAs, ?y), T(?y, sameAs, ?z) \rightarrow T(?x, sameAs, ?z)$$
+<a class="pos" name="eq-trans2"><div class="rule-caption"><b>Rule <i>#eq-trans</i></b></div></a>
+
+<p>All possible instantiations of this rule with a self-equivalency statement <i>T(X, sameAs, X)</i> results in the following inferences:</p>
+
+$$T(X, sameAs, X), T(X, sameAs, X) \rightarrow T(X, sameAs, X)$$
+<a class="pos" name="eq-trans-i"><div class="rule-caption"><b>Instantiated <i>#eq-trans</i> rule</b></div></a>
+
+$$T(X, sameAs, X), T(X, sameAs, Y) \rightarrow T(X, sameAs, Y)$$
+<a class="pos" name="eq-trans-i2"><div class="rule-caption"><b>Instantiated <i>#eq-trans</i> rule (2)</b></div></a>
+
+$$T(Y, sameAs, X), T(X, sameAs, X) \rightarrow T(Y, sameAs, X)$$
+<a class="pos" name="eq-trans-i3"><div class="rule-caption"><b>Instantiated <i>#eq-trans</i> rule (3)</b></div></a>
+
+<p>In all cases, one of the instantiated premises is simply inferred again, meaning no additional inferences are made.</p>
+
+<h4>Rule #eq-rep-s</h4>
+
+$$T(?s, sameAs, ?s_{2}), T(?s, ?p, ?o) \rightarrow T(?s_{2}, ?p, ?o)$$
+<a class="pos" name="eq-rep-s"><div class="rule-caption"><b>Rule <i>#eq-rep-s</i></b></div></a>
+
+<p>Instantiating this rule with a self-equivalency statement <i>T(X, sameAs, X)</i> yields the following inference:</p>
+
+$$T(X, sameAs, X), T(X, ?p, ?o) \rightarrow T(X, ?p, ?o)$$
+<a class="pos" name="eq-rep-s-i"><div class="rule-caption"><b>Instantiated <i>#eq-rep-s</i> rule</b></div></a>
+
+<p>This rule simply infers the second premise again, meaning no additional inferences are made.</p>
+
+<h4>Rule #eq-rep-p</h4>
+
+$$T(?p, sameAs, ?p_{2}), T(?s, ?p, ?o) \rightarrow T(?s, ?p_{2}, ?o)$$
+<a class="pos" name="eq-rep-p"><div class="rule-caption"><b>Rule <i>#eq-rep-p</i></b></div></a>
+
+<p>Instantiating this rule with a self-equivalency statement <i>T(X, sameAs, X)</i> yields the following inference:</p>
+
+$$T(X, sameAs, X), T(?s, X, ?o) \rightarrow T(?s, X, ?o)$$
+<a class="pos" name="eq-rep-p-i"><div class="rule-caption"><b>Instantiated <i>#eq-rep-p</i> rule</b></div></a>
+
+<p>This rule simply infers the second premise again, meaning no additional inferences are made.</p>
+
+<h4>Rule #eq-rep-o</h4>
+
+$$T(?o, sameAs, ?o_{2}), T(?s, ?p, ?o) \rightarrow T(?s, ?p, ?o_{2})$$
+<a class="pos" name="eq-rep-o2"><div class="rule-caption"><b>Rule <i>#eq-rep-o</i></b></div></a>
+
+<p>Instantiating this rule with a self-equivalency statement <i>T(X, sameAs, X)</i> yields the following inference:</p>
+
+$$T(X, sameAs, X), T(?s, ?p, X) \rightarrow T(?s, ?p, X)$$
+<a class="pos" name="eq-rep-o-i"><div class="rule-caption"><b>Instantiated <i>#eq-rep-o</i> rule</b></div></a>
+
+<p>This rule simply infers the second premise again, meaning no additional inferences are made.</p>
+
+<h3>Consistency-checking rules</h3>
+
+<p>On the other hand, leaving out the <i>#eq-ref</i> rule could have an impact on consistency-checking performed by the <i>#eq-diff1</i> rule:</p>
+
+$$T(?x, sameAs, ?y), T(?x, differentFrom, ?y) \rightarrow false$$
+<a class="pos" name="eq-diff1"><div class="rule-caption"><b>Rule <i>#eq-diff1</i></b></div></a>
+
+<p>In case of reciprocal statements such as <i>T(X, differentFrom, X)</i>, this rule will only be triggered in case X's self-equivalency statement (i.e., <i>T(X, sameAs, X)</i>) is also present. Therefore, in this particular case, this consistency-checking rule will no longer fire.</p>
+
+<p>Regarding the remaining two consistency-checking rules that reference <i>sameAs</i> statements (see below): these cannot fire for self-equivalency statements due to the condition <i>?y1 != ?y2</i>. We note that this condition always needs to be present, else the two clauses <i>T(?list, hasMember, ?y1)</i> and <i>T(?list, hasMember, ?y2)</i> will fire for a single <i>hasMember</i> triple.</p>
+
+$$(?x, a, AllDifferent), T(?x, members, ?list), T(?list, hasMember, ?y1), T(?list, hasMember, ?y2),\\ y1 != y2, T(?y1, sameAs, ?y2) \rightarrow false$$
+<a class="pos" name="eq-diff2"><div class="rule-caption"><b>Rule <i>#eq-diff2</i></b></div></a>
+
+$$(?x, a, AllDifferent), T(?x, distinctMembers, ?list), T(?list, hasMember, ?y1), T(?list, hasMember, ?y2),\\ y1 != y2, T(?y1, sameAs, ?y2) \rightarrow false$$
+<a class="pos" name="eq-diff3"><div class="rule-caption"><b>Rule <i>#eq-diff3</i></b></div></a>
+	
+<h2>References</h2>
+<a name="ref1" class="ref"><b>[1]</b> Van Woensel, W., Abidi, S. S. R.: Optimizing and Benchmarking OWL2 RL for Semantic Reasoning on Mobile Platforms. Web Semant. <b>(submitted)</b></a>
+<a name="ref2" class="ref"><b>[2]</b> Tai, W., Keeney, J., O'Sullivan, D.: Resource-constrained reasoning using a reasoner composition approach. Semant. Web. 6, 35-59 (2015)</a>
+</body>
+</html>

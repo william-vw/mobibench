@@ -1,0 +1,7 @@
+wvw.mobibench.service.convert.spin.jena.SPIN2Jena
+wvw.mobibench.service.convert.spin.nools.SPIN2Nools
+wvw.mobibench.service.convert.spin.triplepatterns.SPIN2TriplePatterns
+wvw.mobibench.service.convert.spin.rdfquery.SPIN2RDFQuery
+wvw.mobibench.service.convert.spin.sparql.query.SPIN2SPARQLQuery
+wvw.mobibench.service.convert.spin.sparql.update.SPIN2SPARQLUpdate
+wvw.mobibench.service.convert.spin.datalog.SPIN2Datalog

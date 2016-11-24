@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Usage | MobiBench</title>
+
+	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+	<link rel="stylesheet" href="css/default.css" />
+	<style>
+		body {
+			line-height: 140%;
+		}
+		ul.nav-menu {
+			width: 300px;
+		}
+		h6 {
+			font-size: 16px;
+			margin-top: 0;
+			margin-bottom: 0;
+			text-decoration: underline;
+		}
+		.code {
+			font-family: consolas, courier;
+			font-size: 16px;
+		}
+		pre {
+			line-height: 100%;
+		}
+	</style>
+	
+    <script type="text/javascript" src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+	<style>
+		li.L0, li.L1, li.L2, li.L3,
+		li.L5, li.L6, li.L7, li.L8
+		{ list-style-type: decimal !important }
+	</style>
+	
+	<a href="javascript:" id="return-to-top"><i class="icon-chevron-up"></i></a>
+	
+	<link rel="stylesheet" href="css/totop.css" />
+	<link rel="stylesheet" href="css/font-awesome.css">
+	<script type="text/javascript" src="js/totop.js"></script>
+	
+</head>
+
+<body>
+<a class="pos" name="top"><h1>MobiBench: Usage</h1></a>
+
+<p>This page elaborates on the usage of <a href="../index.html">MobiBench</a>.</p>
+
+<p><b>Contact</b>: <a href="mailto:william.van.woensel@gmail.com&subject=MobiBench">William Van Woensel</a></p>
+
+<div class="nav-menu">Navigation</div>
+<ul class="nav-menu">
+	<li><a href="#code">Code</a>
+		<ul>
+			<li><a href="#mobibench_projects">MobiBench projects</a>
+				<ul>
+					<li><a href="#project_web_service">Web Service</a></li>
+					<li><a href="#project_benchmark_engine">Benchmark Engine</a></li>
+					<li><a href="#project_benchmark_automation">Benchmark Automation</a></li>
+					<li><a href="#project_analysis">Analysis</a></li>
+					<li><a href="#project_utils">Utils</a></li>
+				</ul>
+			</li>
+				
+			<li><a href="#reasoners">Reasoners</a>
+				<ul>
+					<li><a href="#reasoners_code">Code</a></li>
+					<li><a href="#reasoners_plugin">Plugin</a></li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li><a href="#instructions">Instructions</a>
+		<ul>
+			<li><a href="#usage_web_service">Web Service</a></li>
+			<li><a href="#usage_benchmark_engine">Benchmark Engine</a></li>
+			<li><a href="#autom_support">Automation support</a></li>
+			<li><a href="#program_access">Programmatic access</a></li>
+			<li><a href="#analysis_tools">Analysis tools</a></li>
+			<li><a href="#separate_ws_access">Separate Web service access</a></li>
+		</ul>
+	</li>
+</ul>
+
+<a class="pos" name="code">
+	<h2>Code</h2>
+</a>
+
+<p>This section lists all of the MobiBench code projects.</p>
+
+<a class="pos" name="mobibench_projects">
+	<h3>MobiBench projects</h3>
+</a>
+
+<p>All projects are packaged as Maven projects <a href="#note1">(*)</a>, and available on <a href="https://github.com/darth-willy/mobibench">GitHub</a>.</p>
+
+<a class="pos" name="project_web_service">
+	<h4>Web Service</h4>
+</a>
+<p><b>MobiBenchWebService</b> is a Java EE project, and performs the following functions:</p>
+<ul>
+	<li>
+		<p><u>Converting RDF data & SPIN rules into other formats.</u></p>
+		<p><b>Extensibility</b> To plugin a new resource format, create a new converter class implementing the uniform interface; i.e., <span class="code">RuleConverter</span> or <span class="code">DataConverter</span> (to convert SPIN rules to another format, the <span class="code">SPIN2</span> class can be used as superclass). Then, add the class to a configuration file (<span class="code">spin2s.txt</span> / <span class="code">rdf2s.txt</span>), used by the web service to dynamically load converter class definitions at startup. </p>
+	</li>
+	<li>
+		<p><u>Performing OWL2 RL ruleset selections.</u></p>
+		<p><b>Extensibility</b> Supporting a new selection criterium depends on its requirements. In case an a priori analysis of the ontology is required, you can create a new subclass of the <span class="code">DomainBasedSelection</span> class. Else, simply add a new subfolder under the <span class="code">(MobiBenchEngineJS)/www/res/owl/owl2rl/</span> folder, which keeps a list of rules and axioms to be removed, replaced or added (see existing files for examples).</p>
+	</li>
+	<li>
+		<p><u>Pre-processing certain n-ary rules, so they are executable by general-purpose rule engines.</u></p>
+		<p><b>Extensibility</b> To support a new pre-processing mechanism, create a new subclass of the <span class="code">PreProcessor</span> class. In case the mechanism requires ontology analysis, <span class="code">OntologyBasedPreProcessor</span> can be subclassed, which features utility methods for that purpose.</p>
+	</li>
+	<li><u>Persisting log output on the server.</u></li>
+	<li><u>Persisting arbitrary files (e.g., benchmark results) on the server.</u></li>
+</ul>
+
+<p>The <span class="code">wvw.mobibench.service.servlet.MobiBenchServlet</span> class listens for incoming POST requests and delegates them to the corresponding component. E.g., to support additional pre-processing options, or non-default selection methods, extend this class to listen for corresponding requests.</p>
+<p>The file <span class="code">(MobiBenchEngineJS)/www/js/libs/webservice_utils.js</span> defines utility functions to contact the webservice from the local benchmark engine (thus acting as a local "proxy"). This file will also need to be extended to support additional selection / pre-processing / etc. methods.</p>
+
+<a class="pos" name="project_benchmark_engine">
+	<h4>Benchmark Engine</h4>
+</a>
+
+<p><b>MobiBenchEngineJS</b> is the core JavaScript MobiBench framework, which includes the core benchmarking code, JavaScript reasoners and their plugins, and currently available benchmark resources. Currently, there are two platform deployments: <b>MobiBenchEngineNative</b> (Android) and <b>MobiBenchEnginePc</b> (PC). <u>Note that <span class="code">MobiBenchEngineNative</span> is located under <span class="code">MobiBenchEngineJS/platforms/android</span></u>.</p>
+
+<p>Platform-specific JavaScript libraries and plugins are placed under <span class="code">(MobiBenchEngineJS)/www/js/platforms</span> (e.g., <span class="code">www/js/platforms/android</span>). Typically, platform-specific JavaScript code references platform-specific (Android, Java) code behind-the-scenes: e.g., to store data persistently, logs messages, makes HTTP requests, invokes platform-specific reasoning engines, etc. We note that <span class="code">MobiBenchEnginePc</span> requires a MySQL server to be installed for storing key-values persistently (see <span class="code">wvw.mobibench.call.plugins.KeyValueDbPlugin</span> class). For <span class="code">MobiBenchEngineNative</span>, JavaScript-to-Java communication is made possible using the JavaScript Cordova communication bridge (<span class="code">cordova.exec()</span>); for <span class="code">MobiBenchEnginePc</span>, this is done by using JDK8 Nashorn's support for invoking Java methods from JavaScript (see <a href="http://winterbe.com/posts/2014/04/05/java8-nashorn-tutorial/">here</a> for a short tutorial).</p>
+
+<p>The method of loading any JavaScript libraries and plugins depends on the platform: for Android, this is done by the <span class="code">www/index.html</span> file (which is opened by Apache Cordova); for PC, this done by the <span class="code">www/js/platforms/pc/init.js</span> file (which is loaded by custom code, using the JDK8 Nashorn engine). To load additional JavaScript code, these files thus need to be extended.</p>
+
+<p><span class="code">MobiBenchEngineNative</span> is self-contained, and includes the Javascript MobiBench framework under <span class="code">assets/www</span>. (Therefore, it may be easier to setup some sort of file-syncing between <span class="code">MobiBenchEngineJS/www</span> and <span class="code">MobiBenchEngineNative/assets/www</span> to make sure the JavaScript code remains synchronized.) Currently, <span class="code">MobiBenchEnginePc</span> refers to the MobiBench JavaScript framework code in <span class="code">MobiBenchEngineJS</span> (and thus requires that project to be separately available). Both projects contain platform-specific code to e.g., respond to platform-specific calls from JavaScript (see before). Both re-use a shared code-base, <b>MobiBenchEngineCore</b>, which includes e.g., configuration, result and timer Java classes, the reasoning engine super-class, etc.</p>
+
+<p>We note that, at least currently, we mostly use the PC deployment for debugging/verification purposes (the JDK8 Nashorn JavaScript output is *very* detailed), but it could just as well be used for benchmarking. However, in light of this, we cannot guarantee that all reasoners will work on PC (e.g., RDFStore-JS seems to have some issues).</p>
+
+<a class="pos" name="project_benchmark_automation">
+	<h4>Benchmark Automation</h4>
+</a>
+
+<p>Separate automation options exist for <span class="code">MobiBenchEngineNative</span> and <span class="code">MobiBenchEnginePc</span>.</p>
+
+<p><b>MobiBenchAutoPc</b> automates running benchmarks using <span class="code">MobiBenchEnginePc</span>. This project simply references the <span class="code">MobiBenchEnginePc</span> project and invokes the <span class="code">MobiBenchEnginePc.execBenchmark</span> method.</p>
+
+<p><b>MobiBenchAutoDevice</b>: <b>MobiBencAutoDeviceServer</b> and <b>MobiBenchAutoDeviceClient</b> implement a remote automation solution for benchmarking on a mobile (Android) device. <span class="code">MobiBenchAutoDeviceServer</span> is an Android project deployed on the device. The <span class="code">MobiBenchAutoDeviceClient</span> Java client is deployed on a server or PC, and sends a set of generated benchmarks as HTTP requests to the <span class="code">MobiBenchAutoDeviceServer</span>, which invokes the <span class="code">MobiBenchEngineNative</span> (using Android Intents) to perform the requested benchmarks, and returns the results. The advantage of this setup is that it doesn't require a re-deployment on the Android device for each new set of benchmarks, but merely simply re-running the Java client. Also, it allows for remote benchmarking, e.g., in case the developer does not have physical access to the device. Clearly, this solution requires the <span class="code">MobiBenchEngineNative</span> app to be installed on the device.</p>
+
+<p>Both projects re-use a shared codebase, <b>MobiBenchAutoCore</b>, which includes e.g., shared configuration classes, a factory to generate sets of benchmark configurations, based on a user-supplied automation configuration (<span class="code">UserConfigFactory</span>); and a factory to generate JSON serializations of such benchmark configurations (<span class="code">JsonConfigFactory</span>).</p>
+
+<a class="pos" name="project_analysis">
+	<h4>Analysis</h4>
+</a>
+
+<p><b>MobiBenchAnalysis</b> is a Java project, and performs analysis tasks, including: aggregating performance results &amp; heap dumps into summary CSV files; and comparing performance times of two reasoning configurations (e.g., different OWL2 RL subsets), and output both the individual (i.e., per benchmark ontology) and total (i.e., aggregated) differences in performance. This tool is also available as a command line utility (run "jar mb-analysis.jar -help" for available options).</p>
+
+<a class="pos" name="project_utils">
+	<h4>Utils</h4>
+</a>
+
+<p><b>MobiBenchUtils</b> contains a range of miscellaneous utility functions, including the comparison of service matching, OWL2 RL / DL reasoning output, and pre-processing output; and extracting OWL2 RL test suite files.</p>
+
+<p>Dependency utility projects include <b>utils</b>, <b>rdf-utils</b>, <b>library-utils</b> and <b>cmd-utils</b>.<p>
+
+<a class="pos" name="reasoners">
+	<h3>Reasoners</h3>
+</a>
+
+<a class="pos" name="reasoners_code">
+	<h4>Code</h4>
+</a>
+
+<p>Below, we list the Android-ported source code, including dependencies &amp; test code, for the supported OWL reasoners and rule engines. Each test project also includes notes (NOTES.txt) on the porting process. (PC versions may be obtained from the respective developers.)</p>
+
+<ul>
+	<li><a href="https://github.com/lencinhaus/androjena">AndroJena</a></li>
+	<li><a href="code/elk/">ELK</a></li>
+	<li><a href="code/hermit/">HermiT</a></li>
+	<li><a href="code/iris/">IRIS</a></li>
+	<li><a href="code/jfact/">JFact</a></li>
+	<li><a href="code/pellet/">Pellet</a></li>
+	<li><a href="code/pocketkrhyper/">PocketKrHyper</a> (only .jar file is available)</li>
+	<li><a href="code/rdfonthego/">RdfOnTheGo</a></li>
+</ul>
+
+<a class="pos" name="reasoners_plugin">
+	<h4>Plugin</h4>
+</a>
+
+<p><u>This section is meant for developers who want to plugin new engines into MobiBench.</u></p>
+
+<p>Due to the large amounts of dependencies of typical reasoning engines, as well as conflicts between these dependencies, we support packaging engines and their libraries as self-contained .jar files, which can be separately loaded at runtime without requiring re-compilation. The concrete packaging process depends on the platform (PC or Android; see below). This packaging has already been done for all currently supported reasoners and for both platforms.</p>
+
+<p>Alternatively, an option for Android is to directly include engines and their libraries in the app, requiring a re-compilation each time. Choosing between these two options requires uncommenting the corresponding <span class="code">loadEngine</span> method in the <span class="code">wvw.mobile.plugins.engine.NativeEnginesService</span> class (option 1: method on line 252; option 2: method on line 256).</p>
+
+<p>Below, we elaborate on each option.</p>
+
+<a class="pos" name="reasoners_usage1">
+	<h5>1) <u>Automatic loading</u>: package reasoner as .jar file</h5>
+</a>
+
+<h6>Android</h6>
+
+<ol>
+<li>Copy the engine's .txt file from <span class="code">(MobiBenchEngineCore)/wvw.mobibench.engine</span> to <span class="code">(MobiBenchEngineNative)/wvw.mobibench.engine</span> and rename it to .java (if necessary, do the same for its superclass; e.g., <span class="code">OWLAPIEngine</span>).</li>
+<li>Copy the engine's dependencies (set of .jar files) to the <span class="code">(MobiBenchEngineNative)/libs/</span> folder (if needed, add manually to the project's build path).</li>
+<li>With the <span class="code">MobiBenchEngineNative</span> folder as cwd, run "ant debug -buildfile build-native.xml" (requires <a href="http://ant.apache.org/">Apache Ant</a>). Concretely, this process converts a particular reasoner & its dependencies into a .dex file, packages the .dex file as a .jar file, and stores the .jar file as "packaged_dex.jar" under the <span class="code">(MobiBenchEngineNative)/assets/libs</span> folder.</li>
+<li>If all goes well, the .jar-packaged .dex file ("packaged_dex.jar") should appear under the <span class="code">(MobiBenchEngineNative)/assets/libs</span> folder. Rename this file to the lower-case engine name (e.g., "androjena.jar"). <b>Hint</b>: if a build failure occurs, try emptying the <span class="code">(MobiBenchEngineNative)/bin/</span> folder first.
+<li>To cleanup, remove engine dependencies from the project build path (if necessary), remove the dependencies from the <span class="code">(MobiBenchEngineNative)/libs</span> folder, and remove the engine .java file(s).</li>
+</ol>
+
+<p>At runtime, given a request for a particular reasoner, the <span class="code">(MobiBenchEngineNative)/wvw.mobibench.loader.android.AndroidDependencyLoader</span> class dynamically loads the jar file from the <span class="code">(MobiBenchEngineNative)/assets/libs/</span> folder. We note that this option is courtesy of an <a href="http://android-developers.blogspot.co.nz/2011/07/custom-class-loading-in-dalvik.html">Android Developers Blog post</a>, which also served as the inspiration for the PC packaging process.</p>
+
+<h6>PC</h6>
+
+<ol>
+<li>In the <span class="code">MobiBenchEngine<b>Core</b></span> project, rename the engine's .txt file in <span class="code">(MobiBenchEngineCore/)wvw.mobibench.engine</span> to .java (if necessary, do the same for its superclass; e.g., <span class="code">OWLAPIEngine</span>).</li>
+<li>Copy the engine's dependencies (set of .jar files) to the <span class="code">(MobiBenchEngineCore)/pack/libs</span> folder, and add each dependency to the project's build path.</li>
+<li>With the <span class="code">MobiBenchEngineCore</span> project folder as cwd, run "ant -buildfile build-pc.xml" (requires <a href="http://ant.apache.org/">Apache Ant</a>).</li>
+<li>If all goes well, "packaged.jar" should appear under the <span class="code">(MobiBenchEngineCore)/pack/</span> folder. Rename this file to the lower-case engine name (e.g., "androjena.jar") and move the file to the <span class="code">(MobiBenchEngine<b>Pc</b>)/libs</span> folder.</li>
+<li>To cleanup, remove engine dependencies from the project build path, remove contents of the  <span class="code">(MobiBenchEngineCore)/pack/libs</span> folder, and re-name the engine .java file(s) back to .txt.</li>
+</ol>
+
+<p>At runtime, given a request for a particular reasoner, the <span class="code">(MobiBenchEnginePc)/wvw.mobibench.loader.pc.PcDependencyLoader</span> class dynamically loads the jar file from the <span class="code">(MobiBenchEnginePc)/libs/</span> folder.</p>
+
+<p>We note that, the dependencies for AndroJena, ELK and Hermit are currently the Android versions. But, these may be easily replaced by more up-to-date dependencies (which could however require changing some parts in the Java plugin).</p>
+	
+
+<a class="pos" name="reasoners_usage2">
+	<h5>2) <u>Manual loading:</u> manually include reasoner & dependencies</h5>
+</a>
+
+<p>This option simply involves putting the reasoner's <span class="code">ReasoningEngine</span> subclass as a Java file under the <span class="code">wvw.mobibench.engine</span> package folder (and, if needed, its direct superclass), and including its dependencies on the project's build path. These subclasses are already present under the package folder as .txt files (<span class="code">MobiBenchEngineCore</span>) - simply rename the desired one to a .java file. Reasoner dependencies can be found in their respective <a href="#reasoners_code">projects</a>. 
+
+<a class="pos" name="instructions">
+	<h2>Instructions</h2>
+</a>
+
+<p>This section gives instructions on how to use the MobiBench framework.</p>
+
+<a class="pos" name="usage_web_service">
+	<h3>Web service</h3>
+</a>
+
+<p><b>Setup:</b> configure the <span class="code">(MobiBenchWebService)/src/main/resources/res/config.properties</span> file, including the local path for storing files with relative paths (<span class="code">storagePath</span>).</p>
+
+<p><b>Deployment:</b> the <span class="code">MobiBenchWebService</span> project needs to be deployed using a server with a servlet container(e.g., <a href="http://tomcat.apache.org/">Apache Tomcat</a>). The web service needs to be deployed first, since it performs supporting functions for the MobiBench framework.</p>
+
+<a class="pos" name="usage_benchmark_engine">
+	<h3>Benchmark Engine</h3>
+</a>
+
+<p><b>Setup:</b> in case automation tools are not being used (see below), the <span class="code">(MobiBenchEngineJS)/www/js/config.js</span> file needs to be configured with the IP address and port of <span class="code">MobiBenchWebService</span>. Further, the <span class="code">benchmark.js</span> file supplies several configuration parameters (see lines 3-17), such as whether conformance should be automatically tested, log output should be persisted, etc. Some of these options can also be set via the benchmark configuration (e.g., see <a href="#code1">Code 1</a>).</p>
+
+<p>Further:</p>
+
+<ul>
+<li>
+	<b>PC</b>: update  <span class="code">(MobiBenchEnginePc)/wvw.mobibench.MobiBenchEnginePc.rootPath</span> to point to the main folder in which <span class="code">MobiBenchEnginePC</span> and <span class="code">MobiBenchEngineJS</span> are located.
+</li>
+</ul>
+
+<p><b>Deployment:</b>
+<ul>
+<li><b>Android</b>: run the <span class="code">MobibenchEngineNative</span> project on the Android device.</li>
+<li><b>PC</b>: run the <span class="code">MobibenchEnginePc</span> project on your machine.</li>
+</ul>
+
+<p>Performance results, together with generated inferences and log output (if configured), will be sent to the web service during and/or after the benchmarks. Heap dumps will be stored on the device itself, under <span class="code">Android/data/benchmarks/dumps/</span>. Performance result files and heap dumps are named after the ID from the benchmark configuration (see <a href="#code1">Code 1</a>).</p>
+
+<a class="pos" name="autom_support">
+	<h3>Automation support</h3>
+</a>
+
+<h4>Setup</h4>
+
+<p>In <span class="code">MobiBenchAutoCore</span>, update the <span class="code">wvw.mobibench.auto.AutoBenchmark.run</span> method to execute the desired type of benchmark (e.g., <span class="code">run_OWL2RL</span> method). In <span class="code">wvw.mobibench.auto.factory.user.DefaultUserConfigFactory</span>, update the desired method (e.g., <span class="code">user_OWL2RL</span>) with an automation configuration (see existing methods for examples). Each <span class="code">run_*</span> (e.g., <span class="code">run_OWL2RL</span>) method invokes the appropriate user factory method (e.g., <span class="code">user_OWL2RL</span>) to generate sets of benchmark configurations. Update <span class="code">wvw.mobibench.auto.AutoBenchmark.remotePath</span> to point towards <span class="code">(MobiBenchEngineJS)/www/res/owl/</span> on your machine.</p>
+
+<h4>Deployment</h4>
+<p><b>MobiBenchAutoDevice:</b> first, run the <span class="code">MobiBenchAutoDeviceServer</span> project on the Android device. The app should display an IP address on the local WiFi network, on which the device benchmark server is accessible. Copy this address to <span class="code">(MobiBenchAutoDeviceClient)/wvw.mobibench.auto.AutoBenchmarkDeviceClient.deviceAddress</span>. Then, run the <span class="code">MobiBenchAutoDeviceClient</span> project as a Java application, with the <span class="code">wvw.mobibench.auto.AutoBenchmark.run</span> setup (see above) to execute the desired benchmarks. Note that the <span class="code">MobiBenchEngineNative</span> project first needs to be installed on the device.</p>
+
+<p><b>MobiBenchAutoPc:</b> simply run this project as a Java application. (Regrettably, it seems that the JDK8 Nashorn engine cannot be stopped; so after all benchmarks are done, the process needs to be stopped manually).<p>
+
+<a class="pos" name="program_access">
+	<h3>Programmatic access</h3>
+</a>
+
+<p>To execute benchmarks programmatically, call the <span class="code">execBenchmark</span> JavaScript function (<span class="code">www/js/benchmark.js</span>) with a configuration object. Below, we show an example:</p>
+
+<a name="code1">
+<pre class="prettyprint lang-js linenums" style="width: 600px">
+config: {
+  engine: 'androjena', 
+  nrRuns: 10, 
+  warmupRun: true,
+  dumpHeap: true,
+    reasoning: {
+      task: 'ontology_inference',
+      mechanism: {
+        ontology_inference: {
+          type: 'owl2rl',
+          dependency: 'rule_inference'
+        },
+        rule_inference: {
+          mainFlow: 'frequent',
+          subFlow: 'load_data_exec_rules'
+        } 
+      } 
+    },
+  resources: {
+    ontology: {
+      path: 'res/owl/data/0.nt',
+      type:'data', format:'RDF', syntax:'N-TRIPLE'
+    },
+    owl2rl : {
+      axioms: {
+        path: 'res/owl/owl2rl/full/axioms.nt',
+        type:'data', format:'RDF', syntax:'N-TRIPLE'
+      },
+      rules: {
+        path: 'res/owl/owl2rl/full/rules.spin',
+        type: 'rules', format: 'SPIN'
+      },
+      selections: [ 'inf-inst', 'entailed' ]
+    },
+    confPath: 'res/owl/conf/ontology_inference/owl2rl/ore-small/0/full.nt'
+    id: '...'
+  }
+}
+</pre>
+<div class="code-caption"><b>Code 1: </b> example benchmark configuration object.</div>
+</a>
+
+<p>This object specifies the unique engine ID; the number of experiment runs, possibly including a "warmup" run (which will not count towards the collected metrics); and whether memory usage should be measured (<span class="code">dumpHeap</span>). Further, the reasoning part indicates the high-level reasoning task (i.e., <span class="code">ontology_inference</span>) and concrete implementation (i.e., <span class="code">owl2rl</span>; called "mechanism"). Any dependent task is listed as well (i.e., <span class="code">rule_inference</span>), including the main and sub process flows to be followed.</p>
+
+<p>The resources section supplies information on the ontologies, service descriptions / user goals, data and (potentially) rulesets used in the benchmark. In this case, an ontology and OWL2 RL resources are listed (including the axioms and ruleset, as well as ruleset selections to be applied). In addition, the ontology section can indicate the expected output of the reasoning task (<span class="code">confPath</span>) which allows for automated conformance checking.</p>
+
+<p>Finally, the <span class="code">id</span> field indicates the name of the file in which performance results (and the heap dump) will be stored. Any identifier may be used here.</p>
+
+<p>To check which configurations (e.g., reasoning task, mechanism, subflow) are supported by each engine, check the JavaScript / Java plugin (for Java, check the <span class="code">createEngineConfig</span> method).</p>
+
+
+<a class="pos" name="analysis_tools">
+	<h3>Analysis tools</h3>
+</a>
+
+<p>To deal with an abundance of benchmark results, <span class="code">MobiBenchAnalysis</span> supports automatically aggregating benchmark results, including performance times and memory heap sizes, into a CSV file. This file lists the performance results per configuration; including process flow, reasoning task and implementation (or "mechanism"; e.g., OWL2 RL vs. built-in OWL reasoning), applied rule subsets (for OWL2 RL), potential engine-specific options, and dataset (potentially including scale). Secondly, <span class="code">MobiBenchAnalysis</span> supports outputting the individual (i.e., per benchmark dataset) and total (i.e., aggregated) differences in performance between two reasoning configurations, thus greatly facilitating the comparison of different reasoning setups.</p>
+
+<p>This tool is also available as a command line utility (the .jar file can be found under the MobiBenchAnalysis project). Run "jar mb-analysis.jar -help" for available options.</p>
+
+<a class="pos" name="separate_ws_access">
+	<h3>Separate Web service access</h3>
+</a>
+
+<p>The functionality of the <span class="code">MobiBenchWebService</span> can also be accessed separately; e.g., to separately convert benchmark resources or perform ruleset selections. The <span class="code">webservice.js</span> script (in <span class="code">MobiBenchEngineJS/www/js/</span>) contains code snippets to access various functions of <span class="code">MobiBenchWebService</span>. For instance: </p>
+
+<a name="code2">
+<pre class="prettyprint lang-js linenums" style="width: 600px">
+// first, retrieve rules from file
+var rules = retrieveResource("res/owl/owl2rl/full/rules.spin");
+
+// then, convert rules via Web service
+convert(rules, 'rules', {
+  to : 'Datalog' // convert to this format
+
+}, function(convRules) {
+  console.log("converted rules:\n" + convRules); // outputs converted rules
+});
+</pre>
+<div class="code-caption"><b>Code 2: </b> snippet from webservice.js.</div>
+</a>
+
+<p>The <span class="code">(MobiBenchEngineJS)/www/webservice.html</span> page executes the <span class="code">webservice.js</span> script. <b>Important:</b> loading this page requires deploying the relevant <span class="code">MobiBenchEngineJS</span> code (<span class="code">www/</span> folder) <u>on the same server as <span class="code">MobiBenchWebService</span></u> (e.g., localhost), and accessing the <span class="code">webservice.html</span> file via the browser. Else, a cross-origin resource-sharing (CORS) exception will be raised by the browser.</p>
+
+<br />
+
+<p style="font-size: 14px;"><a name="note1"><b>(*)</b></a> The Android projects are not packaged as Maven projects, and have their dependencies directly in their <span class="code">libs/</span> folder. This is because of difficulties that Eclipse has with Android Maven projects: when putting all plugins under <span class="code">&lt;pluginManagement&gt;</span> in <span class="code">pom.xml</span> (as recommended when faced with a "plugin lifecycle .." error), Eclipse complains that "apk" packaging is not supported. There are other working solutions out there, but instead of forcing people to deal with this issue we opted to make these "regular" Android projects.</p>
+
+
+</body>
+</body>
+</html>

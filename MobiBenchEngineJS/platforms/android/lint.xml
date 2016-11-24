@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="DefaultLocale">
+        <ignore path="src/dal/niche/mobile/benchmark/dependency_loader/EngineDependencyLoader.java" />
+        <ignore path="src/dal/niche/mobile/benchmark/loader/EngineDependencyLoader.java" />
+    </issue>
+</lint>

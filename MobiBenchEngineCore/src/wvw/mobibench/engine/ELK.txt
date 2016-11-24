@@ -1,0 +1,101 @@
+/**
+ * Copyright 2016 William Van Woensel
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ * 
+ * 
+ * @author wvw
+ * 
+ */
+
+package wvw.mobibench.engine;
+
+import org.semanticweb.elk.owlapi.ElkReasonerFactory;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
+
+import wvw.mobibench.config.data.DataFormats;
+import wvw.mobibench.config.data.DatasetConfigContainer;
+import wvw.mobibench.config.engine.EngineConfig;
+import wvw.mobibench.config.engine.EngineReasoningConfig;
+import wvw.mobibench.config.engine.res.EngineDatasetConfig;
+import wvw.mobibench.config.reason.MechanismTypes;
+import wvw.mobibench.config.reason.ReasoningConfig;
+import wvw.mobibench.config.reason.ReasoningMechanism;
+import wvw.mobibench.config.reason.ReasoningScope;
+import wvw.mobibench.config.reason.ScopeTypes;
+import wvw.mobibench.config.reason.TaskTypes;
+import wvw.mobibench.exception.BenchmarkException;
+import wvw.mobibench.exception.OperationNotSupportedException;
+import wvw.mobibench.results.ExperimentResults;
+
+public class ELK extends OWLAPIEngine {
+
+	// NOTE pre-computable inference types (returned by
+	// getPrecomputableInferenceTypes):
+	// infTypes: [class assertions, class hierarchy]
+
+	public ELK() {
+		super("ELK", true);
+	}
+
+	protected EngineConfig createEngineConfig() {
+		EngineDatasetConfig dataConfig = new EngineDatasetConfig(DataFormats.RDF);
+
+		// > reasoning
+
+		EngineReasoningConfig reasonConfig = new EngineReasoningConfig();
+
+		// - ontology_inference
+
+		// -- builtin
+		ReasoningMechanism owlMech = new ReasoningMechanism(MechanismTypes.BUILTIN);
+		owlMech.addScope(new ReasoningScope(ScopeTypes.CLASS));
+
+		reasonConfig.addMechanism(TaskTypes.ONTOLOGY_INFERENCE, owlMech);
+
+		return new EngineConfig(dataConfig, reasonConfig);
+	}
+
+	protected OWLReasoner createReasoner(OWLOntology ontology) {
+		OWLReasonerFactory reasonerFactory = new ElkReasonerFactory();
+
+		return reasonerFactory.createReasoner(ontology);
+	}
+
+	// protected List<String> collectInferred(ReasoningConfig rConfig)
+	// throws OWLOntologyCreationException, OWLOntologyStorageException {
+	//
+	// List<String> inferred = new ArrayList<String>();
+	//
+	// for (OWLClass clazz : owlOnt.getClassesInSignature()) {
+	// NodeSet<OWLNamedIndividual> individuals = reasoner.getInstances(clazz,
+	// true);
+	//
+	// for (Node<OWLNamedIndividual> individual : individuals) {
+	// inferred.add(clazz + "(" + individual.getRepresentativeElement() + ")");
+	// }
+	// }
+	//
+	// return inferred;
+	// }
+
+	public ExperimentResults entails(ReasoningConfig rConfig,
+			DatasetConfigContainer ontology1, DatasetConfigContainer ontology2)
+			throws BenchmarkException {
+
+		// NOTE calling reasoner.isEntailed throws UnsupportedOperationException
+		throw new OperationNotSupportedException("entails");
+	}
+}

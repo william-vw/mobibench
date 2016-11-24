@@ -1,0 +1,25 @@
+<p>In the <i>build.xml</i> file, the part shown in <a href="#code1">Code 1</a> first creates a staging directory for classes to be converted to .dex (line 1), and then copies the engine's class(es) (based on their class name) from <i>[project-root]/bin/classes</i> to the staging directory (lines 3-7). Subsequently, <i>dex-helper-mod</i> (definition not shown) converts these classes to .dex format (line 9-11), together with their dependencies. Finally, the .dex file is packaged as a .jar file and stored under the <i>assets/lib</i> folder (lines 13-16).</p>
+
+<a name="code1">
+<pre class="prettyprint lang-xml linenums" style="width: 475px">
+&lt;mkdir dir=&quot;${out.classes.absolute.dir}.temp&quot; /&gt;
+
+&lt;copy todir=&quot;${out.classes.absolute.dir}.temp&quot; &gt;
+  &lt;fileset dir=&quot;${out.classes.absolute.dir}&quot; &gt;
+    &lt;include name=&quot;wvw/mobibench/engine/**&quot; /&gt;
+  &lt;/fileset&gt;
+&lt;/copy&gt;
+
+&lt;dex-helper-mod
+  input-dir=&quot;${out.classes.absolute.dir}.temp&quot;
+  output-dex-file=&quot;${out.absolute.dir}/classes.dex&quot; /&gt;
+  
+&lt;jar
+  basedir=&quot;${out.absolute.dir}/&quot;
+  destfile=&quot;${asset.absolute.dir}/libs/packaged_dex.jar&quot;
+  includes=&quot;classes.dex&quot; /&gt;
+</pre>
+<div class="code-caption"><b>Code 1: </b> snippet from build.xml.</div>
+</a>
+
+<p>When executing the build process, make sure only the <i>ReasoningEngine</i> superclass and its relevant subclass (i.e., wrapping the reasoner to be packaged) are present as Java files under the <i>wvw.mobibench.engine</i> package folder, and that the required dependencies are under the Android project's <i>lib/</i> folder. Then, run "ant debug" or "ant release" from the project directory (requires <a href="http://ant.apache.org/">Apache Ant</a>). After building is complete, the .jar-packaged .dex file should appear under the <i>assets/libs</i> folder. Rename the generated .jar file with the lower-case engine ID. <b>Hint:</b> if a build failure occurs, try emptying the <i>bin/</i> folder first.</p>

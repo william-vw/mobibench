@@ -1,0 +1,15 @@
+@prefix vub: <http://vub.ac.be/> .
+@prefix region: <http://wise.vub.ac.be/region/> .
+@prefix dcmi: <http://purl.org/dc/elements/1.1/> .
+@prefix foaf: <http://xmlns.com/foaf/spec/> .
+@prefix : <#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://vub.ac.be/KultuurKaffee> .
+
+<> a region:Cafe , region:FoodAndDrinksAccommodation , region:Building .
+<> rdfs:label "KultuurKaffee"@nl .
+<> dcmi:title "KultuurKaffee"@nl .
+<> dcmi:description "Het KultuurKaffee is een klassieker in het Brusselse concertlandschap. Het is jouw kleine Ancienne Belgique in het hartje van de campus! Door een hardnekkig volgehouden opendeur politiek zijn de meeste optredens bovendien gratis. Je kan dus meer drinken en langer blijven. De concertprogrammatie is divers in stijlen en alleen conservatief in zijn hoge kwaliteitsgarantie. Lady Linn, Arsenal, A Brand... zowat alle Belgische bands met airplay op stubru stonden hier recent nog op de planken. Bovendien vaak net voor het moment van hun doorbraak, want in het KK ben je de massa voor. Sinds enkele jaren programmeren we in samenwerking met de Comedy Kameel een aantal keer per jaar ook comedy. Het recept is hetzelfde als voor de concerten, dus: dichtbij en beregoed."@nl .
+<> foaf:page <http://vub.ac.be/cultuur> .
+<> foaf:page <http://www.uitinbrussel.be/organisator/vub-kultuurkaffee> .
+<> foaf:page <http://www.agenda.be/v2/nl/place/p/3236.html> .

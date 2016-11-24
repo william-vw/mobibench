@@ -1,0 +1,2 @@
+- goes into infinite loop for conf, conf2, lubm datasets
+	keeps making same inferences, doesn't seem to recognize duplicate inferences

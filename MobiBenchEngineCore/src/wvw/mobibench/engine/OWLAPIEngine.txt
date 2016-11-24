@@ -1,0 +1,430 @@
+/**
+ * Copyright 2016 William Van Woensel
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ * 
+ * 
+ * @author wvw
+ * 
+ */
+
+package wvw.mobibench.engine;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.coode.owlapi.rdf.model.RDFNode;
+import org.coode.owlapi.rdf.model.RDFResourceNode;
+import org.coode.owlapi.rdf.model.RDFTranslator;
+import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.io.OWLOntologyDocumentSource;
+import org.semanticweb.owlapi.io.StringDocumentSource;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.OWLOntologyStorageException;
+import org.semanticweb.owlapi.reasoner.InferenceType;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.util.InferredAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredClassAssertionAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredDisjointClassesAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredEquivalentClassAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredOntologyGenerator;
+import org.semanticweb.owlapi.util.InferredSubClassAxiomGenerator;
+
+import wvw.mobibench.config.data.DatasetConfig;
+import wvw.mobibench.config.data.DatasetConfigContainer;
+import wvw.mobibench.config.reason.ReasoningConfig;
+import wvw.mobibench.config.reason.ScopeTypes;
+import wvw.mobibench.config.rules.RulesetConfigContainer;
+import wvw.mobibench.exception.BenchmarkException;
+import wvw.mobibench.exception.OperationNotSupportedException;
+import wvw.mobibench.results.EntailmentResults;
+import wvw.mobibench.results.ExperimentResults;
+import wvw.mobibench.results.OntologyInferenceResults;
+import wvw.mobibench.timer.EngineExperimentTimer;
+import wvw.mobibench.timer.EngineResultTimes;
+import wvw.utils.log2.Log;
+
+public abstract class OWLAPIEngine extends ReasoningEngine {
+
+	protected Map<ScopeTypes, List<InferenceType>> scopeInfTypes =
+			new HashMap<ScopeTypes, List<InferenceType>>();
+
+	protected OWLOntologyManager inputOntologyManager;
+	protected OWLOntology owlOnt;
+
+	protected OWLReasoner reasoner;
+
+	protected EngineResultTimes curResults;
+
+	private boolean incrClass;
+
+	public OWLAPIEngine(String id, boolean incrClass) {
+		super(id);
+
+		this.incrClass = incrClass;
+
+		setupPrecompInfTypes();
+	}
+
+	public void init() {
+	}
+
+	public void reset() {
+		if (reasoner != null)
+			reasoner.dispose();
+
+		reasoner = null;
+
+		inputOntologyManager = null;
+		owlOnt = null;
+
+		// NOTE don't seem to be any methods for closing OWLOntology,
+		// inputOntologyManager
+	}
+
+	public EngineResultTimes loadData(ReasoningConfig rConfig, DatasetConfigContainer dataSet)
+			throws BenchmarkException {
+
+		throw new OperationNotSupportedException("loadData");
+	}
+
+	public ExperimentResults executeRules(ReasoningConfig rConfig,
+			RulesetConfigContainer ruleSet) throws BenchmarkException {
+
+		throw new OperationNotSupportedException("executeRules");
+	}
+
+	public EngineResultTimes loadRules(ReasoningConfig rConfig, RulesetConfigContainer ruleSet)
+			throws BenchmarkException {
+
+		throw new OperationNotSupportedException("loadRules");
+	}
+
+	public ExperimentResults execute(ReasoningConfig rConfig)
+			throws BenchmarkException {
+
+		throw new OperationNotSupportedException("execute");
+	}
+
+	public ExperimentResults inference(ReasoningConfig rConfig,
+			DatasetConfigContainer ontologyContainer) throws BenchmarkException {
+
+		DatasetConfig ontology = ontologyContainer.getConfig();
+		try {
+			EngineExperimentTimer timer;
+			curResults = new EngineResultTimes();
+
+			OntologyInferenceResults expResults = new OntologyInferenceResults(
+					curResults);
+
+			if (inputOntologyManager == null) {
+				Log.d("first inference job");
+
+				timer = new EngineExperimentTimer("loadOntology", curResults);
+				timer.begin();
+
+				inputOntologyManager = OWLManager.createOWLOntologyManager();
+				OWLOntologyDocumentSource src = new StringDocumentSource(
+						ontology.getDataString());
+
+				owlOnt = inputOntologyManager
+						.loadOntologyFromOntologyDocument(src);
+
+				timer.done();
+
+				// NOTE inference time includes consistency checking, but that's
+				// also measured separately
+				// NOTE in case of an inconsistent ontology, no inferences will
+				// be computed (else, some reasoners will crash, such as HermiT)
+				timer = new EngineExperimentTimer("inference", curResults);
+				timer.begin();
+
+				reasoner = createInitReasoner(owlOnt, rConfig);
+				checkConsistency(expResults);
+
+				if (expResults.isConsistent())
+					reasoner.precomputeInferences(getInfTypes(rConfig));
+				// reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY);
+
+				timer.done();
+
+			} else {
+				Log.d("second inference job");
+
+				timer = new EngineExperimentTimer("loadOntology", curResults);
+
+				timer.begin();
+				inputOntologyManager.addAxioms(owlOnt, getAxioms(ontology));
+				timer.done();
+
+				if (incrClass) {
+					Log.d("running incremental classification");
+
+					timer = new EngineExperimentTimer("inference", curResults);
+					timer.begin();
+
+					reasoner.flush();
+					// for ELK, seems that only incremental classification is
+					// currently supported
+					reasoner.precomputeInferences(getInfTypes(rConfig));
+					// reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY);
+
+					timer.done();
+
+				} else {
+					Log.d("inference.2.2");
+
+					timer = new EngineExperimentTimer("inference", curResults);
+					timer.begin();
+
+					reasoner = createInitReasoner(owlOnt, rConfig);
+					checkConsistency(expResults);
+
+					if (expResults.isConsistent())
+						reasoner.precomputeInferences(getInfTypes(rConfig));
+
+					timer.done();
+				}
+			}
+
+			Log.d("is ontology consistent? " + expResults.isConsistent());
+			List<String> inferred;
+			// if (expResults.isConsistent()) {
+			try {
+				timer = new EngineExperimentTimer("collectInferred", curResults);
+
+				timer.begin();
+				inferred = collectInferred(rConfig);
+				timer.done();
+
+				// Log.d("inferred: " + inferred);
+				expResults.setInferred(inferred);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+
+				Log.d("Error: " + e.getMessage());
+			}
+
+			// } else
+			// inferred = new ArrayList<String>();
+
+			return expResults;
+
+		} catch (OWLOntologyCreationException e) {
+			e.printStackTrace();
+
+			throw new BenchmarkException("Error in <inference>: "
+					+ e.getMessage());
+
+		} /*
+		 * catch (OWLOntologyStorageException e) { e.printStackTrace();
+		 * 
+		 * throw new BenchmarkException("Error in <inference>: " +
+		 * e.getMessage()); }
+		 */
+	}
+
+	protected void checkConsistency(OntologyInferenceResults expResults) {
+		EngineExperimentTimer timer = new EngineExperimentTimer("consistency",
+				expResults.getResultTimes());
+		timer.begin();
+
+		expResults.setConsistent(reasoner.isConsistent());
+		timer.done();
+	}
+
+	protected List<String> collectInferred(ReasoningConfig rConfig)
+			throws OWLOntologyCreationException,
+			OWLOntologyStorageException {
+
+		Log.d("collectInferred");
+
+		// NOTE adding any other for particular systems results in errors
+		List<InferredAxiomGenerator<? extends OWLAxiom>> generators = getInferredAxiomGenerators(rConfig);
+
+		OWLOntologyManager outMan = OWLManager
+				.createOWLOntologyManager();
+		OWLOntology infOnt = outMan.createOntology();
+
+		InferredOntologyGenerator iog = new InferredOntologyGenerator(reasoner,
+				generators);
+		iog.fillOntology(outMan, infOnt);
+
+		final List<String> inferred = new ArrayList<String>();
+
+		// courtesy of
+		// https://sourceforge.net/p/owlapi/mailman/message/19852004/
+		RDFTranslator translator = new RDFTranslator(outMan, infOnt, true) {
+
+			protected void addTriple(RDFResourceNode subject,
+					RDFResourceNode pred, RDFNode object) {
+
+				inferred.add(subject + " " + pred + " " + object + " . ");
+			}
+		};
+
+		for (OWLAxiom ax : infOnt.getAxioms())
+			ax.accept(translator);
+
+		// - method 2
+		// StringDocumentTarget target = new StringDocumentTarget();
+		// outputOntologyManager.saveOntology(infOnt, target);
+		//
+		// List<String> inferred = new ArrayList<String>();
+		// inferred.add(target.toString());
+
+		// - method 3
+		// ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+		// outputOntologyManager.saveOntology(infOnt, bOut);
+		// String target = new String(bOut.toByteArray());
+		//
+		// List<String> inferred = new ArrayList<String>();
+		// inferred.add(target.toString());
+
+		return inferred;
+	}
+
+	public ExperimentResults entails(ReasoningConfig rConfig,
+			DatasetConfigContainer serviceContainer, DatasetConfigContainer goalContainer)
+			throws BenchmarkException {
+
+		DatasetConfig service = serviceContainer.getConfig();
+		DatasetConfig goal = serviceContainer.getConfig();
+
+		EngineResultTimes resultTimes = new EngineResultTimes();
+		EngineExperimentTimer timer;
+		try {
+			timer = new EngineExperimentTimer("loadService", resultTimes);
+			timer.begin();
+
+			// NOTE creating OWLOntologyManager included in loadService time
+			OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+
+			OWLOntologyDocumentSource serviceSrc = new StringDocumentSource(
+					service.getDataString());
+
+			OWLOntology serviceOnt = manager
+					.loadOntologyFromOntologyDocument(serviceSrc);
+
+			timer.done();
+
+			timer = new EngineExperimentTimer("loadGoal", resultTimes);
+			timer.begin();
+
+			OWLOntologyDocumentSource goalSrc = new StringDocumentSource(
+					goal.getDataString());
+
+			OWLOntology goalOnt = manager
+					.loadOntologyFromOntologyDocument(goalSrc);
+
+			timer.done();
+
+			timer = new EngineExperimentTimer("entails", resultTimes);
+			timer.begin();
+
+			Set<OWLLogicalAxiom> serviceAxioms = serviceOnt.getLogicalAxioms();
+
+			OWLReasoner reasoner = createInitReasoner(goalOnt, rConfig);
+			boolean entails = reasoner.isEntailed(serviceAxioms);
+
+			timer.done();
+
+			Log.d("entails? " + entails);
+			Log.d("axioms: " + serviceAxioms);
+
+			return new EntailmentResults(resultTimes, entails);
+
+		} catch (OWLOntologyCreationException e) {
+			e.printStackTrace();
+
+			throw new BenchmarkException("Error in <entails>: "
+					+ e.getMessage());
+
+		}
+	}
+
+	protected OWLReasoner createInitReasoner(OWLOntology ontology, ReasoningConfig rConfig) {
+		OWLReasoner reasoner = createReasoner(ontology);
+		setupPrecompInfTypes(reasoner);
+
+		return reasoner;
+	}
+
+	private InferenceType[] getInfTypes(ReasoningConfig rConfig) {
+		List<InferenceType> infTypes = scopeInfTypes.get(rConfig.getScope().getType());
+		Log.d("only including " + infTypes);
+
+		return infTypes.toArray(new InferenceType[infTypes.size()]);
+	}
+
+	protected abstract OWLReasoner createReasoner(OWLOntology ontology);
+
+	protected void setupPrecompInfTypes() {
+		List<InferenceType> infTypes = new ArrayList<InferenceType>();
+		infTypes.add(InferenceType.CLASS_HIERARCHY);
+		infTypes.add(InferenceType.CLASS_ASSERTIONS);
+
+		scopeInfTypes.put(ScopeTypes.CLASS, infTypes);
+	}
+	
+	protected void setupPrecompInfTypes(OWLReasoner reasoner) {
+		List<InferenceType> infTypes = new ArrayList<InferenceType>();
+		infTypes.addAll(reasoner.getPrecomputableInferenceTypes());
+
+		scopeInfTypes.put(ScopeTypes.FULL, infTypes);
+	}
+
+	protected List<InferredAxiomGenerator<? extends OWLAxiom>> getInferredAxiomGenerators(
+			ReasoningConfig rConfig) {
+
+		List<InferredAxiomGenerator<? extends OWLAxiom>> generators =
+				new ArrayList<InferredAxiomGenerator<? extends OWLAxiom>>();
+
+		switch (rConfig.getScope().getType()) {
+
+		case CLASS:
+			Log.d("only including class axiom generators");
+
+			generators.add(new InferredDisjointClassesAxiomGenerator());
+			generators.add(new InferredEquivalentClassAxiomGenerator());
+			generators.add(new InferredSubClassAxiomGenerator());
+			generators.add(new InferredClassAssertionAxiomGenerator());
+
+			break;
+
+		default:
+			return null;
+		}
+
+		return generators;
+	}
+
+	private Set<OWLAxiom> getAxioms(DatasetConfig ontology)
+			throws OWLOntologyCreationException {
+		OWLOntologyManager ontMan = OWLManager.createOWLOntologyManager();
+		OWLOntologyDocumentSource src = new StringDocumentSource(
+				ontology.getDataString());
+
+		OWLOntology owlOnt = ontMan.loadOntologyFromOntologyDocument(src);
+
+		return owlOnt.getAxioms();
+	}
+}

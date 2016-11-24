@@ -1,0 +1,188 @@
+id: bookpersoncreditcardaccount_price_service>bookpersoncreditcardaccount_price_service
+<http://127.0.0.1/service#bookpersoncreditcardaccount_price_service> <http://127.0.0.1/matches> "true" .
+
+
+id: bookpersoncreditcardaccount_price_service>bookpersoncreditcardaccount_recommendedprice_service
+<http://127.0.0.1/service#bookpersoncreditcardaccount_price_service> <http://127.0.0.1/matches> "true" .
+
+
+id: bookpersoncreditcardaccount_price_service>bookpersoncreditcardaccount_taxedfreeprice_service
+<http://127.0.0.1/service#bookpersoncreditcardaccount_price_service> <http://127.0.0.1/matches> "true" .
+
+
+id: bookpersoncreditcardaccount__service>bookpersoncreditcardaccount__service
+<http://127.0.0.1/service#bookpersoncreditcardaccount__service> <http://127.0.0.1/matches> "true" .
+
+
+id: citycountry_hotel_service>citycountry_hotel_service
+<http://127.0.0.1/service#citycountry_hotel_service> <http://127.0.0.1/matches> "true" .
+
+
+id: citycountry_hotel_service>countrycapital-city_hotel_service
+<http://127.0.0.1/service#citycountry_hotel_service> <http://127.0.0.1/matches> "true" .
+
+
+id: citycountry_hotel_service>countrycity_hotel_service
+<http://127.0.0.1/service#citycountry_hotel_service> <http://127.0.0.1/matches> "true" .
+
+
+id: EBookOrder1>EBookOrder1
+<http://127.0.0.1/service#EBookOrder1> <http://127.0.0.1/matches> "true" .
+
+
+id: EBookOrder1>EBookOrder2
+<http://127.0.0.1/service#EBookOrder1> <http://127.0.0.1/matches> "true" .
+
+
+id: EBookOrder1>EBookOrder3
+<http://127.0.0.1/service#EBookOrder1> <http://127.0.0.1/matches> "true" .
+
+
+id: fall_down_pill>fall_down_pill
+<http://127.0.0.1/service#fall_down_pill> <http://127.0.0.1/matches> "true" .
+
+
+id: geocodeUSAddress>geocodeUSAddress
+<http://127.0.0.1/service#geocodeUSAddress> <http://127.0.0.1/matches> "true" .
+
+
+id: geographical-regiongeographical-region_map_service>citycity_map_service
+<http://127.0.0.1/service#geographical-regiongeographical-region_map_service> <http://127.0.0.1/matches> "true" .
+
+
+id: geographical-regiongeographical-region_map_service>geographical-regiongeographical-region_map_Gorgservice
+<http://127.0.0.1/service#geographical-regiongeographical-region_map_service> <http://127.0.0.1/matches> "true" .
+
+
+id: geographical-regiongeographical-region_map_service>geographical-regiongeographical-region_map_service
+<http://127.0.0.1/service#geographical-regiongeographical-region_map_service> <http://127.0.0.1/matches> "true" .
+
+
+id: getAltitudeAboveSeaLevelOfLocation>getAltitudeAboveSeaLevelOfLocation
+<http://127.0.0.1/service#getAltitudeAboveSeaLevelOfLocation> <http://127.0.0.1/matches> "true" .
+
+
+id: getAltitudeAboveSeaLevelOfLocation>getAltitudeOfLocation
+<http://127.0.0.1/service#getAltitudeAboveSeaLevelOfLocation> <http://127.0.0.1/matches> "true" .
+
+
+id: getAltitudeAboveSeaLevelOfLocation>getElevationFromLocation
+<http://127.0.0.1/service#getAltitudeAboveSeaLevelOfLocation> <http://127.0.0.1/matches> "true" .
+
+
+id: getDistanceBetweenCitiesWorldwide>getDistanceBetweenCitiesWorldwide
+<http://127.0.0.1/service#getDistanceBetweenCitiesWorldwide> <http://127.0.0.1/matches> "true" .
+
+
+id: getLocationOfCityState>getLocationOfCityState
+<http://127.0.0.1/service#getLocationOfCityState> <http://127.0.0.1/matches> "true" .
+
+
+id: getLocationOfUSCity>checkAndLookupAddress
+<http://127.0.0.1/service#getLocationOfUSCity> <http://127.0.0.1/matches> "true" .
+
+
+id: getLocationOfUSCity>geocodeUSAddress
+<http://127.0.0.1/service#getLocationOfUSCity> <http://127.0.0.1/matches> "true" .
+
+
+id: getLocationOfUSCity>getATMLocationsInCity
+<http://127.0.0.1/service#getLocationOfUSCity> <http://127.0.0.1/matches> "true" .
+
+
+id: getLocationOfUSCity>getCoordinatesOfAddress
+<http://127.0.0.1/service#getLocationOfUSCity> <http://127.0.0.1/matches> "true" .
+
+
+id: getLocationOfUSCity>getLocationOfAddress
+<http://127.0.0.1/service#getLocationOfUSCity> <http://127.0.0.1/matches> "true" .
+
+
+id: getLocationOfUSCity>getLocationOfCityState
+<http://127.0.0.1/service#getLocationOfUSCity> <http://127.0.0.1/matches> "true" .
+
+
+id: getLocationOfUSCity>getLocationOfCityWorldwide
+<http://127.0.0.1/service#getLocationOfUSCity> <http://127.0.0.1/matches> "true" .
+
+
+id: getLocationOfUSCity>getLocationOfUSCity
+<http://127.0.0.1/service#getLocationOfUSCity> <http://127.0.0.1/matches> "true" .
+
+
+id: getLocationOfUSCity>getMapOfAddress
+<http://127.0.0.1/service#getLocationOfUSCity> <http://127.0.0.1/matches> "true" .
+
+
+id: getMapOfUSAddress>getMapOfUSAddress
+<http://127.0.0.1/service#getMapOfUSAddress> <http://127.0.0.1/matches> "true" .
+
+
+id: getSunsetSunriseTimeOfLocation>getSunsetAndSunriseTime
+<http://127.0.0.1/service#getSunsetSunriseTimeOfLocation> <http://127.0.0.1/matches> "true" .
+
+
+id: getSunsetSunriseTimeOfLocation>getSunsetSunriseTimeOfLocation
+<http://127.0.0.1/service#getSunsetSunriseTimeOfLocation> <http://127.0.0.1/matches> "true" .
+
+
+id: getSunsetSunriseTimeOfLocation>getSunsetSunriseTwilightTime
+<http://127.0.0.1/service#getSunsetSunriseTimeOfLocation> <http://127.0.0.1/matches> "true" .
+
+
+id: getZipcodeForUSCity>city_state_ZipCodes
+<http://127.0.0.1/service#getZipcodeForUSCity> <http://127.0.0.1/matches> "true" .
+
+
+id: getZipcodeForUSCity>getZipcodeForUSCity
+<http://127.0.0.1/service#getZipcodeForUSCity> <http://127.0.0.1/matches> "true" .
+
+
+id: getZipcodeForUSCity>getZipCodesWithinCityState
+<http://127.0.0.1/service#getZipcodeForUSCity> <http://127.0.0.1/matches> "true" .
+
+
+id: lock_door>lock_door
+<http://127.0.0.1/service#lock_door> <http://127.0.0.1/matches> "true" .
+
+
+id: lock_door>open_door
+<http://127.0.0.1/service#lock_door> <http://127.0.0.1/matches> "true" .
+
+
+id: open_door>lock_door
+<http://127.0.0.1/service#open_door> <http://127.0.0.1/matches> "true" .
+
+
+id: open_door>open_door
+<http://127.0.0.1/service#open_door> <http://127.0.0.1/matches> "true" .
+
+
+id: userscience-fiction-novel_price_service>science-fiction-noveluser_recommendedpriceindollar_service
+<http://127.0.0.1/service#userscience-fiction-novel_price_service> <http://127.0.0.1/matches> "true" .
+
+
+id: userscience-fiction-novel_price_service>ScienceFNovelReview_service
+<http://127.0.0.1/service#userscience-fiction-novel_price_service> <http://127.0.0.1/matches> "true" .
+
+
+id: userscience-fiction-novel_price_service>SFNovelReview_service
+<http://127.0.0.1/service#userscience-fiction-novel_price_service> <http://127.0.0.1/matches> "true" .
+
+
+id: userscience-fiction-novel_price_service>SFNRecommendedPrice_service
+<http://127.0.0.1/service#userscience-fiction-novel_price_service> <http://127.0.0.1/matches> "true" .
+
+
+id: userscience-fiction-novel_price_service>userscience-fiction-novel_price_Bestservice
+<http://127.0.0.1/service#userscience-fiction-novel_price_service> <http://127.0.0.1/matches> "true" .
+
+
+id: userscience-fiction-novel_price_service>userscience-fiction-novel_price_service
+<http://127.0.0.1/service#userscience-fiction-novel_price_service> <http://127.0.0.1/matches> "true" .
+
+
+id: userscience-fiction-novel_price_service>userscience-fiction-novel_Relprice_service
+<http://127.0.0.1/service#userscience-fiction-novel_price_service> <http://127.0.0.1/matches> "true" .
+
+

@@ -1,0 +1,34 @@
+Examples of command line options for each task
+
+
+>> summarize performance times
+-task summarize -metric performance -folder <absolute-path>
+
+<absolute-path> points towards folder containing performance results text files to be summarized
+
+
+>> summarize memory usage
+(example: summarize memory usage of AndroJena engine)
+
+-task summarize -metric memory -folder <absolute-path> -className wvw.mobibench.engine.AndroJena
+
+<absolute-path> points towards folder with following structure:
+<folder>
+	conv/ (folder containing hprof-conv converted heap dumps to be summarized; create this folder)
+
+
+>> compare performance times
+(example: compare performance of "inf-inst, inst-entailed, entailed" OWL2 RL rule subset vs. full ruleset (i.e., no selection) for androjena engine)
+
+-task compare -e1 androjena -t1 owl2rl -d1 ore-small -e2 androjena -t2 owl2rl -s2 inf-inst,entailed -d2 ore-small_mat-ont_inst-entailed -folder <absolute-path>
+
+<absolute-path> points towards folder with following structure:
+<folder>
+	<engine-id-1>
+		full/
+			[ performance results text files ]
+		<selections-1>/ (comma-separated; e.g., "entailed, extra-axioms")
+			[ performance results text files ]
+		...
+	<engine-id-2>
+		...	  

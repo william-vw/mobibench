@@ -1,0 +1,211 @@
+/**
+ * Copyright 2016 William Van Woensel
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ * 
+ * 
+ * @author wvw
+ * 
+ */
+
+package wvw.mobibench.engine;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import pocketkrhyper.logic.firstorder.KnowledgeBase;
+import pocketkrhyper.logic.firstorder.LogicFactory;
+import pocketkrhyper.reasoner.ProofNotFoundException;
+import pocketkrhyper.reasoner.Reasoner;
+import pocketkrhyper.reasoner.krhyper.KrHyper;
+import wvw.mobibench.config.ProcessFlows;
+import wvw.mobibench.config.data.DataFormats;
+import wvw.mobibench.config.data.DatasetConfig;
+import wvw.mobibench.config.data.DatasetConfigContainer;
+import wvw.mobibench.config.engine.EngineConfig;
+import wvw.mobibench.config.engine.EngineReasoningConfig;
+import wvw.mobibench.config.engine.res.EngineDatasetConfig;
+import wvw.mobibench.config.engine.res.EngineRulesetConfig;
+import wvw.mobibench.config.reason.MechanismTypes;
+import wvw.mobibench.config.reason.ReasoningConfig;
+import wvw.mobibench.config.reason.ReasoningMechanism;
+import wvw.mobibench.config.reason.TaskTypes;
+import wvw.mobibench.config.rules.RuleFormats;
+import wvw.mobibench.config.rules.RulesetConfig;
+import wvw.mobibench.config.rules.RulesetConfigContainer;
+import wvw.mobibench.exception.BenchmarkException;
+import wvw.mobibench.exception.OperationNotSupportedException;
+import wvw.mobibench.results.ExperimentResults;
+import wvw.mobibench.results.InferenceResults;
+import wvw.mobibench.timer.EngineExperimentTimer;
+import wvw.mobibench.timer.EngineResultTimes;
+import wvw.utils.log2.Log;
+
+public class PocketKrHyper extends ReasoningEngine {
+
+	private KnowledgeBase kb;
+	private Reasoner reasoner;
+
+	public PocketKrHyper() {
+		super("PocketKrHyper");
+	}
+
+	protected EngineConfig createEngineConfig() {
+		EngineRulesetConfig ruleConfig = new EngineRulesetConfig(
+				RuleFormats.Datalog, true);
+		EngineDatasetConfig dataConfig = new EngineDatasetConfig(
+				DataFormats.Datalog, true);
+
+		EngineReasoningConfig reasonConfig = new EngineReasoningConfig();
+
+		// - rules_inference
+		ReasoningMechanism rulesMech = new ReasoningMechanism(MechanismTypes.BUILTIN,
+				ProcessFlows.load_rules_data_exec);
+
+		reasonConfig.addMechanism(TaskTypes.RULE_INFERENCE, rulesMech);
+
+		return new EngineConfig(ruleConfig, dataConfig, reasonConfig);
+	}
+
+	public void init() {
+	}
+
+	public void reset() {
+		if (kb != null) {
+			kb.removeQuery();
+			kb.truncateToProfile();
+
+			kb = null;
+		}
+
+		reasoner = null;
+	}
+
+	public EngineResultTimes loadData(ReasoningConfig rConfig, DatasetConfigContainer datasetContainer)
+			throws BenchmarkException {
+
+		DatasetConfig dataset = datasetContainer.getConfig();
+
+		EngineResultTimes resultTimes = new EngineResultTimes();
+
+		EngineExperimentTimer timer = new EngineExperimentTimer("loadData", resultTimes);
+		timer.begin();
+
+		List<String> data = dataset.getDataList();
+		for (String clause : data) {
+
+			// PocketKrHyper doesn't support any periods except to end the
+			// clause
+
+			// TODO add these replacements to Web service
+			clause = clause.replaceAll("\\.", "") + ".";
+			clause = clause.replaceAll(":", "");
+
+			// Log.d("data clause: " + clause);
+			kb.addClause(LogicFactory.newClause(clause));
+		}
+
+		timer.done();
+
+		return resultTimes;
+	}
+
+	public ExperimentResults executeRules(ReasoningConfig rConfig, RulesetConfigContainer ruleset)
+			throws BenchmarkException {
+
+		throw new OperationNotSupportedException("executeRules");
+	}
+
+	public EngineResultTimes loadRules(ReasoningConfig rConfig, RulesetConfigContainer rulesetContainer)
+			throws BenchmarkException {
+
+		RulesetConfig ruleset = rulesetContainer.getConfig();
+
+		EngineResultTimes resultTimes = new EngineResultTimes();
+
+		EngineExperimentTimer timer, timer2;
+
+		timer = new EngineExperimentTimer("loadRules", resultTimes);
+		timer.begin();
+
+		if (kb == null) {
+			timer2 = new EngineExperimentTimer("init KB & reasoner", resultTimes);
+			timer2.begin();
+
+			kb = new KnowledgeBase();
+			kb.setProfileBoundary();
+
+			reasoner = new KrHyper();
+			reasoner.setKnowledgeBase(kb);
+
+			kb.startQuery();
+
+			timer2.done();
+		}
+
+		List<String> rules = ruleset.getRulesList();
+		for (String clause : rules) {
+			// Log.d("rule clause: " + clause);
+
+			kb.addClause(LogicFactory.newClause(clause));
+		}
+
+		timer.done();
+
+		return resultTimes;
+	}
+
+	public ExperimentResults execute(ReasoningConfig rConfig) throws BenchmarkException {
+		InferenceResults expResults = new InferenceResults();
+
+		EngineResultTimes resultTimes = new EngineResultTimes();
+		expResults.setResultTimes(resultTimes);
+
+		EngineExperimentTimer timer;
+
+		timer = new EngineExperimentTimer("execute", resultTimes);
+		timer.begin();
+
+		int minTermWeight = 2;
+		int maxTermWeight = 0;
+		int timeout = Integer.MAX_VALUE;
+
+		try {
+			if (reasoner.reason(minTermWeight, maxTermWeight, timeout)) {
+				List<String> inferred = new ArrayList<String>();
+				inferred.add(reasoner.getModel().toString());
+
+				expResults.setInferred(inferred);
+			}
+
+		} catch (ProofNotFoundException e) {
+			Log.d("no proof found");
+		}
+
+		timer.done();
+
+		return expResults;
+	}
+
+	public ExperimentResults inference(ReasoningConfig rConfig, DatasetConfigContainer ontology)
+			throws BenchmarkException {
+
+		throw new OperationNotSupportedException("inference");
+	}
+
+	public ExperimentResults entails(ReasoningConfig rConfig, DatasetConfigContainer service,
+			DatasetConfigContainer goal) throws BenchmarkException {
+
+		throw new OperationNotSupportedException("entails");
+	}
+}

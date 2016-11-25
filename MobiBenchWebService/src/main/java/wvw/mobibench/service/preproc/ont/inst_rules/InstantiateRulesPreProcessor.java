@@ -49,8 +49,8 @@ import wvw.mobibench.service.res.ServiceResources;
 import wvw.utils.rdf.RdfGen;
 import wvw.utils.rule.RuleWrapper;
 import wvw.utils.rule.RulesUtils;
-import wvw.utils.rule.build.RuleBuilder;
-import wvw.utils.rule.build.SpinRuleBuilder;
+import wvw.utils.rule.builder.RuleBuilder;
+import wvw.utils.rule.builder.SpinRuleBuilder;
 
 public class InstantiateRulesPreProcessor extends OntologyBasedPreProcessor {
 

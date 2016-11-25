@@ -1,0 +1,96 @@
+// this function only works when included directly into the nools file
+// (likely because it references another fn; adding the millis fn into
+// the scope does not solve the problem) 
+function after(dateTime1, dateTime2) {
+	return millis(dateTime1) > millis(dateTime2);
+}
+
+define RDFStatement {
+	s: '', 
+	p: '', 
+	o: '',
+	
+	constructor: function(s, p, o) {
+		this.s = s;
+		this.p = p;
+		this.o = o;
+	},
+	
+	toString: function() {
+		return this.s.toString() 
+			+ " " + this.p.toString() 
+			+ " " + this.o.toString();
+	}
+}
+
+define RDFResource {
+	type: 'resource',
+	uri: '',
+	string: '',
+	
+	constructor: function(uri) {
+		this.uri = uri;
+		
+		this.string = uri;
+	}, 
+	
+	toString: function() {
+		return "<" + this.uri + ">";
+	}
+}
+
+define RDFBlankNode {
+	type: 'resource',
+	id: '',
+	string: '',
+	
+	bNode: true,
+	
+	constructor: function(id) {
+		this.id = id;
+		
+		this.string = id;
+	}, 
+	
+	toString: function() {
+		return "<" + this.id + ">";
+	}
+}
+
+define RDFProperty {
+	type: 'property',
+	uri: '',
+	string: '',
+	
+	constructor: function(uri) {
+		this.uri = uri;
+		
+		this.string = uri;
+	}, 
+	
+	toString: function() {
+		return "<" + this.uri + ">";
+	}
+}
+
+define RDFLiteral {
+	type: 'literal',
+	value: '',
+	dataType: '',
+	string: '',
+	
+	constructor: function(value, dataType) {
+		this.value = value;
+		this.dataType = dataType;
+		
+		this.string = value;
+	},
+	
+	toString: function() {
+		var str = "\"" + this.value + "\"";
+		if (this.dataType)
+			str += "^^<" + this.dataType + ">";
+			
+		return str;
+	}
+}

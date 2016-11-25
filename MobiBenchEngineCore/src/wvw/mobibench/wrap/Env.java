@@ -31,6 +31,8 @@ public abstract class Env {
 	
 	public static void setFilesDir(File filesDir) {
 		Env.filesDir = filesDir;
+		if (!filesDir.exists())
+			filesDir.mkdir();
 		
 		try {
 			IOUtils.deleteContents(filesDir);

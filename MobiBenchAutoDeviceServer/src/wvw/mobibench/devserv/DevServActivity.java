@@ -131,7 +131,7 @@ public class DevServActivity extends Activity implements RequestHandler {
 
 		JsonObject webService = new JsonObject();
 		webService.add("url", new JsonPrimitive(
-				"http://" + retIp + ":8080/MobiBenchWebService/"));
+				"http://" + retIp + ":8080/web-service/"));
 
 		config.add("webService", webService);
 

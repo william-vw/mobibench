@@ -162,10 +162,11 @@ public class MobiBenchServlet extends HttpServlet {
 
 				try {
 					Class<?> clazz = Class.forName(className);
-
 					Constructor<?> constr = clazz.getConstructor();
+					
 					Converter conv = (Converter) constr.newInstance();
-
+					conv.setRes(res);					
+					
 					convs.put(conv.getId(), conv);
 
 				} catch (ClassNotFoundException e) {
@@ -598,7 +599,7 @@ public class MobiBenchServlet extends HttpServlet {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String url = "http://localhost:8080/MobiBenchWebService/preprocess/aux_rules";
+		String url = "http://localhost:8080/web-service/preprocess/aux_rules";
 
 		System.out.println(url.matches(".*?preprocess/.*?"));
 	}

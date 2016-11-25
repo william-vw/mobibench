@@ -18,13 +18,12 @@
 * 
 */
 
-// NOTE uncomment parts to perform rule / data conversion or generate
-// conformance data
+// NOTE uncomment parts to perform rule / data conversion, etc.
 
 // - Rule conversion
 
 // // first, retrieve rules from file
-// var rules = retrieveResource("res/owl/owl2rl/tests/rules2.spin");
+// var rules = retrieveResource("res/owl/owl2rl/full/rules.spin");
 // // doLog("input rules:\n" + rules + "\n\n");
 //
 // // then, convert rules via web service
@@ -77,7 +76,7 @@
 
 // -- domain-based selection
 
-// // first, retrieve required data
+ // first, retrieve required data
 // var rules = retrieveResource("res/owl/owl2rl/full/rules.spin");
 // var axioms = retrieveResource("res/owl/owl2rl/full/axioms.nt");
 //
@@ -95,19 +94,19 @@
 
 // - Pre-processing
 
-// first, retrieve required data
-var path = "res/owl/data/conf/full.nt";
-var ontology = retrieveResource("res/owl/data/conf/full.nt");
-
-// then, obtain pre-processed rules & ontology from web service
-// (options: inst_rules, binarize, aux_rules)
-preprocess({
-	path : path,
-	content : ontology, 
-	
-	syntax : "N-TRIPLE"
-
-}, "inst_rules", function(ret) {
-	doLog("rules: " + ret.rules.split(/\r?\n\r?\n/));
-	doLog("ontology: " + ret.ontology);
-});
+//// first, retrieve required data
+//var path = "res/owl/data/conf/full.nt";
+//var ontology = retrieveResource("res/owl/data/conf/full.nt");
+//
+//// then, obtain pre-processed rules & ontology from web service
+//// (options: inst_rules, binarize, aux_rules)
+//preprocess({
+//	path : path,
+//	content : ontology, 
+//	
+//	syntax : "N-TRIPLE"
+//
+//}, "inst_rules", function(ret) {
+//	doLog("rules: " + ret.rules.split(/\r?\n\r?\n/));
+//	doLog("ontology: " + ret.ontology);
+//});

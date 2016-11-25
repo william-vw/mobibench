@@ -37,7 +37,7 @@ import wvw.utils.timer.ResultTime;
 public class ServiceResources {
 
 	private ServletContext ctx;
-	private String resPath = "/WEB-INF/classes/";
+	private String resPath = "/WEB-INF/";
 
 	private ManagedFiles files = new ManagedFiles(1 * 1024 * 1024);
 
@@ -54,6 +54,8 @@ public class ServiceResources {
 	}
 
 	public InputStream getInputStream(String path) {
+		// System.out.println(ctx.getResourcePaths("/WEB-INF/"));
+		
 		return ctx.getResourceAsStream(resPath + path);
 	}
 
@@ -61,8 +63,7 @@ public class ServiceResources {
 		return IOUtils.readFromStream(getInputStream(path));
 	}
 
-	public String store(String name, BufferedReader reader, boolean append)
-			throws IOException {
+	public String store(String name, BufferedReader reader, boolean append) throws IOException {
 
 		ManagedFile mFile = getFile(name);
 		mFile.store(reader, append);
@@ -70,8 +71,7 @@ public class ServiceResources {
 		return mFile.getAbsolutePath();
 	}
 
-	public String store(String name, String contents, boolean append)
-			throws IOException {
+	public String store(String name, String contents, boolean append) throws IOException {
 
 		ManagedFile mFile = getFile(name);
 		mFile.store(contents, append);

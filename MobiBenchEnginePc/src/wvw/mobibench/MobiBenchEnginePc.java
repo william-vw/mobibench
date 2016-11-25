@@ -47,10 +47,9 @@ import wvw.utils.log2.target.SystemOutTarget;
 public class MobiBenchEnginePc implements CallbackListener {
 
 	// NOTE update based on your machine
-	public static String rootPath = "C:/Users/William/git/mobile-benchmarks/";
+	public static String rootPath = "/home/william/git/mobibench/";
 
-	public static String utilsPath = rootPath
-			+ "MobiBenchEnginePc/src/wvw/mobile/utils/";
+	public static String utilsPath = rootPath + "MobiBenchEnginePc/src/wvw/mobile/utils/";
 	public static String wwwPath = rootPath + "MobiBenchEngineJS/www/";
 	public static String jarPath = rootPath + "MobiBenchEnginePc/libs/";
 
@@ -62,7 +61,7 @@ public class MobiBenchEnginePc implements CallbackListener {
 	private void init() {
 		Log.setTarget(new SystemOutTarget());
 		Env.setFilesDir(new File(Paths.get("").toAbsolutePath().toFile(), "data/"));
-		
+
 		Utils.setInstance(new PcUtils(utilsPath));
 	}
 
@@ -73,8 +72,7 @@ public class MobiBenchEnginePc implements CallbackListener {
 		setupJsEnv();
 	}
 
-	public MobiBenchEnginePc(BenchmarkEngineListener listener)
-			throws BenchmarkException {
+	public MobiBenchEnginePc(BenchmarkEngineListener listener) throws BenchmarkException {
 		init();
 
 		this.listener = listener;
@@ -88,8 +86,7 @@ public class MobiBenchEnginePc implements CallbackListener {
 			scriptEngine.eval("wwwPath = \"" + wwwPath + "\"");
 			// (init.js calls CallbackPlugin.doneLoading when done loading,
 			// which will call doneLoading() on this object)
-			scriptEngine
-					.eval(new FileReader(wwwPath + "js/platforms/pc/init.js"));
+			scriptEngine.eval(new FileReader(wwwPath + "js/platforms/pc/init.js"));
 
 		} catch (ScriptException | FileNotFoundException e) {
 			throw new BenchmarkException(e);
@@ -104,6 +101,7 @@ public class MobiBenchEnginePc implements CallbackListener {
 		JSONObject obj = new JSONObject(config);
 
 		InetAddress ip = getIp();
+
 		if (ip != null)
 			obj.put("config", createConfig(ip.getHostAddress()));
 
@@ -129,8 +127,15 @@ public class MobiBenchEnginePc implements CallbackListener {
 			while (intfs.hasMoreElements()) {
 				NetworkInterface intf = intfs.nextElement();
 
-				if (intf.isUp() && !intf.isLoopback())
-					return intf.getInetAddresses().nextElement();
+				if (intf.isUp() && !intf.isLoopback()) {
+					Enumeration<InetAddress> addrIt = intf.getInetAddresses();
+					while (addrIt.hasMoreElements()) {
+						InetAddress addr = addrIt.nextElement();
+						
+						if (addr.isSiteLocalAddress())
+							return addr;
+					}
+				}
 			}
 
 		} catch (SocketException e) {
@@ -144,7 +149,7 @@ public class MobiBenchEnginePc implements CallbackListener {
 		JSONObject config = new JSONObject();
 
 		JSONObject webService = new JSONObject();
-		webService.put("url", "http://" + retIp + ":8080/MobiBenchWebService/");
+		webService.put("url", "http://" + retIp + ":8080/web-service/");
 
 		config.put("webService", webService);
 
@@ -153,14 +158,10 @@ public class MobiBenchEnginePc implements CallbackListener {
 
 	public String jsFn_execBenchmark(String config) {
 		// @formatter:off
-		return 
-			"execBenchmark(" + config + ", " + 
-				"function() {" + 
-					"doLog(\"runner: benchmark done\");" +
-		
-					"callbackPlugin.benchmarkDone(function() {});" + 
-			"});";
-		// @formatter:on	
+		return "execBenchmark(" + config + ", " + "function() {" + "doLog(\"runner: benchmark done\");" +
+
+				"callbackPlugin.benchmarkDone(function() {});" + "});";
+		// @formatter:on
 	}
 
 	public String doneLoading() {

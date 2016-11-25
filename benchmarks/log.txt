@@ -1,0 +1,190 @@
+config:
+{
+    "confTest": true,
+    "engine": "androjena",
+    "warmupRun": false,
+    "outputPath": "/home/william/git/mobibench/MobiBenchEngineJS/www/res/owl/output/ontology_inference/owl2rl/conf/full/full-inst_rules-androjena.nt",
+    "reasoning": {
+        "task": "ontology_inference",
+        "id": "frequent-ontology_inference_owl2rl",
+        "mechanism": {
+            "ontology_inference": {
+                "dependency": "rule_inference",
+                "type": "owl2rl"
+            },
+            "rule_inference": {
+                "subFlow": "load_data_exec_rules",
+                "type": "builtin",
+                "mainFlow": "frequent"
+            }
+        }
+    },
+    "confPath": "res/owl/conf/ontology_inference/owl2rl/conf/full/full.nt",
+    "resources": {
+        "owl2rl": {
+            "supportsCaching": false,
+            "axioms": {
+                "path": "res/owl/owl2rl/full/axioms.nt",
+                "format": "RDF",
+                "syntax": "N-TRIPLE",
+                "type": "data"
+            },
+            "selections": [],
+            "preprocess": "inst_rules",
+            "rules": {
+                "path": "res/owl/owl2rl/full/rules.spin",
+                "format": "SPIN",
+                "type": "rules"
+            }
+        },
+        "id": "full-inst_rules-conf_full",
+        "ontology": {
+            "path": "res/owl/data/conf/full.nt",
+            "format": "RDF",
+            "syntax": "N-TRIPLE",
+            "type": "data"
+        }
+    },
+    "dumpHeap": false,
+    "id": "frequent-ontology_inference_owl2rl=full-inst_rules-conf_full",
+    "outputInf": true,
+    "config": {
+        "webService": {
+            "url": "http://192.168.2.15:8080/web-service/"
+        }
+    },
+    "nrRuns": "1"
+}
+initializing the benchmark..
+
+params? true; res/owl/conf/ontology_inference/owl2rl/conf/full/full.nt; true; /home/william/git/mobibench/MobiBenchEngineJS/www/res/owl/output/ontology_inference/owl2rl/conf/full/full-inst_rules-androjena.nt
+loading engine..
+loading task..
+loading resources..
+> CACHE: cannot reuse (empty)
+.. preprocessing (inst_rules)
+.. converting SPIN => Jena
+> CACHE: not storing (supportsCaching = false)
+
+running the benchmark..
+>> Benchmark: androjena
+
+-- Run:  0
+
+# conf: 238
+# inferred: 1545
+no missing inferences
+inferences made
+
+
+-- axioms-rules
+> totals and averages: 
+(all: {"loadData":[178]})
+loadData: 178; avg: 178
+
+
+-- ontology-rules
+> totals and averages: 
+(all: {"loadData":[56],"createRules":[86],"executeRules":[1446],"collectInferred":[43]})
+loadData: 56; avg: 56
+createRules: 86; avg: 86
+executeRules: 1446; avg: 1446
+collectInferred: 43; avg: 43
+
+
+
+config:
+{
+    "engine": "androjena",
+    "nrRuns": "1",
+    "warmupRun": false,
+    "dumpHeap": false,
+    "reasoning": {
+        "task": "ontology_inference",
+        "id": "frequent-ontology_inference_owl2rl",
+        "mechanism": {
+            "ontology_inference": {
+                "type": "owl2rl",
+                "dependency": "rule_inference"
+            },
+            "rule_inference": {
+                "type": "builtin",
+                "subFlow": "load_data_exec_rules",
+                "mainFlow": "frequent"
+            }
+        }
+    },
+    "confTest": true,
+    "outputInf": true,
+    "outputPath": "/home/william/git/mobibench/MobiBenchEngineJS/www/res/owl/output/ontology_inference/owl2rl/conf/full/full-inst_rules-androjena.nt",
+    "confPath": "res/owl/conf/ontology_inference/owl2rl/conf/full/full.nt",
+    "resources": {
+        "ontology": {
+            "path": "res/owl/data/conf/full.nt",
+            "type": "data",
+            "format": "RDF",
+            "syntax": "N-TRIPLE"
+        },
+        "owl2rl": {
+            "axioms": {
+                "path": "res/owl/owl2rl/full/axioms.nt",
+                "type": "data",
+                "format": "RDF",
+                "syntax": "N-TRIPLE"
+            },
+            "rules": {
+                "path": "res/owl/owl2rl/full/rules.spin",
+                "type": "rules",
+                "format": "SPIN"
+            },
+            "selections": [],
+            "preprocess": "inst_rules",
+            "supportsCaching": false
+        },
+        "id": "full-inst_rules-conf_full"
+    },
+    "id": "frequent-ontology_inference_owl2rl=full-inst_rules-conf_full",
+    "config": {
+        "webService": {
+            "url": "http://192.168.2.15:8080/web-service/"
+        }
+    }
+}
+initializing the benchmark..
+
+params? true; res/owl/conf/ontology_inference/owl2rl/conf/full/full.nt; true; /home/william/git/mobibench/MobiBenchEngineJS/www/res/owl/output/ontology_inference/owl2rl/conf/full/full-inst_rules-androjena.nt
+loading engine..
+loading task..
+loading resources..
+> CACHE: cannot re-use (supportsCaching = false)
+.. preprocessing (inst_rules)
+.. converting SPIN => Jena
+> CACHE: not storing (supportsCaching = false)
+
+running the benchmark..
+>> Benchmark: androjena
+
+-- Run:  0
+
+# conf: 238
+# inferred: 1545
+no missing inferences
+inferences made
+
+
+-- axioms-rules
+> totals and averages: 
+(all: {"loadData":[45]})
+loadData: 45; avg: 45
+
+
+-- ontology-rules
+> totals and averages: 
+(all: {"loadData":[54],"executeRules":[2999],"collectInferred":[125],"createRules":[51]})
+loadData: 54; avg: 54
+executeRules: 2999; avg: 2999
+collectInferred: 125; avg: 125
+createRules: 51; avg: 51
+
+
+

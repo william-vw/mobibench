@@ -22,8 +22,8 @@ config = {
 
 	webService : {
 		// NOTE is overwritten by correct IP when auto-device-server, auto-pc is used
-//		url : "http://192.168.2.13:8080/MobiBenchWebService/",
-		url : "http://localhost:8080/MobiBenchWebService/",
+//		url : "http://192.168.2.13:8080/web-service/",
+		url : "http://localhost:8080/web-service/",
 		timeout : 120000
 	}
 };

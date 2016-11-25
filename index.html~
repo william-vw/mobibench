@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MobiBench</title>
+
+	<script type="text/javascript" src="web/js/jquery-1.11.3.min.js"></script>
+	<link rel="stylesheet" href="web/css/default.css" />
+	
+    <script type="text/javascript" src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+	<style>
+		li.L0, li.L1, li.L2, li.L3,
+		li.L5, li.L6, li.L7, li.L8
+		{ list-style-type: decimal !important }
+	</style>
+	
+	<a href="javascript:" id="return-to-top"><i class="icon-chevron-up"></i></a>
+	
+	<link rel="stylesheet" href="web/css/totop.css" />
+	<link rel="stylesheet" href="web/css/font-awesome.css">
+	<script type="text/javascript" src="js/totop.js"></script>
+</head>
+
+<body>
+    <a class="pos" name="top"><h1>MobiBench</h1></a>
+
+    <p>This website represents the online documentation for the MobiBench framework, which is used to benchmark mobile reasoners.</p>
+    
+	<p>This website also serves as the online documentation for the paper "Optimizing and Benchmarking OWL2 RL for Semantic Reasoning on Mobile Platforms", submitted to the Journal of Web Semantics (2016). In this capacity, the website also lists large-scale version of figures 3-8 <a href="web/results/index.html">here</a> (which were cut off due to high peaks in the paper).</p>
+	
+	<p>All software related to MobiBench can be found at its <a href="https://github.com/darth-willy/mobibench">github repo</a>.</p>
+	
+    <p>All content is released under the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License 2.0</a>.</p>
+    
+    <p><b>Contact</b>: <a href="mailto:william.van.woensel@gmail.com&subject=MobiBench">William Van Woensel</a></p>
+
+<div class="nav-menu">Navigation</div>
+<ul class="nav-menu">
+	<li><a href="web/mobibench-usage.html">MobiBench usage</a>
+		<ul>
+			<li><a href="web/mobibench-usage.html#code">Code</a>
+				<ul>
+					<li><a href="web/mobibench-usage.html#mobibench_projects">MobiBench projects</a>
+						<ul>
+							<li><a href="web/mobibench-usage.html#project_web_service">Web Service</a></li>
+							<li><a href="web/mobibench-usage.html#project_benchmark_engine">Benchmark Engine</a></li>
+							<li><a href="web/mobibench-usage.html#project_benchmark_automation">Benchmark Automation</a></li>
+							<li><a href="web/mobibench-usage.html#project_analysis">Analysis</a></li>
+							<li><a href="web/mobibench-usage.html#project_utils">Utils</a></li>
+						</ul>
+					</li>
+						
+					<li><a href="web/mobibench-usage.html#reasoners">Reasoners</a>
+						<ul>
+							<li><a href="web/mobibench-usage.html#reasoners_code">Code</a></li>
+							<li><a href="web/mobibench-usage.html#reasoners_plugin">Plugin</a></li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li><a href="web/mobibench-usage.html#instructions">Instructions</a>
+				<ul>
+					<li><a href="web/mobibench-usage.html#usage_web_service">Web Service</a></li>
+					<li><a href="web/mobibench-usage.html#usage_benchmark_engine">Benchmark Engine</a></li>
+					<li><a href="web/mobibench-usage.html#autom_support">Automation support</a></li>
+					<li><a href="web/mobibench-usage.html#program_access">Programmatic access</a></li>
+					<li><a href="web/mobibench-usage.html#analysis_tools">Analysis tools</a></li>
+					<li><a href="web/mobibench-usage.html#separate_ws_access">Separate Web service access</a></li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	
+	<li style="margin-top: 15px"><a href="web/benchmark-resources.html">Mobile reasoning benchmark resources</a>
+		<ul>
+			<li><a href="web/benchmark-resources.html#bench_owl">OWL 2 materializing inference</a>
+				<ul>
+					<li><a href="web/benchmark-resources.html#bench_onto">Benchmark ontologies</a>
+						<ul>
+							<li><a href="web/benchmark-resources.html#bench_owl2rl_corpus">OWL2 RL Benchmark Corpus</a></li>
+						</ul>
+					</li>
+					<li><a href="web/benchmark-resources.html#bench_rules">Benchmark rulesets</a></li>
+					<li><a href="web/benchmark-resources.html#bench_conf">Conformance tests</a>
+						<ul>
+							<li><a href="web/benchmark-resources.html#bench_owl2rl_test">OWL2 RL test suite</a></li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li><a href="web/benchmark-resources.html#bench_services">Semantic service matching</a>
+				<ul>
+					<li><a href="web/benchmark-resources.html#bench_services_test">OWL-S service retrieval test collection</a></li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li style="margin-top: 15px"><a href="web/owl2rl-optimizations.html">OWL2 RL optimizations</a>
+		<ul>
+			<li><a href="web/owl2rl-optimizations.html#equiv_subset">Equivalent OWL2 RL subset</a>
+				<ul>
+					<li><a href="web/owl2rl-optimizations.html#rule_entailments">Entailments between OWL2 RL rules</a></li>
+					<li><a href="web/owl2rl-optimizations.html#extra_axioms">Extra supporting axiomatic triples</a></li>
+					<li><a href="web/owl2rl-optimizations.html#new_general_rules">New generalized OWL2 RL rules</a></li>
+					<li><a href="web/owl2rl-optimizations.html#equiv_inst_rules">Equivalence with instance-based rules</a></li>
+				</ul>
+			</li>
+			<li><a href="web/owl2rl-optimizations.html#purp_ref_subsets">Purpose- and reference-based subsets</a></li>
+			<li><a href="web/owl2rl-optimizations.html#remove_ineff_rules">Removal of inefficient rules</a></li>
+		</ul>
+	</li>
+	<li style="margin-top: 15px"><a href="web/owl2rl-n-ary-rules.html">Supporting OWL2 RL n-ary rules</a>
+		<ul>
+			<li><a href="web/owl2rl-n-ary-rules.html#rule-types">Types of n-ary rules</a></li>
+			<li>
+				<a href="web/owl2rl-n-ary-rules.html#rule-solutions">Solutions</a>
+				<ul>
+					<li><a href="web/owl2rl-n-ary-rules.html#mem-fns">List membership functions</a></li>
+					<li><a href="web/owl2rl-n-ary-rules.html#instantiate-rules">Instantiate n-ary rules</a></li>
+					<li><a href="web/owl2rl-n-ary-rules.html#binarize-ontology">Normalize (or “binarize”) the input ontology</a></li>
+					<li><a href="web/owl2rl-n-ary-rules.html#auxiliary-rules">Replace each n-ary rule by 3 auxiliary rules</a></li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+</ul>	
+</body>
+</html>

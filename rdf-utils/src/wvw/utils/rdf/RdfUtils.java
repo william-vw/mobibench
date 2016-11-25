@@ -38,14 +38,8 @@ public class RdfUtils {
 
 	@SuppressWarnings("unused")
 	private void tripleDiff() throws IOException {
-		String[] triples1 = IOUtils
-				.readFromFile(
-						new File(
-								"C:/Users/William/git/mobile-benchmarks/BenchmarkEngineJS/WebContent/res/owl2rl/data/materialized/instances/full/conf_comp.nt"))
-				.split("/n");
-		String triples2 = IOUtils
-				.readFromFile(new File(
-						"C:/Users/William/git/mobile-benchmarks/BenchmarkEngineJS/WebContent/res/owl2rl/data/materialized/instances/full/conf.nt"));
+		String[] triples1 = IOUtils.readFromFile(new File("...")).split("/n");
+		String triples2 = IOUtils.readFromFile(new File("..."));
 
 		for (String triple1 : triples1) {
 			// System.out.println("t1: " + triple1);
@@ -58,14 +52,11 @@ public class RdfUtils {
 	private void printRdf() throws IOException {
 		Model model = ModelFactory.createDefaultModel();
 
-		model.read(
-				"file:///C:/Users/William/git/mobile-benchmarks/BenchmarkEngineJS/platforms/android/assets/www/res/owl/data/all/lubm/scale60.owl",
-				"", "RDF/XML");
+		model.read("...", "", "RDF/XML");
 
 		// model.write(System.out, "N-TRIPLE");
 
-		File out = new File(
-				"C:/Users/William/git/mobile-benchmarks/BenchmarkEngineJS/platforms/android/assets/www/res/owl/data/all/lubm/scale60.nt");
+		File out = new File("...");
 		if (!out.exists())
 			out.createNewFile();
 

@@ -82,6 +82,7 @@
 			<li><a href="#program_access">Programmatic access</a></li>
 			<li><a href="#analysis_tools">Analysis tools</a></li>
 			<li><a href="#separate_ws_access">Separate Web service access</a></li>
+			<li><a href="#run_eclipse">Run on Eclipse</a></li>
 		</ul>
 	</li>
 </ul>
@@ -128,7 +129,7 @@
 
 <p><b>MobiBenchEngineJS</b> is the core JavaScript MobiBench framework, which includes the core benchmarking code, JavaScript reasoners and their plugins, and currently available benchmark resources. Currently, there are two platform deployments: <b>MobiBenchEngineNative</b> (Android) and <b>MobiBenchEnginePc</b> (PC). <u>Note that <span class="code">MobiBenchEngineNative</span> is located under <span class="code">MobiBenchEngineJS/platforms/android</span></u>.</p>
 
-<p>Platform-specific JavaScript libraries and plugins are placed under <span class="code">(MobiBenchEngineJS)/www/js/platforms</span> (e.g., <span class="code">www/js/platforms/android</span>). Typically, platform-specific JavaScript code references platform-specific (Android, Java) code behind-the-scenes: e.g., to store data persistently, logs messages, makes HTTP requests, invokes platform-specific reasoning engines, etc. We note that <span class="code">MobiBenchEnginePc</span> requires a MySQL server to be installed for storing key-values persistently (see <span class="code">wvw.mobibench.call.plugins.KeyValueDbPlugin</span> class). For <span class="code">MobiBenchEngineNative</span>, JavaScript-to-Java communication is made possible using the JavaScript Cordova communication bridge (<span class="code">cordova.exec()</span>); for <span class="code">MobiBenchEnginePc</span>, this is done by using JDK8 Nashorn's support for invoking Java methods from JavaScript (see <a href="http://winterbe.com/posts/2014/04/05/java8-nashorn-tutorial/">here</a> for a short tutorial).</p>
+<p>Platform-specific JavaScript libraries and plugins are placed under <span class="code">(MobiBenchEngineJS)/www/js/platforms</span> (e.g., <span class="code">www/js/platforms/android</span>). Typically, platform-specific JavaScript code references platform-specific (Android, Java) code behind-the-scenes: e.g., to store data persistently, logs messages, makes HTTP requests, invokes platform-specific reasoning engines, etc. For <span class="code">MobiBenchEngineNative</span>, JavaScript-to-Java communication is made possible using the JavaScript Cordova communication bridge (<span class="code">cordova.exec()</span>); for <span class="code">MobiBenchEnginePc</span>, this is done by using JDK8 Nashorn's support for invoking Java methods from JavaScript (see <a href="http://winterbe.com/posts/2014/04/05/java8-nashorn-tutorial/">here</a> for a short tutorial).</p>
 
 <p>The method of loading any JavaScript libraries and plugins depends on the platform: for Android, this is done by the <span class="code">www/index.html</span> file (which is opened by Apache Cordova); for PC, this done by the <span class="code">www/js/platforms/pc/init.js</span> file (which is loaded by custom code, using the JDK8 Nashorn engine). To load additional JavaScript code, these files thus need to be extended.</p>
 
@@ -256,7 +257,8 @@
 
 <ul>
 <li>
-	<b>PC</b>: update  <span class="code">(MobiBenchEnginePc)/wvw.mobibench.MobiBenchEnginePc.rootPath</span> to point to the main folder in which <span class="code">MobiBenchEnginePC</span> and <span class="code">MobiBenchEngineJS</span> are located.
+	<b>PC</b>: update  <span class="code">(MobiBenchEnginePc)/wvw.mobibench.MobiBenchEnginePc.rootPath</span> to point to the main folder containing <span class="code">MobiBenchEnginePC</span> and <span class="code">MobiBenchEngineJS</span>.<br />
+<b>Important:</b> <span class="code">MobiBenchEnginePc</span> requires a MySQL server to be installed for storing key-values persistently (see <span class="code">wvw.mobibench.call.plugins.KeyValueDbPlugin</span> class). 
 </li>
 </ul>
 
@@ -372,10 +374,24 @@ convert(rules, 'rules', {
 
 <p>The <span class="code">(MobiBenchEngineJS)/www/webservice.html</span> page executes the <span class="code">webservice.js</span> script. <b>Important:</b> loading this page requires deploying the relevant <span class="code">MobiBenchEngineJS</span> code (<span class="code">www/</span> folder) <u>on the same server as <span class="code">MobiBenchWebService</span></u> (e.g., localhost), and accessing the <span class="code">webservice.html</span> file via the browser. Else, a cross-origin resource-sharing (CORS) exception will be raised by the browser.</p>
 
+<a class="pos" name="run_eclipse">
+	<h3>Run on Eclipse</h3>
+</a>
+
+<p>Below are some pointers on how to import and run the MobiBench projects on Eclipse.</p>
+
+<ul>
+<li>To import all Maven projects, select Import > Maven > Existing Maven Projects.</li>
+<li>To import the two Android projects (<span class="code">MobiBenchEngineNative</span>, <span class="code">MobiBenchAutoDeviceServer</span>), select Import > Android > Existing Android Code Into Workspace.</li>
+<li>To import the <span class="code">MobiBenchEngineJS</span> project (e.g., needed <a href="#separate_ws_access">when accessing the webservice separately</a>), create a new Dynamic Web Project on the same location as the <span class="code">MobiBenchEngineJS</span> folder. Then, right click the project > Properties > Deployment Assembly > change from <span class="code">WebContent/</span> to <span class="code">www/</span>. Remove the auto-generated <span class="code">WebContent/</span> folder.</li>
+<li>Run maven install (e.g., by creating a Maven run config) on projects <span class="code">utils</span>, <span class="code">rdf-utils</span>.
+<li>To run Maven web projects (<span class="code">MobiBenchWebService</span>, <span class="code">MobiBenchEngineJS</span>), create a Maven run config with goal "tomcat:run" (e.g., see <a href="http://stackoverflow.com/questions/7727204/from-eclipse-how-can-i-run-my-maven-project-in-tomcat">here</a> for details).</li>
+<li>For Android, Java compiler compliance (project properties > Java Compiler > Compiler compliance level) should in general be set to 1.7.</li>
+</ul>
+
 <br />
 
 <p style="font-size: 14px;"><a name="note1"><b>(*)</b></a> The Android projects are not packaged as Maven projects, and have their dependencies directly in their <span class="code">libs/</span> folder. This is because of difficulties that Eclipse has with Android Maven projects: when putting all plugins under <span class="code">&lt;pluginManagement&gt;</span> in <span class="code">pom.xml</span> (as recommended when faced with a "plugin lifecycle .." error), Eclipse complains that "apk" packaging is not supported. There are other working solutions out there, but instead of forcing people to deal with this issue we opted to make these "regular" Android projects.</p>
-
 
 </body>
 </body>

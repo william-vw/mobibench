@@ -19,7 +19,6 @@
  */
 package wvw.mobibench.service.convert.spin.nools;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,12 +26,10 @@ import java.util.List;
 import org.topbraid.spin.model.Construct;
 import org.topbraid.spin.model.TripleTemplate;
 
-import wvw.mobibench.service.convert.Config;
 import wvw.mobibench.service.convert.ConvertConfig;
 import wvw.mobibench.service.convert.ConvertException;
 import wvw.mobibench.service.convert.rdf.nools.RDF2Nools;
 import wvw.mobibench.service.convert.spin.SPIN2;
-import wvw.utils.StreamUtils;
 
 public class SPIN2Nools extends SPIN2 {
 
@@ -47,9 +44,7 @@ public class SPIN2Nools extends SPIN2 {
 
 		// Finally, add DSL class definitions
 		try {
-			String classDefs = StreamUtils.readString(new FileReader(
-					Config.path + "res/init.nools"));
-
+			String classDefs = res.getContents("res/init.nools");
 			return classDefs + "\n\n" + rules;
 
 		} catch (IOException e) {

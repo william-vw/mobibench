@@ -1,0 +1,15 @@
+-- axioms-rules
+> totals and averages: 
+(all: {"loadData":[45]})
+loadData: 45; avg: 45
+
+
+-- ontology-rules
+> totals and averages: 
+(all: {"loadData":[54],"executeRules":[2999],"collectInferred":[125],"createRules":[51]})
+loadData: 54; avg: 54
+executeRules: 2999; avg: 2999
+collectInferred: 125; avg: 125
+createRules: 51; avg: 51
+
+

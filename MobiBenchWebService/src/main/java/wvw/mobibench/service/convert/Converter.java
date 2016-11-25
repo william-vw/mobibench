@@ -19,48 +19,59 @@
  */
 package wvw.mobibench.service.convert;
 
+import wvw.mobibench.service.res.ServiceResources;
 
 public abstract class Converter {
 
+	protected ServiceResources res;
+
 	private String id;
 
-//	protected Logger log;
-//	protected Configuration config;
+	// protected Logger log;
+	// protected Configuration config;
 
 	public Converter(String id) {
 		this.id = id;
 
-//		initLogger();
-//		loadConfig();
+		// initLogger();
+		// loadConfig();
 	}
 
 	public String getId() {
 		return id;
 	}
 
-//	private void initLogger() {
-//		log = Logger.getLogger(ConvertServlet.class.getName());
-//
-//		Properties properties = new Properties();
-//		try {
-//			properties.load(new FileInputStream(Config.path
-//					+ "log4j.properties"));
-//			PropertyConfigurator.configure(properties);
-//
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	private void loadConfig() {
-//		try {
-//			config = new PropertiesConfiguration(Config.path
-//					+ "convert.properties");
-//
-//		} catch (ConfigurationException e) {
-//			log.error("Error loading config: " + OutputUtils.toString(e));
-//
-//			e.printStackTrace();
-//		}
-//	}
+	public ServiceResources getRes() {
+		return res;
+	}
+
+	public void setRes(ServiceResources res) {
+		this.res = res;
+	}
+
+	// private void initLogger() {
+	// log = Logger.getLogger(ConvertServlet.class.getName());
+	//
+	// Properties properties = new Properties();
+	// try {
+	// properties.load(new FileInputStream(Config.path
+	// + "log4j.properties"));
+	// PropertyConfigurator.configure(properties);
+	//
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	// }
+	//
+	// private void loadConfig() {
+	// try {
+	// config = new PropertiesConfiguration(Config.path
+	// + "convert.properties");
+	//
+	// } catch (ConfigurationException e) {
+	// log.error("Error loading config: " + OutputUtils.toString(e));
+	//
+	// e.printStackTrace();
+	// }
+	// }
 }

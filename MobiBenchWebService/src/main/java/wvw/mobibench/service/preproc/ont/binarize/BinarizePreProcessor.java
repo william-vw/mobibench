@@ -34,7 +34,9 @@ import wvw.mobibench.service.preproc.PreProcessConfig.Ontology;
 import wvw.mobibench.service.preproc.PreProcessException;
 import wvw.mobibench.service.preproc.PreProcessResults;
 import wvw.mobibench.service.preproc.PreProcessTypes;
+import wvw.mobibench.service.preproc.ont.ChainCollector;
 import wvw.mobibench.service.preproc.ont.OntologyBasedPreProcessor;
+import wvw.mobibench.service.preproc.ont.RDFRes;
 import wvw.mobibench.service.res.ServiceResources;
 
 public class BinarizePreProcessor extends OntologyBasedPreProcessor {
@@ -72,8 +74,8 @@ public class BinarizePreProcessor extends OntologyBasedPreProcessor {
 
 		Model m = loadModel(ontology, syntax);
 
-		normalize(intersectionOf, m);
-		normalize(propertyChainAxiom, m);
+		normalize(RDFRes.intersectionOf, m);
+		normalize(RDFRes.propertyChainAxiom, m);
 		// has-key not supported
 
 		return getData(m);
@@ -86,7 +88,7 @@ public class BinarizePreProcessor extends OntologyBasedPreProcessor {
 		for (Statement stmt : stmts) {
 			Resource list = stmt.getObject().asResource();
 
-			List<Resource> chain = collectChain(list, m);
+			List<Resource> chain = ChainCollector.collect(list, m);
 			normalize(p, chain, m);
 		}
 	}
@@ -107,11 +109,11 @@ public class BinarizePreProcessor extends OntologyBasedPreProcessor {
 		Resource ne = m.createResource(
 				"http://niche.cs.dal.ca/owl/normalize/N" + newCtr++);
 
-		l1.removeAll(rest);
-		l1.addProperty(rest, nl);
+		l1.removeAll(RDFRes.rest);
+		l1.addProperty(RDFRes.rest, nl);
 
-		nl.addProperty(first, ne);
-		nl.addProperty(rest, nil);
+		nl.addProperty(RDFRes.first, ne);
+		nl.addProperty(RDFRes.rest, RDFRes.nil);
 
 		ne.addProperty(p, l2);
 

@@ -8,6 +8,7 @@ simply check whether some rules have duplicate bodies: if so, group rule heads
 	
 - remove duplicate rules
 	e.g., in case <p> is defined as inverse to itself, as well as a symmetric property (e.g., 110.nt), this will lead to ?y <p> ?x being inferred 3 times (prp-inv1, prp-inv2, prp-symp)
+	e.g., each class is determined to be equivalent to itself in materialized ontology, leading to a bunch of rules ?x a <c> => ?x a <c>
 simple duplicate checking for rules?  
 
 

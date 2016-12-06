@@ -171,9 +171,14 @@ ReasonTask = function(engine, config) {
 			log.msg("inferences made", LogLvl.INFO);
 
 			var fileName = null;
-			if (OUTPUT_PATH)
+			if (OUTPUT_PATH) {
+				
+				if (!OUTPUT_PATH.endsWith(".nt"))
+					OUTPUT_PATH += ".nt";	
+				
 				fileName = OUTPUT_PATH;
-			else
+				
+			} else
 				fileName = this.engine.id.toLowerCase() + "/inferred.txt";
 
 			var content = "";

@@ -47,7 +47,7 @@ import wvw.utils.log2.target.SystemOutTarget;
 public class MobiBenchEnginePc implements CallbackListener {
 
 	// NOTE update based on your machine
-	public static String rootPath = "C:/Users/William/git/mobile-benchmarks/";
+	public static String rootPath = "C:/Users/William/git/mobibench/";
 
 	public static String utilsPath = rootPath
 			+ "MobiBenchEnginePc/src/wvw/mobile/utils/";

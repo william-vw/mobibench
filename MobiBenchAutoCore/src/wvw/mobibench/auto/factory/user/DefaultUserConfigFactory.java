@@ -67,21 +67,22 @@ public class DefaultUserConfigFactory extends UserConfigFactory {
 		config.setTask("ontology_inference");
 		config.setSubTask("owl2rl");
 
-		config.preprocess(PreprocessOptions.INST_RULES);
+		config.preprocess(PreprocessOptions.INST_ALL_RULES);
 
 		config.setOutputInf(true);
+		config.setOutputRules(true);
 
 		// > conformance testing
-		config.setConfTest(true);
-		config.setConfTarget("full");
-
-		config.addDatasets(new OWLDataset("conf", new String[] { "full" }));
-
-		// > full / inf-inst
 		// config.setConfTest(true);
 		// config.setConfTarget("full");
 		//
-		// // - regular dataset
+		// config.addDatasets(new OWLDataset("conf", new String[] { "full" }));
+
+		// > full / inf-inst
+		config.setConfTest(true);
+		config.setConfTarget("full");
+
+		// - regular dataset
 		// config.addDatasets(new OWLDataset("ore-small", 0, 0));
 
 		// // without any selection
@@ -92,9 +93,10 @@ public class DefaultUserConfigFactory extends UserConfigFactory {
 		// new String[] { "entailed", "ineff" });
 
 		// - inf-schema dataset
-		// config.addDatasets(new OWLDataset("ore-small", "mat-schema", 0,
-		// 188));
-		//
+		config.addDatasets(new OWLDataset("ore-small", "mat-schema", new Integer[] { 110 }));
+
+		config.select("inf-inst");
+		
 		// config.select(new String[] { "inf-inst", "entailed", "extra-axioms",
 		// "gener-rules" });
 		// config.select(new String[] { "inf-inst" },
@@ -193,15 +195,13 @@ public class DefaultUserConfigFactory extends UserConfigFactory {
 
 		config.addDatasets(new OWLDataset("precond"), new OWLDataset("effect"));
 
-		config.addDirections(MatchDirections.GOAL_SERVICE,
-				MatchDirections.SERVICE_GOAL);
+		config.addDirections(MatchDirections.GOAL_SERVICE, MatchDirections.SERVICE_GOAL);
 
 		// TODO first "selection" indicates the ruleset (e.g., "full", "custom",
 		// "service-based")
 
 		config.select(new String[] { "service-based", "entailed" },
-				new String[] { "service-based", "entailed", "inst-ent",
-						"ineff" });
+				new String[] { "service-based", "entailed", "inst-ent", "ineff" });
 
 		config.setLocalPath(localPath);
 		config.setRemotePath(remotePath);

@@ -21,5 +21,5 @@ package wvw.mobibench.service.convert;
 
 public class Config {
 
-	public static final String path = "C:/Users/William/git/mobile-benchmarks/SPIN WebService/WebContent/";
+	public static final String path = "C:/Users/William/git/mobibench/.../";
 }

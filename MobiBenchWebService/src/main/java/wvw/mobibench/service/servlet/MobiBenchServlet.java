@@ -49,12 +49,14 @@ import wvw.mobibench.service.convert.Converter;
 import wvw.mobibench.service.convert.DataConverter;
 import wvw.mobibench.service.convert.RuleConverter;
 import wvw.mobibench.service.preproc.PreProcessConfig;
+import wvw.mobibench.service.preproc.PreProcessConfig.Options;
 import wvw.mobibench.service.preproc.PreProcessException;
 import wvw.mobibench.service.preproc.PreProcessResults;
 import wvw.mobibench.service.preproc.PreProcessor;
 import wvw.mobibench.service.preproc.aux_rules.AuxiliaryRulesPreProcessor;
 import wvw.mobibench.service.preproc.ont.binarize.BinarizePreProcessor;
-import wvw.mobibench.service.preproc.ont.inst_rules.InstantiateRulesPreProcessor;
+import wvw.mobibench.service.preproc.ont.inst_rules.InstantiateAllPreProcessor;
+import wvw.mobibench.service.preproc.ont.inst_rules.InstantiateNaryPreProcessor;
 import wvw.mobibench.service.res.ServiceResources;
 import wvw.mobibench.service.select.RulesetSelectionException;
 import wvw.mobibench.service.select.SelectOutput;
@@ -153,8 +155,7 @@ public class MobiBenchServlet extends HttpServlet {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void loadConverters(String fileName, Map convs) {
 		try {
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(res.getInputStream(fileName)));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(res.getInputStream(fileName)));
 
 			String line = null;
 			while ((line = reader.readLine()) != null) {
@@ -169,34 +170,29 @@ public class MobiBenchServlet extends HttpServlet {
 					convs.put(conv.getId(), conv);
 
 				} catch (ClassNotFoundException e) {
-					log.error("Error loading converter: converter class "
-							+ className + " not found on classpath ("
+					log.error("Error loading converter: converter class " + className + " not found on classpath ("
 							+ OutputUtils.toString(e) + ")");
 
 					e.printStackTrace();
 
 				} catch (NoSuchMethodException e) {
-					log.error("Error loading converter: no empty constructor "
-							+ "found for " + className + " ("
+					log.error("Error loading converter: no empty constructor " + "found for " + className + " ("
 							+ OutputUtils.toString(e) + ")");
 
 					e.printStackTrace();
 
 				} catch (InvocationTargetException e) {
-					log.error("Error loading converter for class " + className
-							+ ": " + OutputUtils.toString(e));
+					log.error("Error loading converter for class " + className + ": " + OutputUtils.toString(e));
 
 					e.printStackTrace();
 
 				} catch (IllegalAccessException e) {
-					log.error("Error loading converter for class " + className
-							+ ": " + OutputUtils.toString(e));
+					log.error("Error loading converter for class " + className + ": " + OutputUtils.toString(e));
 
 					e.printStackTrace();
 
 				} catch (InstantiationException e) {
-					log.error("Error loading converter for class " + className
-							+ ": " + OutputUtils.toString(e));
+					log.error("Error loading converter for class " + className + ": " + OutputUtils.toString(e));
 
 					e.printStackTrace();
 				}
@@ -212,25 +208,21 @@ public class MobiBenchServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			response.getWriter()
-					.write("<html>" + "<body>"
-							+ "<h1>Welcome to the MobiBench RESTful Web Service!</h1>"
-							+ "</body>" + "</html>");
+			response.getWriter().write("<html>" + "<body>" + "<h1>Welcome to the MobiBench RESTful Web Service!</h1>"
+					+ "</body>" + "</html>");
 
 		} catch (IOException e) {
-			log.error(
-					"Error handling incoming GET: " + OutputUtils.toString(e));
+			log.error("Error handling incoming GET: " + OutputUtils.toString(e));
 
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
 		log.info("> Received request");
 
@@ -266,8 +258,8 @@ public class MobiBenchServlet extends HttpServlet {
 		}
 	}
 
-	private void doConversion(String url, HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	private void doConversion(String url, HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
 		if (url.endsWith("rules"))
 			doRuleConversion(request, response);
@@ -276,8 +268,8 @@ public class MobiBenchServlet extends HttpServlet {
 			doDataConversion(request, response);
 	}
 
-	private void doRuleConversion(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	private void doRuleConversion(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
 		log.info(">> Performing rule conversion");
 
@@ -288,8 +280,7 @@ public class MobiBenchServlet extends HttpServlet {
 		String from = request.getParameter("from");
 		String to = request.getParameter("to");
 
-		boolean includeComments = Boolean
-				.valueOf(request.getParameter("includeComments"));
+		boolean includeComments = Boolean.valueOf(request.getParameter("includeComments"));
 
 		if (from == null && to == null)
 			errorMsg = "Expecting 'from' or 'to' URL parameter";
@@ -309,17 +300,14 @@ public class MobiBenchServlet extends HttpServlet {
 				String rules = readString(request);
 				// Log.d("rules? " + rules);
 
-				String result = (String) conv.convertRules(rules,
-						new ConvertConfig(true, includeComments));
+				String result = (String) conv.convertRules(rules, new ConvertConfig(true, includeComments));
 
-				response.getWriter()
-						.write(gson.toJson(new StringResultMessage(result)));
+				response.getWriter().write(gson.toJson(new StringResultMessage(result)));
 
 				log.info("> Conversion successful, returned result");
 
 			} catch (IOException | ConvertException e) {
-				errorMsg = "Error performing rule conversion: "
-						+ OutputUtils.toString(e);
+				errorMsg = "Error performing rule conversion: " + OutputUtils.toString(e);
 
 				e.printStackTrace();
 			}
@@ -331,8 +319,8 @@ public class MobiBenchServlet extends HttpServlet {
 		}
 	}
 
-	private void doDataConversion(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	private void doDataConversion(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
 		log.info(">> Performing data conversion");
 
@@ -358,8 +346,7 @@ public class MobiBenchServlet extends HttpServlet {
 			syntax = syntax.replace("_", "/"); // for RDF/XML
 
 		if (!isSupportedRDFSyntax(syntax))
-			errorMsg = "Unsupported RDF syntax; supported syntaxes: "
-					+ getSupportedRDFSyntaxes();
+			errorMsg = "Unsupported RDF syntax; supported syntaxes: " + getSupportedRDFSyntaxes();
 
 		if (errorMsg == null) {
 			try {
@@ -368,14 +355,12 @@ public class MobiBenchServlet extends HttpServlet {
 				String result = conv.convert(data, syntax);
 				// System.out.println("data result:\n" + result);
 
-				response.getWriter()
-						.write(gson.toJson(new StringResultMessage(result)));
+				response.getWriter().write(gson.toJson(new StringResultMessage(result)));
 
 				log.info(">> Conversion successful, returned result");
 
 			} catch (IOException | ConvertException e) {
-				errorMsg = "Error performing data conversion: "
-						+ OutputUtils.toString(e);
+				errorMsg = "Error performing data conversion: " + OutputUtils.toString(e);
 
 				e.printStackTrace();
 			}
@@ -388,8 +373,8 @@ public class MobiBenchServlet extends HttpServlet {
 		}
 	}
 
-	private void doSelectRules(String url, HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	private void doSelectRules(String url, HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
 		if (url.endsWith("default"))
 			doDefaultSelectRules(request, response);
@@ -398,8 +383,8 @@ public class MobiBenchServlet extends HttpServlet {
 			doDomainSelectRules(request, response);
 	}
 
-	private void doDefaultSelectRules(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	private void doDefaultSelectRules(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
 		log.info(">> Selecting rules (default)");
 
@@ -408,16 +393,14 @@ public class MobiBenchServlet extends HttpServlet {
 		try {
 			String json = readString(request);
 
-			DefaultSelectConfig config = new DefaultSelectConfig(
-					gson.fromJson(json, InitSelectConfig.class));
+			DefaultSelectConfig config = new DefaultSelectConfig(gson.fromJson(json, InitSelectConfig.class));
 
 			// System.out.println("config: " + config);
 
 			DefaultSelection select = new DefaultSelection();
 			SelectOutput output = select.select(config);
 
-			response.getWriter()
-					.write(gson.toJson(new SelectionOutputMessage(output)));
+			response.getWriter().write(gson.toJson(new SelectionOutputMessage(output)));
 
 			log.info(">> Selection successful, returned result");
 
@@ -434,8 +417,8 @@ public class MobiBenchServlet extends HttpServlet {
 		}
 	}
 
-	private void doDomainSelectRules(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	private void doDomainSelectRules(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
 		log.info(">> Selecting rules (domain-specific)");
 
@@ -444,17 +427,14 @@ public class MobiBenchServlet extends HttpServlet {
 		try {
 			String json = readString(request);
 
-			DomainBasedSelectConfig config = gson.fromJson(json,
-					DomainBasedSelectConfig.class);
+			DomainBasedSelectConfig config = gson.fromJson(json, DomainBasedSelectConfig.class);
 			System.out.println(config);
 
-			DomainBasedSelection select = DomainBasedSelectionFactory
-					.create(config);
+			DomainBasedSelection select = DomainBasedSelectionFactory.create(config);
 
 			String rules = select.select(config).getRules();
 
-			response.getWriter()
-					.write(gson.toJson(new StringResultMessage(rules)));
+			response.getWriter().write(gson.toJson(new StringResultMessage(rules)));
 
 			log.info(">> Selection successful, returned result");
 
@@ -471,8 +451,8 @@ public class MobiBenchServlet extends HttpServlet {
 		}
 	}
 
-	private void doPreProcess(String url, HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	private void doPreProcess(String url, HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
 		String option = url.substring(url.lastIndexOf("/")).replace("/", "");
 
@@ -487,27 +467,33 @@ public class MobiBenchServlet extends HttpServlet {
 		else if (option.equals("binarize"))
 			processor = new BinarizePreProcessor(res);
 
-		else if (option.equals("inst_rules"))
-			processor = new InstantiateRulesPreProcessor(res);
+		else if (option.equals("inst_all_rules"))
+			processor = new InstantiateAllPreProcessor(res);
+
+		else if (option.equals("inst_nary_rules"))
+			processor = new InstantiateNaryPreProcessor(res);
 
 		else
 			errorMsg = "Unknown preprocessing option: " + option;
 
 		if (processor != null) {
-			PreProcessConfig config = gson.fromJson(readString(request),
-					PreProcessConfig.class);
+			PreProcessConfig config = gson.fromJson(readString(request), PreProcessConfig.class);
 
 			try {
 				PreProcessResults results = processor.preprocess(config);
-
-				response.getWriter()
-						.write(gson.toJson(new PreProcessResultMsg(results)));
+				response.getWriter().write(gson.toJson(new PreProcessResultMsg(results)));
 
 				log.info(">> Pre-processing successful, returned result");
 
+				Options o = config.getOptions();
+				if (o.isOutputRules()) {
+					Log.d("(storing instantiated rules: " + o.getOutputPath() + ")");
+					
+					res.store(o.getOutputPath() + ".spin", results.getRules(), false);
+				}
+
 			} catch (PreProcessException e) {
-				errorMsg = "Error pre-processing rules: "
-						+ OutputUtils.toString(e);
+				errorMsg = "Error pre-processing rules: " + OutputUtils.toString(e);
 
 				e.printStackTrace();
 			}
@@ -520,8 +506,8 @@ public class MobiBenchServlet extends HttpServlet {
 		}
 	}
 
-	private void doLogData(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	private void doLogData(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
 		log.info(">> Logging data");
 
@@ -530,8 +516,8 @@ public class MobiBenchServlet extends HttpServlet {
 		onSuccess(response);
 	}
 
-	private void doStoreFile(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	private void doStoreFile(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
 		String fileName = request.getParameter("fileName");
 		boolean append = Boolean.parseBoolean(request.getParameter("append"));
@@ -588,12 +574,12 @@ public class MobiBenchServlet extends HttpServlet {
 		return OutputUtils.keysToString(rdfSyntaxes);
 	}
 
-	protected void doPut(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doPut(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 	}
 
-	protected void doDelete(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 	}
 
 	public static void main(String[] args) throws Exception {

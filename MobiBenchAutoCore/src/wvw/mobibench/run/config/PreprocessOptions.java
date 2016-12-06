@@ -22,18 +22,18 @@ package wvw.mobibench.run.config;
 
 public enum PreprocessOptions {
 
-	AUX_RULES(true), BINARIZE(false), INST_RULES(false);
-	
+	AUX_RULES(true), BINARIZE(false), INST_NARY_RULES(false), INST_ALL_RULES(false);
+
 	private boolean supportsCaching;
-	
+
 	private PreprocessOptions(boolean supportsCaching) {
 		this.supportsCaching = supportsCaching;
 	}
-	
+
 	public boolean supportsCaching() {
 		return supportsCaching;
 	}
-	
+
 	public String toString() {
 		return super.toString().toLowerCase();
 	}

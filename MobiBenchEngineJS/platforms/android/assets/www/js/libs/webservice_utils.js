@@ -77,13 +77,14 @@ function domainBasedSelect(rules, axioms, ontology, syntax, type, callback) {
 	contactWebService(JSON.stringify(config), 'select/domain', [], callback);
 }
 
-function preprocess(ontology, rules, type, callback) {
+function preprocess(ontology, rules, options, callback) {
 	var config = {
 		ontology : ontology,
-		rules : rules
+		rules : rules,
+		options : options
 	};
 
-	contactWebService(JSON.stringify(config), 'preprocess/' + type, [],
+	contactWebService(JSON.stringify(config), 'preprocess/' + options.type, [],
 			callback);
 }
 

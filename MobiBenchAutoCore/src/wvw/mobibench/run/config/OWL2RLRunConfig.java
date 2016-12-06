@@ -33,22 +33,23 @@ public class OWL2RLRunConfig extends RunConfig {
 
 	private List<String[]> selections = new ArrayList<String[]>();
 	private List<PreprocessOptions> preprocesses = new ArrayList<PreprocessOptions>();
+	protected boolean outputRules = false;
 
 	private String confTarget;
 
 	public OWL2RLRunConfig() {
 	}
 
-	protected void init(String engine, int nrRuns, boolean warmupRun,
-			boolean dumpHeap, String mainFlow, String subFlow, String task,
-			String subTask, boolean confTest, String confTarget,
-			boolean outputInf, String localPath, String remotePath) {
+	protected void init(String engine, int nrRuns, boolean warmupRun, boolean dumpHeap, String mainFlow, String subFlow,
+			String task, String subTask, boolean confTest, String confTarget, boolean outputInf, boolean outputRules,
+			String localPath, String remotePath) {
 
-		super.init(engine, nrRuns, warmupRun, dumpHeap, mainFlow, task, subTask,
-				confTest, outputInf, localPath, remotePath);
+		super.init(engine, nrRuns, warmupRun, dumpHeap, mainFlow, task, subTask, confTest, outputInf, localPath,
+				remotePath);
 
 		this.subFlow = subFlow;
 		this.confTarget = confTarget;
+		this.outputRules = outputRules;
 	}
 
 	public String getSubFlow() {
@@ -105,6 +106,14 @@ public class OWL2RLRunConfig extends RunConfig {
 		return confTarget;
 	}
 
+	public boolean outputRules() {
+		return outputRules;
+	}
+
+	public void setOutputRules(boolean outputRules) {
+		this.outputRules = outputRules;
+	}
+
 	public List<OWL2RLRunConfig> genAtomConfigs() {
 		List<OWL2RLRunConfig> configs = new ArrayList<OWL2RLRunConfig>();
 
@@ -112,17 +121,15 @@ public class OWL2RLRunConfig extends RunConfig {
 		while (it1.hasNext()) {
 			String[] selection = it1.next();
 
-			Iterator<PreprocessOptions> it2 = new NullIfEmptyIterator<PreprocessOptions>(
-					preprocesses);
+			Iterator<PreprocessOptions> it2 = new NullIfEmptyIterator<PreprocessOptions>(preprocesses);
 
 			while (it2.hasNext()) {
 				PreprocessOptions preprocess = it2.next();
 
 				OWL2RLRunConfig config = new OWL2RLRunConfig();
 
-				config.init(engine, nrRuns, warmupRun, dumpHeap, mainFlow,
-						subFlow, task, subTask, confTest, confTarget, outputInf,
-						localPath, remotePath);
+				config.init(engine, nrRuns, warmupRun, dumpHeap, mainFlow, subFlow, task, subTask, confTest, confTarget,
+						outputInf, outputRules, localPath, remotePath);
 
 				config.setScopes(scopes);
 				config.setDatasets(datasets);

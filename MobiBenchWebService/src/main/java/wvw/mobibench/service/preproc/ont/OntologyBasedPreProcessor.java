@@ -29,9 +29,6 @@ import java.util.List;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.reasoner.rulesys.GenericRuleReasoner;
@@ -45,18 +42,6 @@ public abstract class OntologyBasedPreProcessor extends PreProcessor {
 	protected OntologyBasedPreProcessor(ServiceResources res) {
 		super(res);
 	}
-
-	protected Property intersectionOf;
-	protected Property propertyChainAxiom;
-	protected Property hasKey;
-	protected Property type;
-	protected Property sameAs;
-
-	protected Property first;
-	protected Property rest;
-	protected Property nil;
-
-	protected Resource ne;
 
 	protected Model loadModel(String data) throws IOException {
 		return loadModel(data, "N-TRIPLE");
@@ -89,17 +74,17 @@ public abstract class OntologyBasedPreProcessor extends PreProcessor {
 	}
 
 	private void initResources(Model m) {
-		intersectionOf = m.createProperty("http://www.w3.org/2002/07/owl#intersectionOf");
-		propertyChainAxiom = m.createProperty("http://www.w3.org/2002/07/owl#propertyChainAxiom");
-		hasKey = m.createProperty("http://www.w3.org/2002/07/owl#hasKey");
-		type = m.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-		sameAs = m.createProperty("http://www.w3.org/2002/07/owl#sameAs");
+		RDFRes.intersectionOf = m.createProperty("http://www.w3.org/2002/07/owl#intersectionOf");
+		RDFRes.propertyChainAxiom = m.createProperty("http://www.w3.org/2002/07/owl#propertyChainAxiom");
+		RDFRes.hasKey = m.createProperty("http://www.w3.org/2002/07/owl#hasKey");
+		RDFRes.type = m.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+		RDFRes.sameAs = m.createProperty("http://www.w3.org/2002/07/owl#sameAs");
 
-		first = m.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#first");
-		rest = m.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#rest");
-		nil = m.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#nil");
+		RDFRes.first = m.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#first");
+		RDFRes.rest = m.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#rest");
+		RDFRes.nil = m.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#nil");
 
-		ne = m.createProperty("http://spinrdf.org/sp#ne");
+		RDFRes.ne = m.createProperty("http://spinrdf.org/sp#ne");
 	}
 
 	protected String getData(Model m) {
@@ -116,32 +101,5 @@ public abstract class OntologyBasedPreProcessor extends PreProcessor {
 			stmts.add(stmtIt.next());
 
 		return stmts;
-	}
-
-	protected List<Resource> collectChain(Resource list, Model m) {
-		List<Resource> chain = new ArrayList<Resource>();
-		chain.add(list);
-
-		collectChain(list, chain, m);
-
-		return chain;
-	}
-
-	protected void collectChain(Resource list, List<Resource> chain, Model m) {
-		// Log.d("list: " + list);
-
-		StmtIterator stmtIt = m.listStatements(list, rest, (RDFNode) null);
-
-		if (stmtIt.hasNext()) {
-			Statement stmt = stmtIt.next();
-
-			Resource list2 = stmt.getObject().asResource();
-			if (list2.equals(nil))
-				return;
-
-			chain.add(list2);
-
-			collectChain(list2, chain, m);
-		}
 	}
 }

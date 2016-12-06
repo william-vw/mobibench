@@ -71,288 +71,279 @@ function initBenchmark(bConfig, callback) {
 
 		var processors = [
 
-				function(collected, callback) {
-					USING_CACHE = false;
+		function(collected, callback) {
+			USING_CACHE = false;
 
-					keyValueDb
-							.retrieve(
-									"cache",
-									function(CACHE) {
-										CACHE = CACHE.value;
+			keyValueDb.retrieve("cache",
+			function(CACHE) {
+				CACHE = CACHE.value;
+	
+				if (CACHE == "") {
+					log.msg("> CACHE: cannot reuse (empty)");
+	
+					callback();
+					return;
+				}
+	
+				// doLog("supportsCaching? " +
+				// collected.supportsCaching);
+	
+				if (!collected.supportsCaching) {
+					log.msg("> CACHE: cannot re-use (supportsCaching = false)");
+	
+					callback();
+					return;
+				}
+	
+				CACHE = JSON.parse(CACHE);
+	
+				if ((collected.selections ^ CACHE.selections)
+					|| (collected.selections && CACHE.selections 
+					&& !sameElements(collected.selections, CACHE.selections))) {
+	
+					log.msg("> CACHE: cannot reuse (different selections)");
+	
+					callback();
+					return;
+				}
+	
+				// doLog("preprocess? " +
+				// collected.preprocess + " <> " +
+				// CACHE.preprocess);
+	
+				if (collected.preprocess != CACHE.preprocess) {
+					log
+							.msg("> CACHE: cannot reuse (different pre-process)");
+	
+					callback();
+					return;
+				}
+	
+				var resources = collected.resources;
+				var resources2 = CACHE.resources;
+	
+				if (resources.length != resources2.length) {
+					callback();
+	
+					return;
+				}
+	
+				var reuse = false;
+	
+				for (var i = 0; i < resources.length; i++) {
+					var resource = resources[i];
+	
+					// ontology not suitable for re-use
+					if (resource.id == 'ontology')
+						continue;
+	
+					var config = engine.config.resources[resource.type];
+					var resource2 = resources2[i];
+	
+					if (resource2.path == resource.path
+							&& config.format == resource2.format)
+	
+						reuse = true;
+	
+					else {
+						log.msg("> CACHE: cannot reuse (different resources)");
+						callback();
+	
+						return;
+					}
+				}
+	
+				if (!reuse) {
+					log.msg("> CACHE: nothing to reuse");
+	
+					callback();
+					return;
+				}
+	
+				log.msg("> CACHE: reusing");
+	
+				for (var i = 0; i < resources.length; i++) {
+					var resource = resources[i];
+					var resource2 = resources2[i];
+	
+					// don't re-use ontology
+					if (resource.id == 'ontology')
+						continue;
+	
+					resources[i].format = resources2[i].format;
+					resources[i].content = resources2[i].content;
+				}
+	
+				USING_CACHE = true;
+	
+				callback();
+			});
+		},
 
-										if (CACHE == "") {
-											log
-													.msg("> CACHE: cannot reuse (empty)");
+		function(collected, callback) {
+			if (USING_CACHE) {
+				callback();
 
-											callback();
-											return;
-										}
+				return;
+			}
 
-										// doLog("supportsCaching? " +
-										// collected.supportsCaching);
+			if (!bConfig.resources.owl2rl) {
+				callback();
 
-										if (!collected.supportsCaching) {
-											log
-													.msg("> CACHE: cannot re-use (supportsCaching = false)");
+				return;
+			}
 
-											callback();
-											return;
-										}
+			var owl2rl = bConfig.resources.owl2rl;
+			var selections = owl2rl.selections.slice();
 
-										CACHE = JSON.parse(CACHE);
+			if (selections.length == 0) {
+				callback();
 
-										if ((collected.selections ^ CACHE.selections)
-												|| (collected.selections
-														&& CACHE.selections && !sameElements(
-														collected.selections,
-														CACHE.selections))) {
+				return;
+			}
 
-											log
-													.msg("> CACHE: cannot reuse (different selections)");
+			var rules = owl2rl.rules.content;
+			var axioms = owl2rl.axioms.content;
 
-											callback();
-											return;
-										}
+			var domainBased = false;
+			for (var i = 0; i < selections.length; i++) {
+				var selection = selections[i];
 
-										// doLog("preprocess? " +
-										// collected.preprocess + " <> " +
-										// CACHE.preprocess);
+				if (selection == 'domain-based') {
+					domainBased = true;
 
-										if (collected.preprocess != CACHE.preprocess) {
-											log
-													.msg("> CACHE: cannot reuse (different pre-process)");
+					selections.splice(i--, 1);
 
-											callback();
-											return;
-										}
+				} else
+					selections[i] = loadSelectConfig(selection);
+			}
 
-										var resources = collected.resources;
-										var resources2 = CACHE.resources;
+			function ctu() {
+				owl2rl.rules.content = rules;
+				owl2rl.axioms.content = axioms;
 
-										if (resources.length != resources2.length) {
-											callback();
+				owl2rl.selections = undefined;
 
-											return;
-										}
+				callback();
+			}
 
-										var reuse = false;
+			log.msg(".. selecting rules & axioms", LogLvl.TRACE);
+			defaultSelect(rules, axioms, selections, function(ret) {
+				rules = ret.rules;
+				axioms = ret.axioms;
 
-										for (var i = 0; i < resources.length; i++) {
-											var resource = resources[i];
+				if (domainBased) {
+					var ontology = bConfig.resources.ontology.content;
 
-											// ontology not suitable for re-use
-											if (resource.id == 'ontology')
-												continue;
+					domainBasedSelect(rules, axioms, ontology,
+							"N-TRIPLE", "forward_naive",
 
-											var config = engine.config.resources[resource.type];
-											var resource2 = resources2[i];
+							function(ret) {
+								rules = ret;
 
-											if (resource2.path == resource.path
-													&& config.format == resource2.format)
+								ctu();
+							});
+				} else
+					ctu();
+			});
+		},
 
-												reuse = true;
+		function(collected, callback) {
+			if (USING_CACHE) {
+				callback();
 
-											else {
-												log
-														.msg("> CACHE: cannot reuse (different resources)");
-												callback();
+				return;
+			}
 
-												return;
-											}
-										}
+			var resources = bConfig.resources;
 
-										if (!reuse) {
-											log
-													.msg("> CACHE: nothing to reuse");
+			if (!resources.owl2rl) {
+				callback();
 
-											callback();
-											return;
-										}
+				return;
+			}
 
-										log.msg("> CACHE: reusing");
+			var owl2rl = resources.owl2rl;
+			if (!owl2rl.preprocess) {
+				callback();
 
-										for (var i = 0; i < resources.length; i++) {
-											var resource = resources[i];
-											var resource2 = resources2[i];
+				return;
+			}
 
-											// don't re-use ontology
-											if (resource.id == 'ontology')
-												continue;
+			log.msg(".. preprocessing (" + owl2rl.preprocess + ")",
+					LogLvl.TRACE);
 
-											resources[i].format = resources2[i].format;
-											resources[i].content = resources2[i].content;
-										}
-
-										USING_CACHE = true;
-
-										callback();
-									});
+			preprocess(resources.ontology, owl2rl.rules.content, 
+				{ 
+					type : owl2rl.preprocess,
+					outputRules : bConfig.outputRules,
+					outputPath : bConfig.outputPath
 				},
+				function(ret) {
+					if (ret.ontology)
+						resources.ontology.content = ret.ontology;
+	
+					if (ret.rules)
+						owl2rl.rules.content += "\n\n" + ret.rules;
+	
+					callback();
+			});
+		},
 
-				function(collected, callback) {
-					if (USING_CACHE) {
+		function(collected, callback) {
+
+			performSync(
+				function(resource, callback) {
+
+					if (!resource.content) {
+						log.msg("empty resource: " + resource.id,
+								LogLvl.TRACE);
+
+						var config = engine.config.resources[resource.type];
+						resource.format = config.format;
+
 						callback();
-
 						return;
 					}
 
-					if (!bConfig.resources.owl2rl) {
-						callback();
-
-						return;
-					}
-
-					var owl2rl = bConfig.resources.owl2rl;
-					var selections = owl2rl.selections.slice();
-
-					if (selections.length == 0) {
-						callback();
-
-						return;
-					}
-
-					var rules = owl2rl.rules.content;
-					var axioms = owl2rl.axioms.content;
-
-					var domainBased = false;
-					for (var i = 0; i < selections.length; i++) {
-						var selection = selections[i];
-
-						if (selection == 'domain-based') {
-							domainBased = true;
-
-							selections.splice(i--, 1);
-
-						} else
-							selections[i] = loadSelectConfig(selection);
-					}
-
-					function ctu() {
-						owl2rl.rules.content = rules;
-						owl2rl.axioms.content = axioms;
-
-						owl2rl.selections = undefined;
+					// doLog("convert: " + JSON.stringify(resource,
+					// null, 4));
+					convertResource(resource, function() {
+						handleRawResource(resource);
 
 						callback();
-					}
-
-					log.msg(".. selecting rules & axioms", LogLvl.TRACE);
-					defaultSelect(rules, axioms, selections, function(ret) {
-						rules = ret.rules;
-						axioms = ret.axioms;
-
-						if (domainBased) {
-							var ontology = bConfig.resources.ontology.content;
-
-							domainBasedSelect(rules, axioms, ontology,
-									"N-TRIPLE", "forward_naive",
-
-									function(ret) {
-										rules = ret;
-
-										ctu();
-									});
-						} else
-							ctu();
 					});
-				},
 
-				function(collected, callback) {
-					if (USING_CACHE) {
-						callback();
+				}, null, null, collected.resources, callback);
+		},
 
-						return;
-					}
+		function(collected, callback) {
+			if (!USING_CACHE) {
 
-					var resources = bConfig.resources;
+				if (!collected.supportsCaching) {
+					log.msg("> CACHE: not storing (supportsCaching = false)");
 
-					if (!resources.owl2rl) {
-						callback();
+					callback();
 
-						return;
-					}
+				} else if (collected.selections
+						&& contains(collected.selections, 'domain-based')) {
 
-					var owl2rl = resources.owl2rl;
-					if (!owl2rl.preprocess) {
-						callback();
+					log.msg("> CACHE: not storing (domain-based selection)");
 
-						return;
-					}
+					callback();
 
-					log.msg(".. preprocessing (" + owl2rl.preprocess + ")",
-							LogLvl.TRACE);
+				} else if (collected.resources[0].composed) {
+					log.msg("> CACHE: not storing (composed resources)");
 
-					preprocess(resources.ontology, owl2rl.preprocess, function(
-							ret) {
+					callback();
 
-						if (ret.ontology)
-							resources.ontology.content = ret.ontology;
+				} else
+					keyValueDb.store("cache", JSON.stringify(collected,
+							null, 4), callback);
 
-						if (ret.rules)
-							owl2rl.rules.content += "\n\n" + ret.rules;
-
-						callback();
-					});
-				},
-
-				function(collected, callback) {
-
-					performSync(
-							function(resource, callback) {
-
-								if (!resource.content) {
-									log.msg("empty resource: " + resource.id,
-											LogLvl.TRACE);
-
-									var config = engine.config.resources[resource.type];
-									resource.format = config.format;
-
-									callback();
-									return;
-								}
-
-								// doLog("convert: " + JSON.stringify(resource,
-								// null, 4));
-								convertResource(resource, function() {
-									handleRawResource(resource);
-
-									callback();
-								});
-
-							}, null, null, collected.resources, callback);
-				},
-
-				function(collected, callback) {
-					if (!USING_CACHE) {
-
-						if (!collected.supportsCaching) {
-							log
-									.msg("> CACHE: not storing (supportsCaching = false)");
-
-							callback();
-
-						} else if (collected.selections
-								&& contains(collected.selections,
-										'domain-based')) {
-
-							log
-									.msg("> CACHE: not storing (domain-based selection)");
-
-							callback();
-
-						} else if (collected.resources[0].composed) {
-							log
-									.msg("> CACHE: not storing (composed resources)");
-
-							callback();
-
-						} else
-							keyValueDb.store("cache", JSON.stringify(collected,
-									null, 4), callback);
-
-					} else
-						callback();
-				} ];
+			} else
+				callback();
+		} ];
 
 		function convertResource(resource, callback) {
 			var config = engine.config.resources[resource.type];

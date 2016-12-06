@@ -48,11 +48,10 @@ public class DefaultJsonConfigFactory implements JsonConfigFactory {
 		List<String> ret = new ArrayList<String>();
 
 		for (OWL2RLRunConfig config : configs) {
-			String reasonId1 = config.getMainFlow()
-					+ "-ontology_inference_owl2rl";
+			String reasonId1 = config.getMainFlow() + "-ontology_inference_owl2rl";
 
 			// @formatter:off
-		String config1 = 
+			String config1 = 
 				"{" +
 				"     \"engine\": \"" + config.getEngine() + "\",\n" +
 				"     \"nrRuns\": \"" + config.getNrRuns() + "\",\n" +
@@ -75,8 +74,9 @@ public class DefaultJsonConfigFactory implements JsonConfigFactory {
 				"         }\n" +
 				"     },\n" + 
 				"	  \"confTest\": " + config.confTest() + ",\n" + 
-				"	  \"outputInf\": " + config.outputInf() + ",\n";
-		// @formatter:on
+				"	  \"outputInf\": " + config.outputInf() + ",\n" +
+				"	  \"outputRules\": " + config.outputRules() + ",\n";
+			// @formatter:on
 
 			if (config.hasScopes()) {
 				for (OWLScope scope : config.getScopes()) {
@@ -85,11 +85,10 @@ public class DefaultJsonConfigFactory implements JsonConfigFactory {
 						List<String> options = scope.getOptions();
 
 						for (String option : options) {
-							String reasonId2 = reasonId1 + "-" + scope + "_"
-									+ option;
+							String reasonId2 = reasonId1 + "-" + scope + "_" + option;
 
 							// @formatter:off
-						String config2 = config1.replace("<ID>", "\"" + reasonId2 + "\"")
+							String config2 = config1.replace("<ID>", "\"" + reasonId2 + "\"")
 								.replace("<SCOPE>",
 										"		  \"scope\": {\n" +
 										"		  		\"type\": \"" + scope + "\",\n" +
@@ -99,15 +98,14 @@ public class DefaultJsonConfigFactory implements JsonConfigFactory {
 										"		  },\n");
 						// @formatter:on
 
-							json_OWL2RL_resources(config, reasonId2, config2,
-									ret);
+							json_OWL2RL_resources(config, reasonId2, config2, ret);
 						}
 
 					} else {
 						String reasonId2 = reasonId1 + "-" + scope;
 
 						// @formatter:off
-					String config2 = config1.replace("<ID>", "\"" + reasonId2 + "\"")
+						String config2 = config1.replace("<ID>", "\"" + reasonId2 + "\"")
 							.replace("<SCOPE>",
 									"		  \"scope\": {\n" +
 									"		  		\"type\": \"" + scope + "\",\n" +
@@ -121,9 +119,7 @@ public class DefaultJsonConfigFactory implements JsonConfigFactory {
 
 			} else {
 				String reasonId2 = reasonId1;
-				String config2 = config1
-						.replace("<ID>", "\"" + reasonId2 + "\"")
-						.replace("<SCOPE>", "");
+				String config2 = config1.replace("<ID>", "\"" + reasonId2 + "\"").replace("<SCOPE>", "");
 
 				json_OWL2RL_resources(config, reasonId2, config2, ret);
 			}
@@ -137,25 +133,22 @@ public class DefaultJsonConfigFactory implements JsonConfigFactory {
 		return ret;
 	}
 
-	private void json_OWL2RL_resources(OWL2RLRunConfig config, String reasonId,
-			String configStr, List<String> ret) {
+	private void json_OWL2RL_resources(OWL2RLRunConfig config, String reasonId, String configStr, List<String> ret) {
 		for (OWLDataset dataset : config.getDatasets()) {
 
 			if (dataset.hasFiles()) {
 				List<String> dataFiles = dataset.getFiles();
 
 				for (String file : dataFiles)
-					handleDataset(config, reasonId, configStr, dataset, file,
-							ret);
+					handleDataset(config, reasonId, configStr, dataset, file, ret);
 
 			} else
 				handleDataset(config, reasonId, configStr, dataset, null, ret);
 		}
 	}
 
-	private void handleDataset(OWL2RLRunConfig config, String reasonId,
-			String configStr, OWLDataset dataset, String file,
-			List<String> ret) {
+	private void handleDataset(OWL2RLRunConfig config, String reasonId, String configStr, OWLDataset dataset,
+			String file, List<String> ret) {
 
 		List<String> selections = config.getSelections();
 
@@ -175,7 +168,7 @@ public class DefaultJsonConfigFactory implements JsonConfigFactory {
 		else
 			dataSet = dataset.getDataset();
 
-		if (config.outputInf()) {
+		if (config.outputInf() || config.outputRules()) {
 			String path = config.getRemotePath();
 			path += "output/ontology_inference/owl2rl/";
 
@@ -190,9 +183,10 @@ public class DefaultJsonConfigFactory implements JsonConfigFactory {
 			else
 				name += "-none";
 
-			path += dataSet + "/" + name + "-" + config.getEngine() + ".nt";
+			path += dataSet + "/" + name + "-" + config.getEngine();
 
-			configStr += "	\"outputPath\" : \"" + path + "\",\n";
+			if (config.outputInf())
+				configStr += "	\"outputPath\" : \"" + path + "\",\n";
 		}
 
 		if (config.confTest()) {
@@ -305,8 +299,7 @@ public class DefaultJsonConfigFactory implements JsonConfigFactory {
 		List<String> ret = new ArrayList<String>();
 
 		for (OWLBuiltinRunConfig config : configs) {
-			String reasonId1 = config.getMainFlow()
-					+ "-ontology_inference_builtin";
+			String reasonId1 = config.getMainFlow() + "-ontology_inference_builtin";
 		// @formatter:off
 		String config1 = 
 				"{" +
@@ -335,8 +328,7 @@ public class DefaultJsonConfigFactory implements JsonConfigFactory {
 					List<String> options = scope.getOptions();
 
 					for (String option : options) {
-						String reasonId2 = reasonId1 + "-" + scope + "_"
-								+ option;
+						String reasonId2 = reasonId1 + "-" + scope + "_" + option;
 
 					// @formatter:off
 					String config2 = config1.replace("<ID>", "\"" + reasonId2 + "\"").replace(
@@ -349,8 +341,7 @@ public class DefaultJsonConfigFactory implements JsonConfigFactory {
 							"		  },\n");
 					// @formatter:on
 
-						json_OWLBuiltin_resources(config, reasonId2, config2,
-								ret);
+						json_OWLBuiltin_resources(config, reasonId2, config2, ret);
 					}
 
 				} else {
@@ -378,12 +369,12 @@ public class DefaultJsonConfigFactory implements JsonConfigFactory {
 		return ret;
 	}
 
-	private void json_OWLBuiltin_resources(OWLBuiltinRunConfig config,
-			String reasonId, String orConfigStr, List<String> ret) {
+	private void json_OWLBuiltin_resources(OWLBuiltinRunConfig config, String reasonId, String orConfigStr,
+			List<String> ret) {
 
 		for (OWLDataset dataset : config.getDatasets()) {
 			List<String> dataFiles = dataset.getFiles();
-			
+
 			for (String file : dataFiles) {
 				String configStr = orConfigStr;
 
@@ -465,15 +456,13 @@ public class DefaultJsonConfigFactory implements JsonConfigFactory {
 		}
 	}
 
-	public List<String> json_ruleBasedServiceMatching(
-			List<RuleBasedServiceMatchConfig> configs) {
+	public List<String> json_ruleBasedServiceMatching(List<RuleBasedServiceMatchConfig> configs) {
 
 		List<String> ret = new ArrayList<String>();
 
 		for (RuleBasedServiceMatchConfig config : configs) {
 
-			String reasonId1 = config.getMainFlow()
-					+ "-service_match_rule_based";
+			String reasonId1 = config.getMainFlow() + "-service_match_rule_based";
 		// @formatter:off
 		String config1 = 
 				"{\n" +
@@ -511,8 +500,7 @@ public class DefaultJsonConfigFactory implements JsonConfigFactory {
 
 					if (scope.hasOptions()) {
 						for (String option : scope.getOptions()) {
-							String reasonId2 = reasonId1 + "-" + scope + "_"
-									+ option;
+							String reasonId2 = reasonId1 + "-" + scope + "_" + option;
 
 						// @formatter:off
 								String config2 = config1.replace("<ID>", "\"" + reasonId2 + "\"")
@@ -525,8 +513,7 @@ public class DefaultJsonConfigFactory implements JsonConfigFactory {
 										"		  },\n");
 						// @formatter:on
 
-							json_ruleBasedServiceMatch_resources(config,
-									reasonId2, config2, selections, ret);
+							json_ruleBasedServiceMatch_resources(config, reasonId2, config2, selections, ret);
 						}
 
 					} else {
@@ -541,19 +528,15 @@ public class DefaultJsonConfigFactory implements JsonConfigFactory {
 									"		  },\n");
 					// @formatter:on
 
-						json_ruleBasedServiceMatch_resources(config, reasonId2,
-								config2, selections, ret);
+						json_ruleBasedServiceMatch_resources(config, reasonId2, config2, selections, ret);
 					}
 				}
 
 			} else {
 				String reasonId2 = reasonId1;
-				String config2 = config1
-						.replace("<ID>", "\"" + reasonId2 + "\"")
-						.replace("<SCOPE>", "");
+				String config2 = config1.replace("<ID>", "\"" + reasonId2 + "\"").replace("<SCOPE>", "");
 
-				json_ruleBasedServiceMatch_resources(config, reasonId2, config2,
-						selections, ret);
+				json_ruleBasedServiceMatch_resources(config, reasonId2, config2, selections, ret);
 			}
 		}
 
@@ -565,15 +548,13 @@ public class DefaultJsonConfigFactory implements JsonConfigFactory {
 		return ret;
 	}
 
-	private void json_ruleBasedServiceMatch_resources(
-			RuleBasedServiceMatchConfig config, String reasonId,
+	private void json_ruleBasedServiceMatch_resources(RuleBasedServiceMatchConfig config, String reasonId,
 			String configStr, List<String> selections, List<String> ret) {
 
 		String root = "res/services/";
 		for (MatchDirections dir : config.getDirections()) {
 
-			String rulesSrcsRoot = null, axiomsSrcsRoot = null,
-					targetRoot = null, resId = null;
+			String rulesSrcsRoot = null, axiomsSrcsRoot = null, targetRoot = null, resId = null;
 
 			switch (dir) {
 
@@ -636,18 +617,15 @@ public class DefaultJsonConfigFactory implements JsonConfigFactory {
 				if (schema)
 					datasetName += "_schema";
 
-				String selStr = StringUtils.toString(orSelections, ",", "[",
-						"]");
+				String selStr = StringUtils.toString(orSelections, ",", "[", "]");
 				if (config.outputInf()) {
 					String path = config.getRemotePath();
 
 					path += "output/service_match/rule_based/";
-					path += config.getEngine() + "/" + datasetName + "/"
-							+ dir.toString().toLowerCase() + "-" + selStr
+					path += config.getEngine() + "/" + datasetName + "/" + dir.toString().toLowerCase() + "-" + selStr
 							+ ".nt";
 
-					configStr = configStr.replace("<OUTPUT_PATH>",
-							"\"" + path + "\"");
+					configStr = configStr.replace("<OUTPUT_PATH>", "\"" + path + "\"");
 				}
 
 				resId += "-" + selStr;
@@ -687,8 +665,7 @@ public class DefaultJsonConfigFactory implements JsonConfigFactory {
 					String axiomsPath = rulesPrefix + "axioms.nt";
 					String rulesPath = rulesPrefix + "rules.spin";
 
-					String selStr2 = StringUtils.toString(selections, ",", "[",
-							"]");
+					String selStr2 = StringUtils.toString(selections, ",", "[", "]");
 
 					// @formatter:off
 					jsonConfig +=

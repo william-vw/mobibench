@@ -48,10 +48,8 @@ public class RunConfig {
 	public RunConfig() {
 	}
 
-	protected void init(String engine, int nrRuns, boolean warmupRun,
-			boolean dumpHeap, String mainFlow, String task, String subTask,
-			boolean confTest, boolean outputInf, String localPath,
-			String remotePath) {
+	protected void init(String engine, int nrRuns, boolean warmupRun, boolean dumpHeap, String mainFlow, String task,
+			String subTask, boolean confTest, boolean outputInf, String localPath, String remotePath) {
 
 		this.engine = engine;
 		this.nrRuns = nrRuns;

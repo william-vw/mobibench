@@ -29,6 +29,8 @@ public class PreProcessConfig {
 
 	private Ontology ontology;
 	private String rules;
+	
+	private Options options;
 
 	public PreProcessConfig() {
 	}
@@ -44,13 +46,21 @@ public class PreProcessConfig {
 	public String getRules() {
 		return rules;
 	}
-	
+
 	public List<RuleWrapper> getRuleObjs() {
 		return RulesUtils.splitRules(rules);
 	}
 
 	public void setRules(String rules) {
 		this.rules = rules;
+	}
+
+	public Options getOptions() {
+		return options;
+	}
+
+	public void setOptions(Options options) {
+		this.options = options;
 	}
 
 	public class Ontology {
@@ -90,5 +100,33 @@ public class PreProcessConfig {
 		public void setSyntax(String syntax) {
 			this.syntax = syntax;
 		}
+	}
+
+	public class Options {
+
+		private boolean outputRules;
+		private String outputPath;
+
+		public Options(boolean outputRules, String outputPath) {
+			this.outputRules = outputRules;
+			this.outputPath = outputPath;
+		}
+
+		public boolean isOutputRules() {
+			return outputRules;
+		}
+
+		public void setOutputRules(boolean outputRules) {
+			this.outputRules = outputRules;
+		}
+
+		public String getOutputPath() {
+			return outputPath;
+		}
+
+		public void setOutputPath(String outputPath) {
+			this.outputPath = outputPath;
+		}
+
 	}
 }

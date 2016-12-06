@@ -37,7 +37,7 @@ public abstract class AutoBenchmark {
 	private long sleepTime = 10000;
 	private String localPath = "res/owl/";
 	// IMPORTANT update this path to suit your machine
-	private String remotePath = "C:/Users/William/git/mobile-benchmarks/MobiBenchEngineJS/www/res/owl/";
+	private String remotePath = "C:/Users/William/git/mobibench/MobiBenchEngineJS/www/res/owl/";
 
 	private UserConfigFactory userFactory = new DefaultUserConfigFactory();
 	private JsonConfigFactory jsonFactory = new DefaultJsonConfigFactory();

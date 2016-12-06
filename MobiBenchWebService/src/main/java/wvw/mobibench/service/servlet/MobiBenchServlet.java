@@ -537,7 +537,6 @@ public class MobiBenchServlet extends HttpServlet {
 		boolean append = Boolean.parseBoolean(request.getParameter("append"));
 
 		String path = res.store(fileName, request.getReader(), append);
-
 		log.info(">> Stored file: " + path + " (append? " + append + ")");
 
 		onSuccess(response);

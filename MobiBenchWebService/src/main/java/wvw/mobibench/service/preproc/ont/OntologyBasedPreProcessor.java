@@ -34,6 +34,8 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.reasoner.rulesys.GenericRuleReasoner;
+import com.hp.hpl.jena.reasoner.rulesys.Rule;
 
 import wvw.mobibench.service.preproc.PreProcessor;
 import wvw.mobibench.service.res.ServiceResources;
@@ -54,11 +56,13 @@ public abstract class OntologyBasedPreProcessor extends PreProcessor {
 	protected Property rest;
 	protected Property nil;
 
+	protected Resource ne;
+
 	protected Model loadModel(String data) throws IOException {
 		return loadModel(data, "N-TRIPLE");
 	}
 
-	protected Model loadModel(String data, String syntax) throws IOException {		
+	protected Model loadModel(String data, String syntax) throws IOException {
 		return loadModel(new ByteArrayInputStream(data.getBytes()));
 	}
 
@@ -66,9 +70,7 @@ public abstract class OntologyBasedPreProcessor extends PreProcessor {
 		return loadModel(in, "N-TRIPLE");
 	}
 
-	protected Model loadModel(InputStream in, String syntax)
-			throws IOException {
-
+	protected Model loadModel(InputStream in, String syntax) throws IOException {
 		Model m = ModelFactory.createDefaultModel();
 		initResources(m);
 
@@ -77,22 +79,27 @@ public abstract class OntologyBasedPreProcessor extends PreProcessor {
 		return m;
 	}
 
+	protected Model loadInfModel(String data, String syntax, String rulesStr) throws IOException {
+		Model m = loadModel(data, syntax);
+
+		List<Rule> rules = Rule.parseRules(rulesStr);
+		GenericRuleReasoner reasoner = new GenericRuleReasoner(rules);
+
+		return ModelFactory.createInfModel(reasoner, m);
+	}
+
 	private void initResources(Model m) {
-		intersectionOf = m
-				.createProperty("http://www.w3.org/2002/07/owl#intersectionOf");
-		propertyChainAxiom = m.createProperty(
-				"http://www.w3.org/2002/07/owl#propertyChainAxiom");
+		intersectionOf = m.createProperty("http://www.w3.org/2002/07/owl#intersectionOf");
+		propertyChainAxiom = m.createProperty("http://www.w3.org/2002/07/owl#propertyChainAxiom");
 		hasKey = m.createProperty("http://www.w3.org/2002/07/owl#hasKey");
-		type = m.createProperty(
-				"http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+		type = m.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
 		sameAs = m.createProperty("http://www.w3.org/2002/07/owl#sameAs");
 
-		first = m.createProperty(
-				"http://www.w3.org/1999/02/22-rdf-syntax-ns#first");
-		rest = m.createProperty(
-				"http://www.w3.org/1999/02/22-rdf-syntax-ns#rest");
-		nil = m.createProperty(
-				"http://www.w3.org/1999/02/22-rdf-syntax-ns#nil");
+		first = m.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#first");
+		rest = m.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#rest");
+		nil = m.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#nil");
+
+		ne = m.createProperty("http://spinrdf.org/sp#ne");
 	}
 
 	protected String getData(Model m) {

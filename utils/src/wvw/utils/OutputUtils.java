@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 William Van Woensel
+ * Copyright 2015 William Van Woensel
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -19,13 +19,101 @@
  */
 package wvw.utils;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 
+ * @author wvw
+ */
+
 public class OutputUtils {
+
+	@SuppressWarnings("rawtypes")
+	public static String className(Class cls) {
+		String str = cls.toString();
+
+		return str.substring(str.lastIndexOf(".") + 1);
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static String toString(Object obj) {
+		if (obj == null)
+			return "null";
+
+		else if (obj instanceof Exception)
+			return toString((Exception) obj);
+
+		else if (obj instanceof Map)
+			return toString((Map) obj);
+
+		else if (obj instanceof List)
+			return toString((List) obj);
+
+		else if (obj instanceof Object[])
+			return toString((Object[]) obj);
+
+		else if (obj instanceof int[])
+			return toString((int[]) obj);
+
+		else if (obj instanceof byte[])
+			return toString((byte[]) obj);
+
+		else if (obj instanceof int[][])
+			return toString((int[][]) obj);
+
+		else if (obj instanceof boolean[])
+			return toString((boolean[]) obj);
+
+		else
+			return obj.toString();
+	}
 
 	public static String toString(Exception e) {
 		return "[" + e.getClass() + "] " + e.getMessage();
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static String toString(Map map) {
+		StringBuffer ret = new StringBuffer();
+
+		ret.append("{");
+
+		Iterator it = map.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry entry = (Map.Entry) it.next();
+
+			Object key = entry.getKey();
+			Object value = entry.getValue();
+
+			if (ret.length() > 1)
+				ret.append(",");
+
+			ret.append(toString(key)).append("=").append(toString(value));
+		}
+
+		ret.append("}");
+
+		return ret.toString();
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static String toString(List list) {
+		StringBuffer ret = new StringBuffer();
+
+		ret.append("[");
+		for (Object o : list) {
+
+			if (ret.length() > 1)
+				ret.append(",");
+
+			ret.append(toString(o));
+		}
+
+		ret.append("]");
+
+		return ret.toString();
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -38,29 +126,83 @@ public class OutputUtils {
 		return map.keySet().toString();
 	}
 
-	public static String toString(String[] strs) {
-		StringBuffer b = new StringBuffer();
+	public static String toString(Object[] array) {
+		StringBuffer ret = new StringBuffer();
 
-		for (int i = 0; i < strs.length; i++) {
+		for (int i = 0; i < array.length; i++) {
+			Object el = array[i];
+
 			if (i > 0)
-				b.append(", ");
+				ret.append(", ");
 
-			b.append(strs[i]);
+			ret.append(toString(el));
 		}
 
-		return "[" + b.toString() + "]";
+		return "[ " + ret + " ]";
 	}
 
-	public static String toString(List<String> strs, String sep) {
-		StringBuffer b = new StringBuffer();
+	public static String toString(int[] array) {
+		if (array == null)
+			return "null";
 
-		for (int i = 0; i < strs.size(); i++) {
+		StringBuffer ret = new StringBuffer();
+		for (int i = 0; i < array.length; i++) {
+			int el = array[i];
+
 			if (i > 0)
-				b.append(sep);
-			
-			b.append(strs.get(i));
+				ret.append(", ");
+
+			ret.append(el);
 		}
 
-		return b.toString();
+		return "[ " + ret + " ]";
+	}
+
+	public static String toString(byte[] array) {
+		if (array == null)
+			return "null";
+
+		StringBuffer ret = new StringBuffer();
+		for (int i = 0; i < array.length; i++) {
+			byte el = array[i];
+
+			if (i > 0)
+				ret.append(", ");
+
+			ret.append(el);
+		}
+
+		return "[ " + ret + " ]";
+	}
+
+	public static String toString(int[][] array) {
+		if (array == null)
+			return "null";
+
+		StringBuffer ret = new StringBuffer();
+		for (int i = 0; i < array.length; i++) {
+			int[] el = array[i];
+
+			if (i > 0)
+				ret.append(", ");
+
+			ret.append(toString(el));
+		}
+
+		return "[ " + ret + " ]";
+	}
+
+	public static String toString(boolean[] array) {
+		StringBuffer ret = new StringBuffer();
+		for (int i = 0; i < array.length; i++) {
+			boolean el = array[i];
+
+			if (i > 0)
+				ret.append(", ");
+
+			ret.append(el);
+		}
+
+		return "[ " + ret + " ]";
 	}
 }

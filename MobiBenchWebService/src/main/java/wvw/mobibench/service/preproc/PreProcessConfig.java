@@ -20,9 +20,15 @@
 
 package wvw.mobibench.service.preproc;
 
+import java.util.List;
+
+import wvw.utils.rule.RuleWrapper;
+import wvw.utils.rule.RulesUtils;
+
 public class PreProcessConfig {
 
 	private Ontology ontology;
+	private String rules;
 
 	public PreProcessConfig() {
 	}
@@ -33,6 +39,18 @@ public class PreProcessConfig {
 
 	public void setOntology(Ontology ontology) {
 		this.ontology = ontology;
+	}
+
+	public String getRules() {
+		return rules;
+	}
+	
+	public List<RuleWrapper> getRuleObjs() {
+		return RulesUtils.splitRules(rules);
+	}
+
+	public void setRules(String rules) {
+		this.rules = rules;
 	}
 
 	public class Ontology {

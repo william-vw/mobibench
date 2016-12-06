@@ -1,22 +1,22 @@
 /**
-* Copyright 2016 William Van Woensel
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-* 
-* 
-* @author wvw
-* 
-*/
+ * Copyright 2016 William Van Woensel
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ * 
+ * 
+ * @author wvw
+ * 
+ */
 
 // NOTE uncomment parts to perform rule / data conversion or generate
 // conformance data
@@ -54,10 +54,10 @@
 // document.body.innerHTML = convData.split("\n").join("<br />");
 // });
 
+
 // - Ruleset selection
 
-// -- default selection
-
+//// -- default selection
 // // first, retrieve required data
 // var rules = retrieveResource("res/owl/owl2rl/full/rules.spin");
 // var axioms = retrieveResource("res/owl/owl2rl/full/axioms.nt");
@@ -76,7 +76,6 @@
 // });
 
 // -- domain-based selection
-
 // // first, retrieve required data
 // var rules = retrieveResource("res/owl/owl2rl/full/rules.spin");
 // var axioms = retrieveResource("res/owl/owl2rl/full/axioms.nt");
@@ -96,18 +95,21 @@
 // - Pre-processing
 
 // first, retrieve required data
-var path = "res/owl/data/conf/full.nt";
-var ontology = retrieveResource("res/owl/data/conf/full.nt");
+var path = "res/owl/data/ore-small/12.nt";
+var ontology = retrieveResource(path);
+
+var rules = retrieveResource("res/owl/owl2rl/consist/rules.spin");
 
 // then, obtain pre-processed rules & ontology from web service
 // (options: inst_rules, binarize, aux_rules)
 preprocess({
 	path : path,
-	content : ontology, 
-	
-	syntax : "N-TRIPLE"
+	content : ontology,
 
-}, "inst_rules", function(ret) {
+	syntax : "N-TRIPLE",
+
+}, rules, "inst_rules", function(ret) {
+
 	doLog("rules: " + ret.rules.split(/\r?\n\r?\n/));
 	doLog("ontology: " + ret.ontology);
 });

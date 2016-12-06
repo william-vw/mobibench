@@ -1,0 +1,16 @@
+> removing superfluous/subsumed rules
+	by merging all rules with identical premises, the required check "?x <p> ?y" only needs to be made once
+but, will likely only have limited effect in optimized implementations
+
+- multiple consequences per rule: 
+	e.g., domain/range: if ?x, ?y are subject/object of <p> with domains { d1, ..., dn } and ranges { r1, ..., rn }, then infer that ?x has all types { d1, ..., dn} and ?y has all types { r1, ..., rn} in 1 rule
+simply check whether some rules have duplicate bodies: if so, group rule heads
+	
+- remove duplicate rules
+	e.g., in case <p> is defined as inverse to itself, as well as a symmetric property (e.g., 110.nt), this will lead to ?y <p> ?x being inferred 3 times (prp-inv1, prp-inv2, prp-symp)
+simple duplicate checking for rules?  
+
+
+
+> could benefit greatly from "entailed" selection (?) 
+	

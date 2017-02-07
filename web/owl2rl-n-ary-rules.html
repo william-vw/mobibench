@@ -126,7 +126,7 @@ $$T(?c, unionOf, ?l), T(?l, hasMember, ?cl) \rightarrow T(?cl, subClassOf, ?c)$$
 <p>A clear drawback of this approach that it requires a pre-processing step for each input ontology. Also, it yields an instantiated rule for each relevant assertion, potentially inflating the ruleset. On the other hand, in case no related assertions are found, this process will not add any rules to the ruleset.</p>
 
 <a class="pos" name="binarize-ontology">
-	<h3>Normalize (or “binarize”) the input ontology</h3>
+	<h3>Normalize (or "binarize") the input ontology</h3>
 </a>
 
 <p>Normalize (or "binarize") the input ontology to only contain binary versions of n-ary assertions relevant to <b>(L2)</b>. For instance, an n-ary intersection can be converted to a set of binary intersections as follows:</p>
@@ -137,7 +137,7 @@ I = C_1 \cap I_1 \wedge I_1 = C_2 \cap I_2 \wedge ... I_{(n-2)} = C_{(n-1)} \cap
 
 <p>The binary version of rule <i>#cls-int1</i> looks as follows:</p>
 
-$$T(?c, intersectionOf, ?x), T(?x,hasMember,?c_1), T(?x, hasMember, ?c_2 ),\\
+$$T(?c, intersectionOf, ?x), T(?x_1,first,?c_1), T(?x_1,rest,?x_2),T(?x_2,first,?c_2 ),\\
 T(?y, type, ?c_1), T(?y, type, ?c_2) \rightarrow T(?y, type, ?c)$$
 <a class="pos" name="binary-n-ary-rule"><div class="rule-caption"><b>Binary version of rule <i>#cls-int1</i></b></div></a>
 
@@ -173,10 +173,10 @@ T(?x, intersectionOf, ?l), T(?y, inIntersection, ?l) \rightarrow T(?y, type, ?x)
 <p>A distinct advantage of this approach is that, in contrast to <a href="#instantiate-rules">instantiating the rules</a> and <a href="#binarize-ontology">binarizing the ontology</a>, it does not rely on pre-processing. However, each "complete" inference for an n-ary assertion (size <i>n</i>) requires <i>n</i> intermediary inferences, which do not follow from OWL2 RL semantics (instead, they ensue from our custom, auxiliary rules). As such, they can be considered to "pollute" the dataset. Bishop et al. <a href="#ref5">[5]</a> internally flag these inferences so they can be skipped during query answering. Developers may want to support something similar when adopting this solution.</p>
 
 <h2>References</h2>
-<a name="ref1" class="ref"><b>[1]</b> O’Connor, M., Das, A.: A Pair of OWL 2 RL Reasoners. OWL: Experiences and Directions Workshop 2012 (2012).</a><br />
-<a name="ref2" class="ref"><b>[2] </b>Motik, B., Horrocks, I., Kim, S.M.: Delta-reasoner: A Semantic Web Reasoner for an Intelligent Mobile Platform. Proceedings of the 21st International Conference Companion on World Wide Web. pp. 63–72. ACM, New York, NY, USA (2012).</a><br />
-<a name="ref3" class="ref"><b>[3]</b> Meditskos, G., Bassiliades, N.: DLEJena: A Practical Forward-chaining OWL 2 RL Reasoner Combining Jena and Pellet. Web Semant. 8, 89–94 (2010).</a><br />
-<a name="ref4" class="ref"><b>[4]</b> Bak, J., Nowak, M., Jedrzejek, C.: RuQAR: Reasoning Framework for OWL 2 RL Ontologies. The Semantic Web: ESWC 2014 Satellite Events, Anissaras, Crete, Greece, May 25-29, 2014, Revised Selected Papers. pp. 195–198. Springer (2014).</a><br />
+<a name="ref1" class="ref"><b>[1]</b> O'Connor, M., Das, A.: A Pair of OWL 2 RL Reasoners. OWL: Experiences and Directions Workshop 2012 (2012).</a><br />
+<a name="ref2" class="ref"><b>[2] </b>Motik, B., Horrocks, I., Kim, S.M.: Delta-reasoner: A Semantic Web Reasoner for an Intelligent Mobile Platform. Proceedings of the 21st International Conference Companion on World Wide Web. pp. 63-72. ACM, New York, NY, USA (2012).</a><br />
+<a name="ref3" class="ref"><b>[3]</b> Meditskos, G., Bassiliades, N.: DLEJena: A Practical Forward-chaining OWL 2 RL Reasoner Combining Jena and Pellet. Web Semant. 8, 89-94 (2010).</a><br />
+<a name="ref4" class="ref"><b>[4]</b> Bak, J., Nowak, M., Jedrzejek, C.: RuQAR: Reasoning Framework for OWL 2 RL Ontologies. The Semantic Web: ESWC 2014 Satellite Events, Anissaras, Crete, Greece, May 25-29, 2014, Revised Selected Papers. pp. 195-198. Springer (2014).</a><br />
 <a name="ref5" class="ref"><b>[5]</b> Bishop, B., Bojanov, S.: Implementing OWL 2 RL and OWL 2 QL Rule-Sets for OWLIM. In: Dumontier, M. and Courtot, M. (eds.) OWLED. CEUR-WS.org (2011).</a><br />
 <a name="ref6" class="ref"><b>[6]</b> Reynolds, D.: OWL 2 RL in RIF (Second Edition), http://www.w3.org/TR/rif-owl-rl/.</a>
 </body>

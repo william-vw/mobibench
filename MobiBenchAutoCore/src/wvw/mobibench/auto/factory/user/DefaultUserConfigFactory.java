@@ -67,7 +67,8 @@ public class DefaultUserConfigFactory extends UserConfigFactory {
 		config.setTask("ontology_inference");
 		config.setSubTask("owl2rl");
 
-		config.preprocess(PreprocessOptions.INST_ALL_RULES);
+		config.preprocess(PreprocessOptions.AUX_RULES);
+		// config.preprocess(PreprocessOptions.INST_ALL_RULES);
 
 		config.setOutputInf(true);
 		config.setOutputRules(true);
@@ -83,7 +84,7 @@ public class DefaultUserConfigFactory extends UserConfigFactory {
 		config.setConfTarget("full");
 
 		// - regular dataset
-		// config.addDatasets(new OWLDataset("ore-small", 0, 0));
+		config.addDatasets(new OWLDataset("ore-small", 0, 188));
 
 		// // without any selection
 		// with below selections
@@ -93,10 +94,11 @@ public class DefaultUserConfigFactory extends UserConfigFactory {
 		// new String[] { "entailed", "ineff" });
 
 		// - inf-schema dataset
-		config.addDatasets(new OWLDataset("ore-small", "mat-schema", new Integer[] { 110 }));
+		// config.addDatasets(new OWLDataset("ore-small", "mat-schema", new
+		// Integer[] { 110 }));
 
-		config.select("inf-inst");
-		
+		// config.select("inf-inst");
+
 		// config.select(new String[] { "inf-inst", "entailed", "extra-axioms",
 		// "gener-rules" });
 		// config.select(new String[] { "inf-inst" },
@@ -147,7 +149,7 @@ public class DefaultUserConfigFactory extends UserConfigFactory {
 
 		OWLBuiltinRunConfig config = new OWLBuiltinRunConfig();
 
-		config.setEngine("pellet");
+		config.setEngine("hermit");
 
 		config.setNrRuns(1);
 		config.setWarmupRun(false);
@@ -159,8 +161,9 @@ public class DefaultUserConfigFactory extends UserConfigFactory {
 		config.setTask("ontology_inference");
 		config.setSubTask("builtin");
 
-		config.addScope(new OWLScope("owl", new String[] { "default" }));
-		config.addDatasets(new OWLDataset("ore-small", 0, 0));
+		config.addScope(new OWLScope("full"));
+		// config.addScope(new OWLScope("owl", new String[] { "default" }));
+		config.addDatasets(new OWLDataset("ore-small", new Integer[] { 97, 124 }));
 
 		config.setLocalPath(localPath);
 		config.setRemotePath(remotePath);

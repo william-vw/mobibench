@@ -62,8 +62,8 @@ public abstract class AutoBenchmark {
 	}
 
 	public void run() {
-		run_OWL2RL();
-		// run_OWL2Builtin();
+		// run_OWL2RL();
+		run_OWL2Builtin();
 		// run_ruleBasedServiceMatching();
 	}
 
@@ -82,8 +82,7 @@ public abstract class AutoBenchmark {
 	}
 
 	public void run_ruleBasedServiceMatching() {
-		List<RuleBasedServiceMatchConfig> config = userFactory
-				.user_ruleBasedServiceMatching();
+		List<RuleBasedServiceMatchConfig> config = userFactory.user_ruleBasedServiceMatching();
 
 		this.configs = jsonFactory.json_ruleBasedServiceMatching(config);
 
@@ -94,8 +93,7 @@ public abstract class AutoBenchmark {
 		if (idx < configs.size()) {
 			if (idx > 0)
 				try {
-					Log.d("auto: waiting " + sleepTime
-							+ " before next benchmark");
+					Log.d("auto: waiting " + sleepTime + " before next benchmark");
 
 					Thread.sleep(sleepTime);
 

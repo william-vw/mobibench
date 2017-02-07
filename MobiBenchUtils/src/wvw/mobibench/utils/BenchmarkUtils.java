@@ -91,7 +91,7 @@ public class BenchmarkUtils {
 		// utils.cleanupIds();
 
 		// -- compare reasoning outputs
-		// utils.compareOwlOutputs();
+		utils.compareOwlOutputs();
 
 		// -- compare different preprocessing strategies
 		// utils.comparePreprocessOutputs();
@@ -191,7 +191,7 @@ public class BenchmarkUtils {
 		// -- extract test cases from owl2rl test suite
 
 		// utils.convertOWLTestSuite();
-		utils.extractOWL2RLTestSuite();
+		// utils.extractOWL2RLTestSuite();
 	}
 
 	private Map<String, String> namespaces = new HashMap<String, String>();
@@ -211,8 +211,7 @@ public class BenchmarkUtils {
 
 	// > construct "all.nt" for all service conditions
 	public void collectAllServices() throws IOException {
-		File f = new File("C:/Users/William/git/mobile-benchmarks/"
-				+ "MobiBenchEngineJS/www/res/services/all.nt");
+		File f = new File("C:/Users/William/git/mobile-benchmarks/" + "MobiBenchEngineJS/www/res/services/all.nt");
 
 		String contents = IOUtils.readFromFile(f);
 
@@ -271,8 +270,7 @@ public class BenchmarkUtils {
 
 	// > prepare OWL2 RL Corpus ontologies for benchmarking
 
-	public void extractConvertORE(String path, String to, String... froms)
-			throws Exception {
+	public void extractConvertORE(String path, String to, String... froms) throws Exception {
 		String targetFolder = path + to;
 
 		long maxLength = 750 * 1024;
@@ -289,13 +287,10 @@ public class BenchmarkUtils {
 
 				long size = src.length();
 				if (size <= maxLength) {
-					System.out.println(
-							"extract: " + src.getName() + " (#" + size + ")");
+					System.out.println("extract: " + src.getName() + " (#" + size + ")");
 
-					String destPath = path + to + "/" + from + "/"
-							+ src.getName();
-					destPath = destPath.substring(0,
-							destPath.lastIndexOf(".") + 1) + "nt";
+					String destPath = path + to + "/" + from + "/" + src.getName();
+					destPath = destPath.substring(0, destPath.lastIndexOf(".") + 1) + "nt";
 
 					File dest = new File(destPath);
 					convertToTurtle(src, dest);
@@ -330,8 +325,7 @@ public class BenchmarkUtils {
 	// http://stackoverflow.com/questions/23210252/save-ontology-file-owl-api
 	private void convertToTurtle(File srcFile, File dest) throws Exception {
 		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		OWLOntology ontology = manager
-				.loadOntologyFromOntologyDocument(srcFile);
+		OWLOntology ontology = manager.loadOntologyFromOntologyDocument(srcFile);
 
 		OWLDocumentFormat srcFormat = manager.getOntologyFormat(ontology);
 
@@ -346,8 +340,7 @@ public class BenchmarkUtils {
 		manager.saveOntology(ontology, destFormat, IRI.create(dest.toURI()));
 	}
 
-	public void bulkCategorizeORE(File folder, String... froms)
-			throws IOException {
+	public void bulkCategorizeORE(File folder, String... froms) throws IOException {
 		StringBuffer maps = new StringBuffer();
 
 		File parent = new File(folder, "ore");
@@ -388,24 +381,19 @@ public class BenchmarkUtils {
 				System.out.println("src: " + oldName + " (# " + nrStmts + ")");
 
 				if (nrStmts <= smallLimit)
-					newName = "ore/" + smallFolder.getName() + "/" + smallCnt++
-							+ ".nt";
+					newName = "ore/" + smallFolder.getName() + "/" + smallCnt++ + ".nt";
 
 				else if (nrStmts <= mediumLimit)
-					newName = "ore/" + mediumFolder.getName() + "/"
-							+ mediumCnt++ + ".nt";
+					newName = "ore/" + mediumFolder.getName() + "/" + mediumCnt++ + ".nt";
 
 				else if (nrStmts <= largeLimit)
-					newName = "ore/" + largeFolder.getName() + "/" + largeCnt++
-							+ ".nt";
+					newName = "ore/" + largeFolder.getName() + "/" + largeCnt++ + ".nt";
 
 				else if (nrStmts <= veryLargeLimit)
-					newName = "ore/" + veryLargeFolder.getName() + "/"
-							+ veryLargeCnt++ + ".nt";
+					newName = "ore/" + veryLargeFolder.getName() + "/" + veryLargeCnt++ + ".nt";
 
 				if (newName != null) {
-					maps.append(oldName).append(" => ").append(newName)
-							.append("\n");
+					maps.append(oldName).append(" => ").append(newName).append("\n");
 
 					File dest = new File(folder, newName);
 					System.out.println("target: " + newName);
@@ -459,8 +447,7 @@ public class BenchmarkUtils {
 		File srcFolder = new File(
 				"C:/Users/William/git/mobile-benchmarks/test-data/testsuite-owl2-rdfbased/subsuites/owl2rl/");
 
-		String[] testCases = IOUtils
-				.readFromFile(new File(srcFolder, "rules.txt")).split("\n");
+		String[] testCases = IOUtils.readFromFile(new File(srcFolder, "rules.txt")).split("\n");
 
 		for (String testCase : testCases) {
 			File caseFolder = new File(srcFolder, testCase);
@@ -468,11 +455,9 @@ public class BenchmarkUtils {
 			List<File> files = new ArrayList<File>();
 			List<String> postFixes = new ArrayList<String>();
 
-			File premiseFile = new File(caseFolder,
-					testCase + ".premisegraph.ttl");
+			File premiseFile = new File(caseFolder, testCase + ".premisegraph.ttl");
 			if (premiseFile.exists()) {
-				File conclusionFile = new File(caseFolder,
-						testCase + ".conclusiongraph.ttl");
+				File conclusionFile = new File(caseFolder, testCase + ".conclusiongraph.ttl");
 
 				files.add(premiseFile);
 				postFixes.add(".premisegraph");
@@ -506,11 +491,9 @@ public class BenchmarkUtils {
 	public void extractOWL2RLTestSuite() throws Exception {
 		String srcPath = "C:/Users/William/git/mobile-benchmarks/test-data/testsuite-owl2-rdfbased/subsuites/owl2rl/";
 
-		String[] allTestCases = IOUtils
-				.readFromFile(new File(srcPath + "rules.txt")).split("\n");
+		String[] allTestCases = IOUtils.readFromFile(new File(srcPath + "rules.txt")).split("\n");
 
-		String schemaTestCases = IOUtils
-				.readFromFile(new File(srcPath + "rules-inf-schema.txt"));
+		String schemaTestCases = IOUtils.readFromFile(new File(srcPath + "rules-inf-schema.txt"));
 
 		Map<String, String> ruleMap = new HashMap<String, String>();
 
@@ -521,11 +504,8 @@ public class BenchmarkUtils {
 
 		for (String rule : rules) {
 			String name = "# " + rule.substring(0, rule.indexOf("\n")).trim();
-			String conseq = rule
-					.substring(rule.indexOf("{") + 2, rule.indexOf("}"))
-					.replaceAll("\t", "").replaceAll("    ", "")
-					.replaceAll(" a ",
-							" <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ")
+			String conseq = rule.substring(rule.indexOf("{") + 2, rule.indexOf("}")).replaceAll("\t", "")
+					.replaceAll("    ", "").replaceAll(" a ", " <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ")
 					.replaceAll("\n\n", "");
 
 			ruleMap.put(name, conseq);
@@ -535,9 +515,7 @@ public class BenchmarkUtils {
 		MultiMap<String, String> rootsConsistMap = new HashMultiMap<String, String>();
 		MultiMap<String, String> pathsConsistMap = new HashMultiMap<String, String>();
 
-		String[] consistTestCases = IOUtils
-				.readFromFile(new File(srcPath + "rules-consist.txt"))
-				.split("\n");
+		String[] consistTestCases = IOUtils.readFromFile(new File(srcPath + "rules-consist.txt")).split("\n");
 
 		for (String testCase : consistTestCases) {
 			String[] parts = testCase.split(": ");
@@ -562,8 +540,7 @@ public class BenchmarkUtils {
 			}
 		}
 
-		File targetFolder = new File(
-				"C:/Users/William/git/mobile-benchmarks/MobiBenchEngineJS/www/res/owl/data/tmp/");
+		File targetFolder = new File("C:/Users/William/git/mobile-benchmarks/MobiBenchEngineJS/www/res/owl/data/tmp/");
 		targetFolder.mkdirs();
 
 		File allInFile = new File(targetFolder, "conf_in.nt");
@@ -582,14 +559,12 @@ public class BenchmarkUtils {
 		File schemaInfInFile = new File(schemaInfFolder, "conf_in.nt");
 		schemaInfInFile.createNewFile();
 
-		OutputStream schemaInfInStrm = new FileOutputStream(schemaInfInFile,
-				false);
+		OutputStream schemaInfInStrm = new FileOutputStream(schemaInfInFile, false);
 
 		File schemaInfOutFile = new File(schemaInfFolder, "conf_out.nt");
 		schemaInfOutFile.createNewFile();
 
-		OutputStream schemaInfOutStrm = new FileOutputStream(schemaInfOutFile,
-				false);
+		OutputStream schemaInfOutStrm = new FileOutputStream(schemaInfOutFile, false);
 
 		for (int i = 0; i < allTestCases.length; i++) {
 			int idx = i + 1;
@@ -599,13 +574,11 @@ public class BenchmarkUtils {
 
 			File caseFolder = new File(srcPath + testCase);
 
-			File premiseFile = new File(caseFolder,
-					testCase + ".premisegraph.nt");
+			File premiseFile = new File(caseFolder, testCase + ".premisegraph.nt");
 
 			if (premiseFile.exists()) {
 
-				File conclusionFile = new File(caseFolder,
-						testCase + ".conclusiongraph.nt");
+				File conclusionFile = new File(caseFolder, testCase + ".conclusiongraph.nt");
 
 				Model premise = ModelFactory.createDefaultModel();
 				premise.read(readRdf(premiseFile, idx), "", "N-TRIPLE");
@@ -635,13 +608,10 @@ public class BenchmarkUtils {
 					continue;
 				}
 
-				File consistencyFile = new File(caseFolder,
-						testCase + ".graph.ttl");
+				File consistencyFile = new File(caseFolder, testCase + ".graph.ttl");
 
 				Model premise = ModelFactory.createDefaultModel();
-				premise.read(
-						readRdf(consistencyFile, "TURTLE", "N-TRIPLE", idx), "",
-						"N-TRIPLE");
+				premise.read(readRdf(consistencyFile, "TURTLE", "N-TRIPLE", idx), "", "N-TRIPLE");
 
 				refactor(idx, premise);
 
@@ -649,8 +619,7 @@ public class BenchmarkUtils {
 
 				String conseq = ruleMap.get(rule);
 				for (String root : roots) {
-					String conseq2 = conseq
-							.replaceAll("(\\?x|\\?y1|\\?i|\\?i1)", root);
+					String conseq2 = conseq.replaceAll("(\\?x|\\?y1|\\?i|\\?i1)", root);
 
 					if (paths != null) {
 						for (String path : paths) {
@@ -681,8 +650,7 @@ public class BenchmarkUtils {
 			while (stmtIt.hasNext()) {
 				Statement stmt = stmtIt.next();
 
-				RDFNode[] nodes = new RDFNode[] { stmt.getSubject(),
-						stmt.getPredicate(), stmt.getObject() };
+				RDFNode[] nodes = new RDFNode[] { stmt.getSubject(), stmt.getPredicate(), stmt.getObject() };
 
 				boolean changed = false;
 				for (int i = 0; i < nodes.length; i++) {
@@ -702,8 +670,7 @@ public class BenchmarkUtils {
 				if (changed) {
 					stmtIt.remove();
 
-					newStmts.add(model.createStatement((Resource) nodes[0],
-							(Property) nodes[1], nodes[2]));
+					newStmts.add(model.createStatement((Resource) nodes[0], (Property) nodes[1], nodes[2]));
 				}
 			}
 
@@ -719,8 +686,7 @@ public class BenchmarkUtils {
 		return StringUtils.toStream(rdf);
 	}
 
-	private InputStream readRdf(File file, String inFormat, String outFormat,
-			int idx) throws IOException {
+	private InputStream readRdf(File file, String inFormat, String outFormat, int idx) throws IOException {
 
 		Model model = ModelFactory.createDefaultModel();
 
@@ -741,8 +707,7 @@ public class BenchmarkUtils {
 
 		int ctr = 0;
 		while (m.find())
-			rdf = rdf.replaceAll(m.group(0),
-					"<" + NS.niche + "bNode_" + ctr++ + "_" + idx + ">");
+			rdf = rdf.replaceAll(m.group(0), "<" + NS.niche + "bNode_" + ctr++ + "_" + idx + ">");
 
 		return rdf;
 	}
@@ -803,9 +768,7 @@ public class BenchmarkUtils {
 		Model m = ModelFactory.createDefaultModel();
 		m.read(new ByteArrayInputStream(contents.getBytes()), "", "N-TRIPLE");
 
-		StmtIterator stmtIt = m.listStatements(null,
-				m.createProperty(
-						"http://www.w3.org/2002/07/owl#intersectionOf"),
+		StmtIterator stmtIt = m.listStatements(null, m.createProperty("http://www.w3.org/2002/07/owl#intersectionOf"),
 				(RDFNode) null);
 
 		while (stmtIt.hasNext()) {
@@ -822,9 +785,7 @@ public class BenchmarkUtils {
 		// Log.d("list: " + list);
 
 		StmtIterator stmtIt = m.listStatements(list,
-				m.createProperty(
-						"http://www.w3.org/1999/02/22-rdf-syntax-ns#rest"),
-				(RDFNode) null);
+				m.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#rest"), (RDFNode) null);
 
 		if (stmtIt.hasNext()) {
 			Statement stmt = stmtIt.next();
@@ -838,8 +799,7 @@ public class BenchmarkUtils {
 
 	// - compare service match results
 
-	public void extraInferences(String subPathDir, String superPathDir)
-			throws IOException {
+	public void extraInferences(String subPathDir, String superPathDir) throws IOException {
 
 		MultiMap<String, String> subSet = collectSet(subPathDir, "non-inf");
 		MultiMap<String, String> superSet = collectSet(superPathDir, "inf");
@@ -869,8 +829,7 @@ public class BenchmarkUtils {
 		Log.d("");
 	}
 
-	public void overlapBetweenDirections(String gsPathDir, String sgPathDir)
-			throws IOException {
+	public void overlapBetweenDirections(String gsPathDir, String sgPathDir) throws IOException {
 
 		MultiMap<String, String> gsSet = collectSet(gsPathDir, "goal-service");
 		MultiMap<String, String> sgSet = collectSet(sgPathDir, "service-goal");
@@ -884,8 +843,7 @@ public class BenchmarkUtils {
 		cmpOverlaps(set, set, "bi-dir");
 	}
 
-	public void overlappingPrecondsEffects(String pPathDir, String ePathDir)
-			throws IOException {
+	public void overlappingPrecondsEffects(String pPathDir, String ePathDir) throws IOException {
 
 		MultiMap<String, String> pSet = collectSet(pPathDir, "preconds");
 		MultiMap<String, String> eSet = collectSet(ePathDir, "effects");
@@ -893,8 +851,7 @@ public class BenchmarkUtils {
 		cmpOverlaps(pSet, eSet, "precond + effect");
 	}
 
-	private void cmpOverlaps(MultiMap<String, String> set1,
-			MultiMap<String, String> set2, String prefix) {
+	private void cmpOverlaps(MultiMap<String, String> set1, MultiMap<String, String> set2, String prefix) {
 
 		int biDirCnt = 0;
 		// int oneDirCnt = 0;
@@ -928,14 +885,12 @@ public class BenchmarkUtils {
 		Log.d("");
 	}
 
-	private MultiMap<String, String> collectSet(String path, String prefix)
-			throws IOException {
+	private MultiMap<String, String> collectSet(String path, String prefix) throws IOException {
 
 		int cnt = 0;
 
 		MultiMap<String, String> map = new HashMultiMap<String, String>();
-		BufferedReader reader = new BufferedReader(
-				new FileReader(new File(path)));
+		BufferedReader reader = new BufferedReader(new FileReader(new File(path)));
 
 		String line = null;
 		while ((line = reader.readLine()) != null) {
@@ -972,9 +927,8 @@ public class BenchmarkUtils {
 		int cnt = 0;
 		int totalDiff = 0;
 
-		File folder = new File(
-				"C:/Users/William/git/mobile-benchmarks/MobiBenchEngineJS/WebContent/res/owl/output/"
-						+ "ontology_inference/owl2rl/ore-small/");
+		File folder = new File("C:/Users/William/git/mobile-benchmarks/MobiBenchEngineJS/WebContent/res/owl/output/"
+				+ "ontology_inference/owl2rl/ore-small/");
 
 		File[] subs = folder.listFiles();
 		for (File sub : subs) {
@@ -986,8 +940,7 @@ public class BenchmarkUtils {
 			int c2 = cntNrStmts(f2);
 
 			if (c1 < c2) {
-				System.out.println("smaller: " + sub.getName() + " (" + c1
-						+ " < " + c2 + ")");
+				System.out.println("smaller: " + sub.getName() + " (" + c1 + " < " + c2 + ")");
 
 				totalDiff += (c2 - c1);
 
@@ -1000,8 +953,7 @@ public class BenchmarkUtils {
 		}
 
 		System.out.println("smaller: " + cnt + " / 189");
-		System.out.println("totalDiff: " + totalDiff + " (avg: "
-				+ (totalDiff / 188) + ")");
+		System.out.println("totalDiff: " + totalDiff + " (avg: " + (totalDiff / 188) + ")");
 	}
 
 	private int cntNrStmts(File f) throws IOException {
@@ -1043,14 +995,12 @@ public class BenchmarkUtils {
 			br.close();
 		}
 
-		System.out.println(
-				"cnt: " + cnt + "\nother: " + other + "\ntotal: " + total);
+		System.out.println("cnt: " + cnt + "\nother: " + other + "\ntotal: " + total);
 	}
 
 	// - check which files are missing in performance-outputs folder
 	// (i.e., which are suffixed sequentially)
-	public void checkMissingFiles(File folder, String discr, boolean pos,
-			int limit) throws IOException {
+	public void checkMissingFiles(File folder, String discr, boolean pos, int limit) throws IOException {
 
 		File[] files = folder.listFiles();
 
@@ -1058,13 +1008,11 @@ public class BenchmarkUtils {
 		for (File file : files) {
 			String name = file.getName();
 			if (!name.endsWith(".txt") || name.startsWith("log")
-					|| ((pos && !name.contains(discr)
-							|| (!pos && name.contains(discr)))))
+					|| ((pos && !name.contains(discr) || (!pos && name.contains(discr)))))
 
 				continue;
 
-			int nr = Integer.parseInt(name.substring(name.lastIndexOf("_") + 1,
-					name.length() - 4));
+			int nr = Integer.parseInt(name.substring(name.lastIndexOf("_") + 1, name.length() - 4));
 
 			nrs.add(nr);
 		}
@@ -1149,24 +1097,19 @@ public class BenchmarkUtils {
 		compareAxioms(path1, path2, path3);
 	}
 
-	private void compareRulesets(String path1, String path2, String path3)
-			throws IOException {
+	private void compareRulesets(String path1, String path2, String path3) throws IOException {
 		Pattern p = Pattern.compile("# ([^\\(\\n]*)"); // rules
 
-		compareSets(p, path1 + "rules.spin", path2 + "rules.spin",
-				(path3 == null ? null : path3 + "rules.spin"));
+		compareSets(p, path1 + "rules.spin", path2 + "rules.spin", (path3 == null ? null : path3 + "rules.spin"));
 	}
 
-	private void compareAxioms(String path1, String path2, String path3)
-			throws IOException {
+	private void compareAxioms(String path1, String path2, String path3) throws IOException {
 		Pattern p = Pattern.compile("([^\\n]*)"); // axioms
 
-		compareSets(p, path1 + "axioms.nt", path2 + "axioms.nt",
-				(path3 == null ? null : path3 + "axioms.nt"));
+		compareSets(p, path1 + "axioms.nt", path2 + "axioms.nt", (path3 == null ? null : path3 + "axioms.nt"));
 	}
 
-	private void compareSets(Pattern p, String path1, String path2,
-			String path3) throws IOException {
+	private void compareSets(Pattern p, String path1, String path2, String path3) throws IOException {
 		List<String> ids0 = new ArrayList<String>();
 		String file0 = IOUtils.readFromFile(new File(path1));
 		Matcher m = p.matcher(file0);
@@ -1238,8 +1181,7 @@ public class BenchmarkUtils {
 
 	// - cleanup
 	public void cleanupIds() throws IOException {
-		cleanupIds(new File(
-				"C:/Users/William/git/mobile-benchmarks/MobiBenchEngineJS/www/res/owl/data/ore-small"));
+		cleanupIds(new File("C:/Users/William/git/mobile-benchmarks/MobiBenchEngineJS/www/res/owl/data/ore-small"));
 	}
 
 	public void cleanupIds(File folder) throws IOException {
@@ -1265,24 +1207,27 @@ public class BenchmarkUtils {
 	// - compare different reasoning outputs
 
 	public void compareOwlOutputs() throws IOException {
-		String rootPath = "C:/Users/William/git/mobile-benchmarks/MobiBenchEngineJS/www/res/owl/output/"
+		String rootPath = "C:/Users/William/git/mobibench/MobiBenchEngineJS/www/res/owl/output/"
 				+ "ontology_inference/";
 
-		compareOutputs(rootPath, "owl2rl", "androjena", "owl2rl", "androjena",
-				"[inf-schema]-inst_rules",
-				"[inf-schema,extra-axioms,gener-rules,domain-based]-inst_rules");
+		// compareOutputs(rootPath, "owl2rl", "androjena", "owl2rl",
+		// "androjena",
+		// "[inf-schema]-inst_rules",
+		// "[inf-schema,extra-axioms,gener-rules,domain-based]-inst_rules");
+
+		// compareOutputs(rootPath, "builtin", "hermit", "owl2rl", "androjena",
+		// "full", "full-aux_rules");
+		compareOutputs(rootPath, "builtin", "hermit", "builtin", "pellet", "full", "owl");
 	}
 
-	private void compareOutputs(String rootPath, String p1, String n1,
-			String p2, String n2, String prefix1, String prefix2)
+	private void compareOutputs(String rootPath, String p1, String n1, String p2, String n2, String prefix1,
+			String prefix2) throws IOException {
+
+		compareOutputs(new File(rootPath + p1), p1, n1, p2, n2, prefix1, prefix2);
+	}
+
+	private void compareOutputs(File curDir, String p1, String n1, String p2, String n2, String prefix1, String prefix2)
 			throws IOException {
-
-		compareOutputs(new File(rootPath + p1), p1, n1, p2, n2, prefix1,
-				prefix2);
-	}
-
-	private void compareOutputs(File curDir, String p1, String n1, String p2,
-			String n2, String prefix1, String prefix2) throws IOException {
 
 		File[] files = curDir.listFiles();
 		for (File file : files) {
@@ -1300,8 +1245,12 @@ public class BenchmarkUtils {
 				String id1 = pathId(f1.getAbsolutePath());
 
 				String path2 = f1.getAbsolutePath();
-				path2 = path2.replace(p1, p2).replace(n1, n2).replace(prefix1,
-						prefix2);
+				path2 = path2.replace(p1, p2).replace(n1, n2);
+
+				String part2 = path2.substring(path2.lastIndexOf("\\"));
+				part2 = part2.replace(prefix1, prefix2);
+
+				path2 = path2.substring(0, path2.lastIndexOf("\\")) + part2;
 
 				File f2 = new File(path2);
 
@@ -1309,8 +1258,9 @@ public class BenchmarkUtils {
 				String id2 = pathId(f2.getAbsolutePath());
 
 				Log.d("> " + id1 + " <=> " + id2);
+
 				compare(contents1, contents2, n2 + " (" + prefix2 + ")");
-				compare(contents2, contents1, n1 + " (" + prefix1 + ")");
+				// compare(contents2, contents1, n1 + " (" + prefix1 + ")");
 			}
 		}
 	}
@@ -1324,15 +1274,38 @@ public class BenchmarkUtils {
 	
 	// also, each NamedIndividual is typed as an owl:Thing by builtin (HermiT)
 	String[] linesToIgnore = { 
-//		"<http://www.w3.org/2002/07/owl#disjointWith> <http://www.w3.org/2002/07/owl#Nothing>",
-//		"<http://www.w3.org/2002/07/owl#Nothing> <http://www.w3.org/2002/07/owl#disjointWith>",
-//		"<http://www.w3.org/2002/07/owl#disjointWith>",
+		// - OWL2 DL -> OWL2 RL 
+		"<http://www.w3.org/2002/07/owl#disjointWith> <http://www.w3.org/2002/07/owl#Nothing>",
+		"<http://www.w3.org/2002/07/owl#Nothing> <http://www.w3.org/2002/07/owl#disjointWith>",
+		"<http://www.w3.org/2002/07/owl#disjointWith>",
 		// cfr. https://www.w3.org/TR/owl2-profiles/#OWL_2_RL; top, bottom X properties are not supported
-//		"<http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2002/07/owl#topDataProperty>",
-//		"<http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2002/07/owl#topObjectProperty>"
+		"<http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2002/07/owl#topDataProperty>",
+		"<http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2002/07/owl#topObjectProperty>",
+		// - OWL2 RL -> OWL2 DL
+		"<http://www.w3.org/2002/07/owl#sameAs>",
+		"<http://www.w3.org/2002/07/owl#Thing>",
+		"<http://www.w3.org/2002/07/owl#Nothing>",
+		"<http://www.w3.org/2000/01/rdf-schema#domain>",
+		"<http://www.w3.org/2000/01/rdf-schema#range>",
+		"<http://www.w3.org/2000/01/rdf-schema#subClassOf>",
+		"<http://www.w3.org/2000/01/rdf-schema#subPropertyOf>",
+		"<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Datatype> .",
+		"<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#AnnotationProperty> .",
+		"<http://www.w3.org/2002/07/owl#inverseOf>",
+		"<http://www.w3.org/2002/07/owl#equivalentClass>",
+		"<http://www.w3.org/2002/07/owl#equivalentProperty>",
+		"<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .",
+		"<http://niche.cs.dal.ca/owl/list#hasMember>",
+		"<http://niche.cs.dal.ca/owl/bNode"
 	};
 	Pattern[] psToIgnore = {
-		Pattern.compile("genid([0-9])+")
+		// - OWL2 DL -> OWL2 RL
+		Pattern.compile("genid([0-9])+"),
+	};
+	
+	Pattern[] specialPs = {
+		// - OWL2 RL -> OWL2 DL
+		Pattern.compile("(.*?) (<http://www.w3.org/2002/07/owl#equivalentClass>|<http://www.w3.org/2000/01/rdf-schema#subClassOf>|<http://www.w3.org/2000/01/rdf-schema#subPropertyOf>|<http://www.w3.org/2002/07/owl#equivalentProperty>) (.*?) \\.")
 	};
 	// @formatter:on
 
@@ -1359,6 +1332,18 @@ public class BenchmarkUtils {
 					continue l1;
 			}
 
+			for (Pattern specialP : specialPs) {
+				Matcher m2 = specialP.matcher(line);
+				if (m2.matches()) {
+
+					String cl1 = m2.group(1);
+					String cl2 = m2.group(3);
+
+					if (cl1.equals(cl2))
+						continue l1;
+				}
+			}
+
 			lines.add(line);
 		}
 
@@ -1367,8 +1352,7 @@ public class BenchmarkUtils {
 		return lines;
 	}
 
-	private void compare(List<String> contents1, List<String> contents2,
-			String id2) {
+	private void compare(List<String> contents1, List<String> contents2, String id2) {
 
 		for (String line1 : contents1) {
 			// System.out.println("line1: " + line1);
@@ -1423,11 +1407,9 @@ public class BenchmarkUtils {
 					while (idx != -1) {
 						int idx2 = contents.indexOf("> .\n", idx + 1);
 
-						String obj = contents
-								.substring(idx + tmp.length(), idx2 + 1).trim();
+						String obj = contents.substring(idx + tmp.length(), idx2 + 1).trim();
 
-						if ((i % 2) != 0
-								|| obj.startsWith("<http://niche.cs.dal.ca/"))
+						if ((i % 2) != 0 || obj.startsWith("<http://niche.cs.dal.ca/"))
 
 							Log.d(tmp + " " + obj);
 
@@ -1461,15 +1443,12 @@ public class BenchmarkUtils {
 	}
 
 	// - copy inference output to "materialized" folders
-	public void copyInf(String dataset, String orName, String targetFolder,
-			int from) throws IOException {
+	public void copyInf(String dataset, String orName, String targetFolder, int from) throws IOException {
 
 		String folder = "C:/Users/William/git/mobile-benchmarks/MobiBenchEngineJS/WebContent/res/owl/";
 
-		String orPath = folder + "output/ontology_inference/owl2rl/" + dataset
-				+ "/";
-		String targetPath = folder + "data/" + dataset + "/" + targetFolder
-				+ "/";
+		String orPath = folder + "output/ontology_inference/owl2rl/" + dataset + "/";
+		String targetPath = folder + "data/" + dataset + "/" + targetFolder + "/";
 
 		for (int i = from;; i++) {
 			File orFile = new File(orPath + i + "/" + orName + ".nt");
@@ -1486,8 +1465,7 @@ public class BenchmarkUtils {
 			w.close();
 
 			System.out.println(new Date(orFile.lastModified()));
-			System.out.println("moving: " + orFile.getName() + " to "
-					+ targetFile.getName() + "\n");
+			System.out.println("moving: " + orFile.getName() + " to " + targetFile.getName() + "\n");
 		}
 	}
 
@@ -1528,15 +1506,13 @@ public class BenchmarkUtils {
 				else
 					unknown = true;
 
-			} else if (p.equals(
-					"<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>")) {
+			} else if (p.equals("<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>")) {
 				if (o.equals("<http://www.w3.org/2002/07/owl#Thing>"))
 					typeOfThing++;
 				else
 					unknown = true;
 
-			} else if (p.equals(
-					"<http://www.w3.org/2000/01/rdf-schema#subClassOf>")) {
+			} else if (p.equals("<http://www.w3.org/2000/01/rdf-schema#subClassOf>")) {
 				if (s.equals(o))
 					subClOfItself++;
 
@@ -1549,21 +1525,18 @@ public class BenchmarkUtils {
 				else
 					unknown = true;
 
-			} else if (p.equals(
-					"<http://www.w3.org/2002/07/owl#equivalentClass>")) {
+			} else if (p.equals("<http://www.w3.org/2002/07/owl#equivalentClass>")) {
 				if (s.equals(o))
 					equivClOfItself++;
 
-			} else if (p.equals(
-					"<http://www.w3.org/2000/01/rdf-schema#subPropertyOf>")) {
+			} else if (p.equals("<http://www.w3.org/2000/01/rdf-schema#subPropertyOf>")) {
 				if (s.equals(o))
 					subPrOfItself++;
 
 				else
 					unknown = true;
 
-			} else if (p.equals(
-					"<http://www.w3.org/2002/07/owl#equivalentProperty>")) {
+			} else if (p.equals("<http://www.w3.org/2002/07/owl#equivalentProperty>")) {
 				if (s.equals(o))
 					equivPrOfItself++;
 				else
@@ -1574,34 +1547,27 @@ public class BenchmarkUtils {
 
 			// NOTE will also capture scm-dom1,etc (i.e., extra schema
 			// constructs that will not influence instances)
-			if (unknown
-					&& !p.equals(
-							"<http://www.w3.org/2000/01/rdf-schema#domain>")
-					&& !p.equals(
-							"<http://www.w3.org/2000/01/rdf-schema#range>"))
+			if (unknown && !p.equals("<http://www.w3.org/2000/01/rdf-schema#domain>")
+					&& !p.equals("<http://www.w3.org/2000/01/rdf-schema#range>"))
 
 				System.out.println("unknown inference: " + line);
 		}
 
-		System.out.println("sameAs: " + sameAs + "\ntypeOfThing: " + typeOfThing
-				+ "\nsubClOfItself: " + subClOfItself + "\nequivCtOfItself: "
-				+ equivClOfItself + "\nsubOfThing: " + subOfThing
-				+ "\nnothingSubOf: " + nothingSubOf + "\nsubPrOfItself: "
-				+ subPrOfItself + "\nequivPrOfItself: " + equivPrOfItself);
+		System.out.println("sameAs: " + sameAs + "\ntypeOfThing: " + typeOfThing + "\nsubClOfItself: " + subClOfItself
+				+ "\nequivCtOfItself: " + equivClOfItself + "\nsubOfThing: " + subOfThing + "\nnothingSubOf: "
+				+ nothingSubOf + "\nsubPrOfItself: " + subPrOfItself + "\nequivPrOfItself: " + equivPrOfItself);
 	}
 
 	// - summarizes results of service matching, based on log output
 	public void summarizeServiceMatchResults() throws Exception {
-		String contents = IOUtils
-				.readFromFile(new File("C:/Users/William/git/mobile-benchmarks/"
-						+ "SPIN WebService/WebContent/data_logs/log_service_goal_schema.txt"));
+		String contents = IOUtils.readFromFile(new File("C:/Users/William/git/mobile-benchmarks/"
+				+ "SPIN WebService/WebContent/data_logs/log_service_goal_schema.txt"));
 
 		int ctr = 0;
 		StringBuffer inferred = new StringBuffer();
 
 		int infIdx = -1;
-		while ((infIdx = contents.indexOf("<http://127.0.0.1/matches>",
-				infIdx + 1)) != -1) {
+		while ((infIdx = contents.indexOf("<http://127.0.0.1/matches>", infIdx + 1)) != -1) {
 			int dataStIdx = contents.lastIndexOf("..loading data", infIdx);
 			int dataEndIdx = contents.indexOf("\n", dataStIdx);
 
@@ -1625,8 +1591,7 @@ public class BenchmarkUtils {
 
 	// > generic utility functions
 
-	public void bulkRename(File folder, String toReplace, String replacement)
-			throws IOException {
+	public void bulkRename(File folder, String toReplace, String replacement) throws IOException {
 		File[] files = folder.listFiles();
 		for (File file : files) {
 
@@ -1637,8 +1602,7 @@ public class BenchmarkUtils {
 
 			} else {
 				if (file.getName().contains(toReplace)) {
-					String newName = file.getName().replace(toReplace,
-							replacement);
+					String newName = file.getName().replace(toReplace, replacement);
 
 					File newFile = new File(folder, newName);
 					System.out.println("newFile: " + newFile);
@@ -1699,8 +1663,7 @@ public class BenchmarkUtils {
 				service = service.substring(service.indexOf("\n") + 1);
 
 				Model m = ModelFactory.createDefaultModel();
-				m.read(new ByteArrayInputStream(service.getBytes()), "",
-						"N-TRIPLE");
+				m.read(new ByteArrayInputStream(service.getBytes()), "", "N-TRIPLE");
 
 				Map<String, Boolean> serviceMap = new HashMap<String, Boolean>();
 
@@ -1732,18 +1695,14 @@ public class BenchmarkUtils {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void collectDistinctTerms(RDFNode node,
-			Map<String, Boolean>... maps) {
+	private void collectDistinctTerms(RDFNode node, Map<String, Boolean>... maps) {
 
 		if (node.isURIResource()) {
 			String uri = node.asResource().getURI();
 
-			if (!uri.contains("frozenVar")
-					&& !uri.startsWith(
-							"http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+			if (!uri.contains("frozenVar") && !uri.startsWith("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
 					&& !uri.startsWith("http://www.w3.org/2002/07/owl#")
-					&& !uri.startsWith(
-							"http://www.daml.org/services/owl-s/1.1/Process.owl#has")) {
+					&& !uri.startsWith("http://www.daml.org/services/owl-s/1.1/Process.owl#has")) {
 
 				for (Map<String, Boolean> map : maps)
 					map.put(uri, true);

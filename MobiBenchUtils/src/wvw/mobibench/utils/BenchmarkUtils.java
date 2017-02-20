@@ -1217,7 +1217,9 @@ public class BenchmarkUtils {
 
 		// compareOutputs(rootPath, "builtin", "hermit", "owl2rl", "androjena",
 		// "full", "full-aux_rules");
-		compareOutputs(rootPath, "builtin", "hermit", "builtin", "pellet", "full", "owl");
+		compareOutputs(rootPath, "builtin", "pellet", "owl2rl", "androjena", "owl", "full-aux_rules");
+		// compareOutputs(rootPath, "builtin", "hermit", "builtin", "pellet",
+		// "full", "owl");
 	}
 
 	private void compareOutputs(String rootPath, String p1, String n1, String p2, String n2, String prefix1,
@@ -1272,23 +1274,30 @@ public class BenchmarkUtils {
 	// @formatter:off
 	Pattern lineP = Pattern.compile("([^\\n]*)");
 	
-	// also, each NamedIndividual is typed as an owl:Thing by builtin (HermiT)
 	String[] linesToIgnore = { 
 		// - OWL2 DL -> OWL2 RL 
-		"<http://www.w3.org/2002/07/owl#disjointWith> <http://www.w3.org/2002/07/owl#Nothing>",
-		"<http://www.w3.org/2002/07/owl#Nothing> <http://www.w3.org/2002/07/owl#disjointWith>",
 		"<http://www.w3.org/2002/07/owl#disjointWith>",
+		"<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .",
+		"<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .",
+		"<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .",
+		"<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .",
+		"<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#SymmetricProperty> .",
+		"<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#AsymmetricProperty> .",
+		"<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#IrreflexiveProperty> .",
+		"<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#TransitiveProperty> .",
+		"<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#FunctionalProperty> .",
+		"<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#InverseFunctionalProperty> .",
 		// cfr. https://www.w3.org/TR/owl2-profiles/#OWL_2_RL; top, bottom X properties are not supported
 		"<http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2002/07/owl#topDataProperty>",
 		"<http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2002/07/owl#topObjectProperty>",
-		// - OWL2 RL -> OWL2 DL
-		"<http://www.w3.org/2002/07/owl#sameAs>",
-		"<http://www.w3.org/2002/07/owl#Thing>",
-		"<http://www.w3.org/2002/07/owl#Nothing>",
-		"<http://www.w3.org/2000/01/rdf-schema#domain>",
-		"<http://www.w3.org/2000/01/rdf-schema#range>",
+		"<http://www.w3.org/2002/07/owl#propertyDisjointWith> <http://www.w3.org/2002/07/owl#bottomObjectProperty> .",
+		"<http://www.w3.org/2002/07/owl#propertyDisjointWith> <http://www.w3.org/2002/07/owl#topObjectProperty> .",
+		"<http://www.w3.org/2002/07/owl#propertyDisjointWith>",
 		"<http://www.w3.org/2000/01/rdf-schema#subClassOf>",
 		"<http://www.w3.org/2000/01/rdf-schema#subPropertyOf>",
+		// - OWL2 RL -> OWL2 DL
+		"<http://www.w3.org/2002/07/owl#Thing>",
+		"<http://www.w3.org/2002/07/owl#Nothing>",
 		"<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Datatype> .",
 		"<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#AnnotationProperty> .",
 		"<http://www.w3.org/2002/07/owl#inverseOf>",

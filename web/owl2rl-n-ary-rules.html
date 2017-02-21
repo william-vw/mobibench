@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-	
+
 <head>
     <title>Supporting OWL2 RL n-ary rules | MobiBench</title>
 
@@ -62,7 +62,7 @@
 		<ul>
 			<li><a href="#mem-fns">List membership functions</a></li>
 			<li><a href="#instantiate-rules">Instantiate n-ary rules</a></li>
-			<li><a href="#binarize-ontology">Normalize (or "binarize") the input ontology</a></li>
+			<li><a href="#binarize-ontology">Normalize (or “binarize”) the input ontology</a></li>
 			<li><a href="#auxiliary-rules">Replace each n-ary rule by 3 auxiliary rules</a></li>
 		</ul>
 	</li>
@@ -121,9 +121,15 @@ $$T(?c, unionOf, ?l), T(?l, hasMember, ?cl) \rightarrow T(?cl, subClassOf, ?c)$$
 	<h3>Instantiate n-ary rules</h3>
 </a>
 
-<p>Based on relevant assertions found in the ontology, this solution instantiates rules from <b>(L2)</b>. In particular, an OWL2 RL rule is instantiated for each related assertion (e.g., <i>propertyChainAxiom</i> for rule <i>#prp-spo2</i>), leading to multiple instantiated rules per original rule. In related work, this  kind of instantiation (or "rule-templates") approach is applied for any n-ary rule <a href="#ref1">[1]</a> or even for all (instance-based) OWL2 RL rules <a href="#ref2">[2, 3, 4]</a></p>
+<p>
+Based on relevant, n-ary assertions found in the ontology. Per original OWL2 RL rule, this approach generates an individual rule for each related n-ary assertion, which is done by constructing a list of the found length and instantiating certain variables with concrete schema references. E.g., a property chain axiom P with constituent properties P_(1-3) will yield the following rule (Code 7):
 
-<p>A clear drawback of this approach that it requires a pre-processing step for each input ontology. Also, it yields an instantiated rule for each relevant assertion, potentially inflating the ruleset. On the other hand, in case no related assertions are found, this process will not add any rules to the ruleset.</p>
+<p>Based on relevant n-ary assertions from the ontology, this solution instantiates rules from <b>(L2)</b>. In particular, an OWL2 RL rule is instantiated for each relevant n-ary assertion (e.g., <i>propertyChainAxiom</i> for rule <i>#prp-spo2</i>), leading to multiple instantiated rules per original rule. E.g., a property chain axiom P with constituent properties $P_(1-3)$ will yield the following rule:
+	
+$$T(?u_1,P_1,?u_2), T(?u_2,P_2,?u_3), T(?u_3,P_3,?u_4) \rightarrow T(?u_1,P,?u_4)
+<a class="pos" name="instantiated-n-ary-property-axiom"><div class="rule-caption"><b>Instantiated rule supporting a specific property chain axiom (#prp-spo2).</b></div></a>
+
+<p>In related work, this  kind of instantiation (or "rule-templates") approach is applied for any n-ary rule <a href="#ref1">[1]</a> or even for all (instance-based) OWL2 RL rules <a href="#ref2">[2, 3, 4]</a></p>
 
 <a class="pos" name="binarize-ontology">
 	<h3>Normalize (or "binarize") the input ontology</h3>
@@ -141,18 +147,8 @@ $$T(?c, intersectionOf, ?x_1), T(?x_1,first,?c_1), T(?x_1,rest,?x_2),T(?x_2,firs
 T(?y, type, ?c_1), T(?y, type, ?c_2) \rightarrow T(?y, type, ?c)$$
 <a class="pos" name="binary-n-ary-rule"><div class="rule-caption"><b>Binary version of rule <i>#cls-int1</i></b></div></a>
 
-<p>This rule may be considered recursive, since it both references and infers the same kind of assertion (i.e., <i>T(?y, type, ?c)</i>). When applying this rule on a set of binary assertions $I_1, I_2, ..., I_{(n-2)}$ &nbsp;, the following holds. For any resource <i>X</i> where $\forall i, n \leq i \leq 2: type(X) = C_i$&nbsp;&nbsp;&nbsp;&nbsp;, the rule infers $\forall i, n-2 \leq i \leq 1: type(X)=I_i$&nbsp;&nbsp;&nbsp;&nbsp;. In doing so, the rule travels up the chain of binary intersections until it infers $type(X) = I_1$&nbsp;&nbsp;. Combined with $type(X) = C_1$&nbsp;&nbsp;&nbsp;, the rule then infers $type(X) = I$&nbsp;&nbsp;.</p>
-
-<p>It is not hard to see how this approach only works for recursive rules, since it relies on producing partial inferences to generate the final inference. Rule <i>#prp-key</i> is not a recursive rule, since it infers equivalence between resources but does not refer to such relations:</p>
-
-$$T(?c, hasKey, ?u), LIST[?u, ?p_1, ..., ?p_n], \\
-T(?x, type, ?c), T(?x, ?p_1, ?z_1), ..., T(?x, ?p_n, ?z_n), \\
-T(?y, type, ?c), T(?y, ?p_1, ?z_1), ..., T(?y, ?p_n, ?z_n)\\
-\rightarrow T(?x, sameAs, ?y)$$
-<a class="pos" name="prp-key"><div class="rule-caption"><b>Rule <i>#prp-key</i>.</b></div></a>
-
-<p>Consequently, this approach only works for rules <i>#prp-spo2</i> and <i>#cls-int1</i> from <b>(L2)</b>. Another drawback is that, similar to <a href="#instantiate-rules">instantiating the rules</a>, it requires pre-processing for each ontology. In particular, each relevant n-ary assertion (size <i>n</i>) needs to be replaced by <i>n-2</i> binarized versions. Further, it generates <i>n-2</i> intermediary inferences for each complete, n-ary inference. Although these are sound inferences, they could be considered to "crowd" the dataset.</p>
-
+<p>This rule may be considered recursive, since it both references and infers the same kind of assertion (i.e., <i>T(?y, type, ?c)</i>). It is not hard to see how this approach only works for recursive rules, since it relies on producing partial inferences to generate the final inference. Rule <i>#prp-key</i> is not a recursive rule, since it infers equivalence between resources but does not refer to such relations. Consequently, this approach only works for rules <i>#prp-spo2</i> and <i>#cls-int1</i> from <b>(L2)</b>. 
+	
 <a class="pos" name="auxiliary-rules">
 	<h3>Replace each n-ary rule by 3 auxiliary rules</h3>
 </a>
@@ -168,7 +164,7 @@ T(?l, first, ?c), T(?l, rest, ?l_2), T(?y, type, ?c), T(?y, inIntersection, ?l_2
 T(?x, intersectionOf, ?l), T(?y, inIntersection, ?l) \rightarrow T(?y, type, ?x)$$
 <a class="pos" name="aux-rules"><div class="rule-caption"><b>Auxiliary rules</b></div></a>
 
-<p>In this solution, a first auxiliary rule starts at the end of any list ($T(?l, rest, nil)$&nbsp;&nbsp;), and infers an intermediary assertion for the last element (cell <i>n</i>). Referencing this first inference, as well as its own, subsequent inferences, a second rule travels up the list structure ($T(?l, rest, ?l_2)$&nbsp;&nbsp;&nbsp;) by inferring similar assertions for cells <i>n-1</i> up until cell <i>1</i>. In case the first cell is related to the relevant assertion (e.g., intersection, property chain or has-key), a third auxiliary rule generates the inference for the original, n-ary assertion.</p>
+<p>In this solution, a first auxiliary rule starts at the end of any list ($T(?l, rest, nil)$&nbsp;&nbsp;), and infers an intermediary assertion for the last element (cell <i>n</i>). Starting from the first inference, a second rule travels up the list structure ($T(?l, rest, ?l_2)$&nbsp;&nbsp;&nbsp;) by inferring the same kind of assertions for cells <i>n-1</i> up until cell <i>1</i>. In case the first cell is related to the relevant assertion (e.g., intersection, property chain or has-key), a third auxiliary rule generates the original, n-ary inference.</p>
 
 <p>A distinct advantage of this approach is that, in contrast to <a href="#instantiate-rules">instantiating the rules</a> and <a href="#binarize-ontology">binarizing the ontology</a>, it does not rely on pre-processing. However, each "complete" inference for an n-ary assertion (size <i>n</i>) requires <i>n</i> intermediary inferences, which do not follow from OWL2 RL semantics (instead, they ensue from our custom, auxiliary rules). As such, they can be considered to "pollute" the dataset. Bishop et al. <a href="#ref5">[5]</a> internally flag these inferences so they can be skipped during query answering. Developers may want to support something similar when adopting this solution.</p>
 

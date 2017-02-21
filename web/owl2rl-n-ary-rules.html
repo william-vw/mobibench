@@ -121,12 +121,9 @@ $$T(?c, unionOf, ?l), T(?l, hasMember, ?cl) \rightarrow T(?cl, subClassOf, ?c)$$
 	<h3>Instantiate n-ary rules</h3>
 </a>
 
-<p>
-Based on relevant, n-ary assertions found in the ontology. Per original OWL2 RL rule, this approach generates an individual rule for each related n-ary assertion, which is done by constructing a list of the found length and instantiating certain variables with concrete schema references. E.g., a property chain axiom P with constituent properties P_(1-3) will yield the following rule (Code 7):
-
-<p>Based on relevant n-ary assertions from the ontology, this solution instantiates rules from <b>(L2)</b>. In particular, an OWL2 RL rule is instantiated for each relevant n-ary assertion (e.g., <i>propertyChainAxiom</i> for rule <i>#prp-spo2</i>), leading to multiple instantiated rules per original rule. E.g., a property chain axiom P with constituent properties $P_(1-3)$ will yield the following rule:
+<p>Based on relevant n-ary assertions from the ontology, this solution instantiates rules from <b>(L2)</b>. In particular, an OWL2 RL rule is instantiated for each relevant n-ary assertion (e.g., <i>propertyChainAxiom</i> for rule <i>#prp-spo2</i>), leading to multiple instantiated rules per original rule. E.g., a property chain axiom P with constituent properties P<sub>1</sub>-P<sub>3</sub> will yield the following rule:</p>
 	
-$$T(?u_1,P_1,?u_2), T(?u_2,P_2,?u_3), T(?u_3,P_3,?u_4) \rightarrow T(?u_1,P,?u_4)
+$$T(?u_1, P_1, ?u_2), T(?u_2, P_2, ?u_3), T(?u_3, P_3, ?u_4) \rightarrow T(?u_1,P,?u_4)$$
 <a class="pos" name="instantiated-n-ary-property-axiom"><div class="rule-caption"><b>Instantiated rule supporting a specific property chain axiom (#prp-spo2).</b></div></a>
 
 <p>In related work, this  kind of instantiation (or "rule-templates") approach is applied for any n-ary rule <a href="#ref1">[1]</a> or even for all (instance-based) OWL2 RL rules <a href="#ref2">[2, 3, 4]</a></p>
